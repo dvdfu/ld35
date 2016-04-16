@@ -26,7 +26,6 @@ function Player:initialize(x, y)
 end
 
 function Player:update(dt)
-	self.vel.y = self.vel.y + 9.8 * dt
     self.animation:update(dt)
 end
 
