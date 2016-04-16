@@ -1,5 +1,6 @@
 local Class = require('modules/middleclass/middleclass')
 local Stateful = require('modules/stateful/stateful')
+Particles = require('particles')
 
 local Game = Class('Game')
 Game:include(Stateful)
@@ -13,6 +14,7 @@ end
 
 function Game:initialize()
     debug('GAME', 'Game initialize.')
+    Particles.initialize()
     self:gotoState('Title')
 end
 
@@ -22,9 +24,12 @@ end
 
 function Game.Title:draw()
     love.graphics.print('GAME.TITLE | Title draw.', 100, 100)
+    Particles.draw('cloud')
 end
 
-function Game.Title:update()
+function Game.Title:update(dt)
+    Particles.emit('cloud', 160, 160, 5)
+    Particles.update('cloud', dt)
 end
 
 return Game
