@@ -1,7 +1,8 @@
 local Particles = {}
 
 local sprites = {
-    circle = love.graphics.newImage('res/images/particle_circle.png')
+    circle = love.graphics.newImage('res/images/particle_circle.png'),
+    bar = love.graphics.newImage('res/images/particle_bar.png')
 }
 
 local emitters = {}
@@ -16,13 +17,19 @@ function Particles.initialize()
     emitters.cloud:setSizes(1, 0.3)
 
     emitters.fire = love.graphics.newParticleSystem(sprites.circle)
-    emitters.fire:setParticleLifetime(0.1, 0.5)
+    emitters.fire:setParticleLifetime(0.2, 0.5)
     emitters.fire:setDirection(-math.pi / 2)
     emitters.fire:setSpread(math.pi / 16)
-    emitters.fire:setAreaSpread('normal', 1, 1)
-    emitters.fire:setSpeed(50, 300)
-    emitters.fire:setColors(255, 255, 0, 255, 255, 182, 0, 255, 255, 73, 73, 255, 146, 36, 36, 255, 10, 10, 10, 255)
-    emitters.fire:setSizes(1, 0.1)
+    emitters.fire:setSpeed(50, 400)
+    emitters.fire:setColors(255, 255, 0, 255, 255, 182, 0, 255, 255, 73, 73, 255, 146, 36, 36, 255, 146, 36, 36, 0)
+    emitters.fire:setSizes(1.3, 0.1)
+
+    emitters.spark = love.graphics.newParticleSystem(sprites.bar)
+    emitters.spark:setParticleLifetime(0, 0.3)
+    emitters.spark:setSpread(math.pi * 2)
+    emitters.spark:setSpeed(0, 200)
+    emitters.spark:setColors(255, 255, 0, 255, 255, 255, 0, 0)
+    emitters.spark:setRelativeRotation(true)
 end
 
 function Particles.get(name)
