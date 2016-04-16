@@ -64,7 +64,6 @@ end
 function Game.Play:draw()
     Debug('GAME.PLAY', 'Play draw.')
 
-    love.graphics.print('GAME PLAY', Screen.targetW / 2 - 40, Screen.targetH / 2 - 10)
     self.player:draw()
 end
 
