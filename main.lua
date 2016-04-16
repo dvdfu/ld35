@@ -7,7 +7,6 @@ local Game = require('game')
 local game = nil
 
 local canvas = nil
-local baseball = love.graphics.newImage('res/images/baseball.png')
 
 function love.load()
     canvas = love.graphics.newCanvas(Screen.fakeW, Screen.fakeH)
@@ -26,7 +25,6 @@ function love.draw()
     love.graphics.rectangle('line', 1, 1, Screen.targetW - 1, Screen.targetH - 1)
 
     -- draw game here
-    love.graphics.draw(baseball, 40, 40)
     game:draw()
 
     love.graphics.pop()
