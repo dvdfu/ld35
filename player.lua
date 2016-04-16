@@ -11,6 +11,7 @@ Player.Ball = Player:addState('Bird')
 
 local sprites = {
     ball = love.graphics.newImage('res/images/baseball.png'),
+    ballShadow = love.graphics.newImage('res/images/baseball_shadow.png'),
     bird = love.graphics.newImage('res/images/bird.png'),
     fireTrail = love.graphics.newImage('res/images/fire_trail.png')
 }
@@ -56,6 +57,10 @@ function Player:draw()
 
 	animations.ball:update(1 / 60)
     animations.ball:draw(sprites.ball, self.pos.x, self.pos.y, self.vel:angleTo(), 1, 1, Player.SIZE / 2, Player.SIZE / 2)
+
+    love.graphics.setBlendMode('multiply')
+    love.graphics.draw(sprites.ballShadow, self.pos.x, self.pos.y, 0, 1, 1, Player.SIZE / 2, Player.SIZE / 2)
+    love.graphics.setBlendMode('alpha')
 end
 
 --============================================================================== PLAYER.BALL
