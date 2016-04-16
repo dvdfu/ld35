@@ -10,14 +10,14 @@ Game.Play = Game:addState('Play')
 Game.End = Game:addState('End')
 
 --============================================================================== LOCAL FUNCTIONS
-local Ball = require('ball')
+local Player = require('player')
 
 --============================================================================== GAME
 function Game:initialize()
     Debug('GAME', 'Game initialize.')
 
     Particles.initialize()
-    self.ball = Ball:new(Screen.targetW / 2, Screen.targetH / 2)
+    self.player = Player:new(Screen.targetW / 2, Screen.targetH / 2)
 
     self:gotoState('Title')
 end
@@ -58,14 +58,14 @@ function Game.Play:update(dt)
     Debug('GAME.PLAY', 'Play update.')
 
     Game.update(self, dt)
-    self.ball:update(dt)
+    self.player:update(dt)
 end
 
 function Game.Play:draw()
     Debug('GAME.PLAY', 'Play draw.')
 
     love.graphics.print('GAME PLAY', Screen.targetW / 2 - 40, Screen.targetH / 2 - 10)
-    self.ball:draw()
+    self.player:draw()
 end
 
 return Game
