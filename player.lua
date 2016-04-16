@@ -1,7 +1,7 @@
 local Anim8 = require('modules/anim8/anim8')
 local Class = require('modules/middleclass/middleclass')
 local Stateful = require('modules/stateful/stateful')
-local vector = require('modules/hump/vector')
+local Vector = require('modules/hump/vector')
 
 local Player = Class('Player')
 Player:include(Stateful)
@@ -19,8 +19,8 @@ local animations = {}
 
 --============================================================================== PLAYER
 function Player:initialize(x, y)
-    self.pos = vector(x, y)
-    self.vel = vector(10, 0)
+    self.pos = Vector(x, y)
+    self.vel = Vector(10, 0)
 
     local grid = nil
     grid = Anim8.newGrid(Player.SIZE, Player.SIZE, Player.SIZE * 6, Player.SIZE)
@@ -39,7 +39,7 @@ end
 function Player:update(dt)
     self.vel.y = self.vel.y + dt * 0
 
-    Particles.get('fire'):setDirection(self.vel:angleTo(vector(-1, 0)))
+    Particles.get('fire'):setDirection(self.vel:angleTo(Vector(-1, 0)))
     Particles.emit('fire', self.pos.x, self.pos.y, 4)
 end
 
