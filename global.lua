@@ -21,3 +21,7 @@ Screen.fakeW = Screen.realW / Screen.scale
 Screen.fakeH = Screen.realH / Screen.scale
 Screen.offsetX = (Screen.realW / Screen.scale - Screen.targetW) / 2
 Screen.offsetY = (Screen.realH / Screen.scale - Screen.targetH) / 2
+
+function Debug(tag, message)
+    print(tag .. ' | ' .. message)
+end
