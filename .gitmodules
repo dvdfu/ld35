@@ -9,4 +9,4 @@
 	url = git@github.com:kikito/middleclass.git
 [submodule "modules/anim8"]
 	path = modules/anim8
-	url = https://github.com/kikito/anim8.git
+	url = git@github.com:kikito/anim8.git
