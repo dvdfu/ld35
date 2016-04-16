@@ -39,14 +39,10 @@ function Game.Title:update(dt)
     if love.keyboard.isDown('return') then
         self:gotoState('Play')
     end
-
-    Particles.emit('fire', 160, 160, 5)
-    Particles.update('fire', dt)
 end
 
 function Game.Title:draw()
     love.graphics.print('GAME TITLE GOES HERE', Screen.targetW / 2 - 80, Screen.targetH / 2 - 10)
-    Particles.draw('fire')
 end
 
 --============================================================================== GAME.PLAY
@@ -64,7 +60,6 @@ end
 function Game.Play:draw()
     Debug('GAME.PLAY', 'Play draw.')
 
-    love.graphics.print('GAME PLAY', Screen.targetW / 2 - 40, Screen.targetH / 2 - 10)
     self.player:draw()
 end
 
