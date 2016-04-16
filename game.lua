@@ -15,7 +15,7 @@ local Ball = require('ball')
 --============================================================================== GAME
 function Game:initialize()
     Debug('GAME', 'Game initialize.')
-    
+
     Particles.initialize()
     self.ball = Ball:new(Screen.targetW / 2, Screen.targetH / 2)
 
@@ -33,9 +33,9 @@ end
 
 function Game.Title:update(dt)
     Debug('GAME.TITLE', 'Title update.')
-    
+
     Game.update(self, dt)
-    
+
     if love.keyboard.isDown('return') then
         self:gotoState('Play')
     end
@@ -56,7 +56,7 @@ end
 
 function Game.Play:update(dt)
     Debug('GAME.PLAY', 'Play update.')
-    
+
     Game.update(self, dt)
     self.ball:update(dt)
 end
