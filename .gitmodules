@@ -1,3 +1,6 @@
 [submodule "modules/hump"]
 	path = modules/hump
 	url = git@github.com:vrld/hump.git
+[submodule "modules/stateful"]
+	path = modules/stateful
+	url = git@github.com:kikito/stateful.lua.git
