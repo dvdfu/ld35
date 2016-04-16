@@ -3,9 +3,10 @@ love.graphics.setDefaultFilter('nearest', 'nearest')
 love.graphics.setLineStyle('rough')
 
 require('global')
+Input = require('input')
+
 local Game = require('game')
 local game = nil
-
 local canvas = nil
 
 function love.load()
@@ -15,6 +16,10 @@ end
 
 function love.update(dt)
     game:update(dt)
+    if Input.pressed('escape') then
+        love.event.quit()
+    end
+    Input.update()
 end
 
 function love.draw()
@@ -22,9 +27,8 @@ function love.draw()
     love.graphics.clear()
     love.graphics.push()
     love.graphics.translate(Screen.offsetX, Screen.offsetY)
-    love.graphics.rectangle('line', 1, 1, Screen.targetW - 1, Screen.targetH - 1)
+    -- love.graphics.rectangle('line', 1, 1, Screen.targetW - 1, Screen.targetH - 1)
 
-    -- draw game here
     game:draw()
 
     love.graphics.pop()

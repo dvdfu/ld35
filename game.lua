@@ -22,9 +22,7 @@ function Game:initialize()
     self:gotoState('Title')
 end
 
-function Game:update(dt)
-    Debug('GAME', 'Game update.')
-end
+function Game:update(dt) end
 
 --============================================================================== GAME.TITLE
 function Game.Title:enteredState()
@@ -36,7 +34,7 @@ function Game.Title:update(dt)
 
     Game.update(self, dt)
 
-    if love.keyboard.isDown('return') then
+    if Input.pressed('return') then
         self:gotoState('Play')
     end
 end
@@ -60,6 +58,9 @@ end
 function Game.Play:draw()
     Debug('GAME.PLAY', 'Play draw.')
 
+    love.graphics.setColor(80, 100, 120)
+    love.graphics.rectangle('fill', 0, 0, Screen.targetW, Screen.targetH)
+    love.graphics.setColor(255, 255, 255)
     self.player:draw()
 end
 

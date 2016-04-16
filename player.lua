@@ -30,33 +30,32 @@ function Player:initialize(x, y)
     animations.bird = Anim8.newAnimation(grid:getFrames('1-4', 1), 0.05)
 
     grid = Anim8.newGrid(80, 24, 80 * 3, 24)
-    animations.fireTrail = Anim8.newAnimation(grid:getFrames('1-3', 1), 0.1)
+    animations.fireTrail = Anim8.newAnimation(grid:getFrames('1-3', 1), 0.05)
 
     self.sprite = sprites.bird
     self:gotoState('Ball')
 end
 
 function Player:update(dt)
-    self.vel.y = self.vel.y + dt * 0
+    if Input.isDown('up') then
+        self.vel:rotateInplace(-0.02)
+    elseif Input.isDown('down') then
+        self.vel:rotateInplace(0.02)
+    end
 
     Particles.get('fire'):setDirection(self.vel:angleTo(Vector(-1, 0)))
     Particles.emit('fire', self.pos.x, self.pos.y, 4)
 end
 
 function Player:draw()
+	-- animations.fireTrail:update(1 / 60)
+	-- animations.fireTrail:draw(sprites.fireTrail, self.pos.x, self.pos.y, self.vel:angleTo(), 1, 1, 68, 12)
+
     Particles.update('fire', 1 / 60)
 	Particles.draw('fire')
 
-	animations.fireTrail:update(1 / 60)
-	animations.fireTrail:draw(sprites.fireTrail, self.pos.x, self.pos.y, self.vel:angleTo(), 1, 1, 68, 12)
-
 	animations.ball:update(1 / 60)
     animations.ball:draw(sprites.ball, self.pos.x, self.pos.y, self.vel:angleTo(), 1, 1, Player.SIZE / 2, Player.SIZE / 2)
-
-    -- r, g, b, a = love.graphics.getColor()
-    -- love.graphics.setColor(255, 0, 0, 255)
-    -- love.graphics.line(self.pos.x, self.pos.y, self.pos.x + self.vel.x * 5, self.pos.y + self.vel.y * 5)
-    -- love.graphics.setColor(r, g, b, a)
 end
 
 --============================================================================== PLAYER.BALL
