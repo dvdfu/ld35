@@ -11,6 +11,7 @@ Game.End = Game:addState('End')
 
 --============================================================================== LOCAL FUNCTIONS
 local Player = require('player')
+local Star = require('star')
 
 --============================================================================== GAME
 function Game:initialize()
@@ -18,6 +19,7 @@ function Game:initialize()
 
     Particles.initialize()
     self.player = Player:new(Screen.targetW / 2, Screen.targetH / 2)
+    self.star = Star:new(Screen.targetW, 0, 1, self.player)
 
     self:gotoState('Title')
 end
@@ -55,16 +57,17 @@ function Game.Play:enteredState()
 end
 
 function Game.Play:update(dt)
-    Debug('GAME.PLAY', 'Play update.')
-
     Game.update(self, dt)
+    Debug('GAME.PLAY', 'Play update.')
     self.player:update(dt)
+    self.star:update(dt)
 end
 
 function Game.Play:draw()
     Debug('GAME.PLAY', 'Play draw.')
 
     self.player:draw()
+    self.star:draw()
 end
 
 return Game

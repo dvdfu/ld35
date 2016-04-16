@@ -1,7 +1,7 @@
 local Anim8 = require('modules/anim8/anim8')
 local Class = require('modules/middleclass/middleclass')
 local Stateful = require('modules/stateful/stateful')
-local vector = require('modules/hump/vector')
+local Vector = require('modules/hump/vector')
 
 local Player = Class('Player')
 Player:include(Stateful)
@@ -15,8 +15,8 @@ local sprites = {
 
 --============================================================================== PLAYER
 function Player:initialize(x, y)
-    self.pos = vector(x, y)
-    self.vel = vector(10, -10)
+    self.pos = Vector(x, y)
+    self.vel = Vector(10, -10)
 
     local grid = Anim8.newGrid(Player.SIZE, Player.SIZE, Player.SIZE * 6, Player.SIZE)
     self.animation = Anim8.newAnimation(grid:getFrames('1-6', 1), 0.05)
