@@ -10,12 +10,15 @@ Game.Play = Game:addState('Play')
 Game.End = Game:addState('End')
 
 --============================================================================== LOCAL FUNCTIONS
-
+local Ball = require('ball')
 
 --============================================================================== GAME
 function Game:initialize()
     Debug('GAME', 'Game initialize.')
+
     Particles.initialize()
+    self.ball = Ball:new(Screen.targetW / 2, Screen.targetH / 2)
+
     self:gotoState('Title')
 end
 
@@ -30,7 +33,9 @@ end
 
 function Game.Title:update(dt)
     Debug('GAME.TITLE', 'Title update.')
+
     Game.update(self, dt)
+
     if love.keyboard.isDown('return') then
         self:gotoState('Play')
     end
@@ -40,7 +45,7 @@ function Game.Title:update(dt)
 end
 
 function Game.Title:draw()
-    love.graphics.print('GAME TITLE GOES HERE', Screen.targetW/2-80, Screen.targetH/2-10)
+    love.graphics.print('GAME TITLE GOES HERE', Screen.targetW / 2 - 80, Screen.targetH / 2 - 10)
     Particles.draw('cloud')
 end
 
@@ -51,12 +56,16 @@ end
 
 function Game.Play:update(dt)
     Debug('GAME.PLAY', 'Play update.')
+
     Game.update(self, dt)
+    self.ball:update(dt)
 end
 
 function Game.Play:draw()
     Debug('GAME.PLAY', 'Play draw.')
-    love.graphics.print('GAME PLAY', Screen.targetW/2-40, Screen.targetH/2-10)
+
+    love.graphics.print('GAME PLAY', Screen.targetW / 2 - 40, Screen.targetH / 2 - 10)
+    self.ball:draw()
 end
 
 return Game
