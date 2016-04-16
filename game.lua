@@ -24,9 +24,7 @@ function Game:initialize()
     self:gotoState('Title')
 end
 
-function Game:update(dt)
-    Debug('GAME', 'Game update.')
-end
+function Game:update(dt) end
 
 --============================================================================== GAME.TITLE
 function Game.Title:enteredState()
@@ -38,17 +36,13 @@ function Game.Title:update(dt)
 
     Game.update(self, dt)
 
-    if love.keyboard.isDown('return') then
+    if Input.pressed('return') then
         self:gotoState('Play')
     end
-
-    Particles.emit('fire', 160, 160, 5)
-    Particles.update('fire', dt)
 end
 
 function Game.Title:draw()
     love.graphics.print('GAME TITLE GOES HERE', Screen.targetW / 2 - 80, Screen.targetH / 2 - 10)
-    Particles.draw('fire')
 end
 
 --============================================================================== GAME.PLAY
@@ -65,7 +59,10 @@ end
 
 function Game.Play:draw()
     Debug('GAME.PLAY', 'Play draw.')
-
+    
+    love.graphics.setColor(80, 100, 120)
+    love.graphics.rectangle('fill', 0, 0, Screen.targetW, Screen.targetH)
+    love.graphics.setColor(255, 255, 255)
     self.player:draw()
     self.star:draw()
 end
