@@ -10,7 +10,7 @@ Star:include(Stateful)
 function Star:initialize(x, y, player)
     self.pos = Vector(x, y)
     self.prev = self.pos:clone()
-    self.z = 1 + 2 * math.random()
+    self.z = 1 + 3 * math.random()
     self.player = player
 end
 

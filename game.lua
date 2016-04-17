@@ -24,6 +24,13 @@ function Game:initialize()
 
     self.player = Player:new(0, 0)
     self.camera = Camera.new(0, 0, Screen.targetW, Screen.targetH)
+
+    local scale = 1.0
+    for i = 2, 3 do
+        scale = scale - 0.05
+        self.camera:addLayer(i .. '', scale)
+    end
+
     self.foreground = Foreground:new(self.player, self.camera)
     self.background = Background:new(self.player, self.foreground, self.camera)
 

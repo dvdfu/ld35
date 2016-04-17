@@ -35,7 +35,14 @@ end
 
 function Stars:draw()
     for _, star in pairs(self.stars) do
-        star:draw()
+        if math.floor(star.z) ~= 3 then
+            layer = self.camera:getLayer(4 - math.floor(star.z) .. '')
+            layer:push()
+            star:draw()
+            layer:pop()
+        else
+            star:draw()
+        end
     end
 
     if (DEBUG) then
