@@ -89,6 +89,7 @@ function Background.Cloud:enteredState()
 
     self.RGB = cloudRGB
     self.nextRGB = atmosphereRGB
+    self.stars = Stars:new(self.player)
 end
 
 function Background.Cloud:update(dt)
@@ -108,10 +109,14 @@ function Background.Cloud:update(dt)
     elseif (self.transitionTimer) then
         self.transitionTimer.update(dt)
     end
+    self.stars:update(dt)
 end
 
 function Background.Cloud:draw()
     Background.draw(self)
+    love.graphics.setColor(255, 255, 255, 64)
+    self.stars:draw()
+    love.graphics.setColor(255, 255, 255, 255)
 end
 
 --============================================================================== BACKGROUND.ATMOSPHERE
@@ -135,17 +140,20 @@ function Background.Atmosphere:update(dt)
     elseif (self.transitionTimer) then
         self.transitionTimer.update(dt)
     end
+    self.stars:update(dt)
 end
 
 function Background.Atmosphere:draw()
     Background.draw(self)
+    love.graphics.setColor(255, 255, 255, 128)
+    self.stars:draw()
+    love.graphics.setColor(255, 255, 255, 255)
 end
 
 --============================================================================== BACKGROUND.SPACE
 function Background.Space:enteredState()
     Debug('BACKGROUND', 'Space enteredState.')
     self.RGB = spaceRGB
-    self.stars = Stars:new(self.player)
 end
 
 function Background.Space:update(dt)
