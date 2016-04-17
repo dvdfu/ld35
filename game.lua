@@ -91,6 +91,7 @@ function Game.Title:update(dt)
         self.player.intro = false
         self.cameraTimer.after(2,
             function()
+                self.player.vel = Vector(10, -10)
                 self.cameraTimer.after(0.01,
                     function(func)
                         if (self.groundHeight < Screen.targetH) then
@@ -127,7 +128,6 @@ end
 --============================================================================== GAME.PLAY
 function Game.Play:enteredState()
     Debug('GAME.PLAY', 'Play enteredState.')
-    self.player.vel = Vector(10, -10)
     self.player.userHasControl = true
     self.boosts = {}
 end
