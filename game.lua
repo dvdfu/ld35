@@ -155,7 +155,7 @@ end
 --============================================================================== GAME.PLAY
 function Game.Play:enteredState()
     Debug('GAME.PLAY', 'Play enteredState.')
-    self.player.userHasControl = true
+    self.player.userCanTurn = true
     self.player:boost()
 end
 
