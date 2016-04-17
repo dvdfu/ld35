@@ -29,7 +29,7 @@ function Foreground:draw()
 
     if (DEBUG) then
         self.camera:detach()
-        love.graphics.print('HEIGHT: ' .. math.floor(self.player.pos.y), 10, Screen.targetH - 20)
+        love.graphics.print('HEIGHT: ' .. math.floor(self.player:getHeight()), 10, Screen.targetH - 20)
         self.camera:attach()
     end
 end

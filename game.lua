@@ -95,7 +95,7 @@ function Game.Title:update(dt)
             end)
     elseif self.cameraMoveState == pitching then
         self.cameraMoveState = pitchToBatter
-        self.player.vel = Vector(-10, 0)
+        self.player.vel = Vector(-5, 0)
         self.player.intro = false
         self.cameraTimer.after(2,
             function()
@@ -112,6 +112,8 @@ function Game.Title:update(dt)
                         end
                     end)
             end)
+    elseif self.cameraMoveState == pitchToBatter then
+        self.camera:lockPosition(self.player.pos.x + Screen.targetW / 2, self.player.pos.y + Screen.targetH / 2)
     elseif self.cameraMoveState == pitcherToPlay then
         self:gotoState('Play')
     end
@@ -148,10 +150,13 @@ function Game.Play:enteredState()
     Debug('GAME.PLAY', 'Play enteredState.')
     self.player.userHasControl = true
     self.boosts = {}
+    self.player:boost()
 end
 
 function Game.Play:update(dt)
     Game.update(self, dt)
+
+    self.camera:lockPosition(self.player.pos.x + Screen.targetW / 2, self.player.pos.y + Screen.targetH / 2)
 
     for k, boost in pairs(self.boosts) do
         if boost.dead then

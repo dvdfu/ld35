@@ -18,7 +18,7 @@ function Particles.initialize()
     emitters.cloud:setSizes(1, 0.5)
 
     emitters.fire = love.graphics.newParticleSystem(sprites.circle)
-    emitters.fire:setParticleLifetime(0.2, 0.5)
+    emitters.fire:setParticleLifetime(0.05, 0.2)
     emitters.fire:setDirection(-math.pi / 2)
     -- emitters.fire:setSpread(math.pi / 16)
     emitters.fire:setSpeed(50, 400)

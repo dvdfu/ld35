@@ -77,8 +77,7 @@ function Player:update(dt)
         end
     end
     self.pos.x = self.pos.x + self.vel.x
-    self.pos.y = self.pos.y - self.vel.y
-    -- Debug('PLAYER HEIGHT', self.pos.y)
+    self.pos.y = self.pos.y + self.vel.y
 end
 
 function Player:draw()
@@ -89,7 +88,7 @@ function Player:draw()
         if DEBUG then
             r, g, b, a = love.graphics.getColor()
             love.graphics.setColor(255, 0, 0, 255)
-            love.graphics.line(self.absolutePos.x, self.absolutePos.y, self.absolutePos.x + self.vel.x * 5, self.absolutePos.y + self.vel.y * 5)
+            love.graphics.line(self.pos.x, self.pos.y, self.pos.x + self.vel.x * 5, self.pos.y + self.vel.y * 5)
             love.graphics.setColor(r, g, b, a)
         end
     end
@@ -114,6 +113,10 @@ function Player:gotoSpeed()
     end
 end
 
+function Player:getHeight()
+    return -self.pos.y
+end
+
 --============================================================================== PLAYER.BALL
 function Player.Ball:enteredState()
     Particles.get('fire'):reset()
@@ -123,10 +126,12 @@ function Player.Ball:update(dt)
     Player.update(self, dt)
     Player.gotoSpeed(self)
 
-    local fire = Particles.get('fire')
-    fire:setDirection(self.vel:angleTo(Vector(-1, 0)))
-    fire:setSpeed(self.vel:len() * 8, self.vel:len() * 40)
-    Particles.emit('fire', self.absolutePos.x, self.absolutePos.y, self.vel:len() / 20.0)
+    if self.userHasControl then
+        local fire = Particles.get('fire')
+        fire:setDirection(self.vel:angleTo(Vector(-1, 0)))
+        fire:setSpeed(self.vel:len() * 8, self.vel:len() * 40)
+        Particles.emit('fire', self.pos.x, self.pos.y, self.vel:len() / 5.0)
+    end
 
     if Input.pressed('space') then
         self:gotoState('BallToBird')
@@ -136,15 +141,15 @@ end
 function Player.Ball:draw()
     if not self.intro then
         -- animations.fireTrail:update(1 / 60)
-        -- animations.fireTrail:draw(sprites.fireTrail, self.absolutePos.x, self.absolutePos.y, self.vel:angleTo(), 1, 1, 68, 12)
+        -- animations.fireTrail:draw(sprites.fireTrail, self.pos.x, self.pos.y, self.vel:angleTo(), 1, 1, 68, 12)
 
         Player.draw(self)
 
         animations.ball:update(self.vel:len() / 1000)
-        animations.ball:draw(sprites.ball, self.absolutePos.x, self.absolutePos.y, self.vel:angleTo(), 1, 1, Player.SIZE / 2, Player.SIZE / 2)
+        animations.ball:draw(sprites.ball, self.pos.x, self.pos.y, self.vel:angleTo(), 1, 1, Player.SIZE / 2, Player.SIZE / 2)
 
         love.graphics.setBlendMode('multiply')
-        love.graphics.draw(sprites.ballShadow, self.absolutePos.x, self.absolutePos.y, 0, 1, 1, Player.SIZE / 2, Player.SIZE / 2)
+        love.graphics.draw(sprites.ballShadow, self.pos.x, self.pos.y, 0, 1, 1, Player.SIZE / 2, Player.SIZE / 2)
         love.graphics.setBlendMode('alpha')
     end
 end
@@ -168,7 +173,7 @@ function Player.Bird:draw()
         Player.draw(self)
 
         animations.bird:update(1 / 60)
-        animations.bird:draw(sprites.bird, self.absolutePos.x, self.absolutePos.y, self.vel:angleTo(), 1, 1, 12, 12)
+        animations.bird:draw(sprites.bird, self.pos.x, self.pos.y, self.vel:angleTo(), 1, 1, 12, 12)
     end
 end
 
@@ -182,7 +187,7 @@ end
 function Player.BirdToBall:draw()
     if not self.intro then
         Player.draw(self)
-        animations.birdToBall:draw(sprites.birdToBall, self.absolutePos.x, self.absolutePos.y, self.vel:angleTo(), 1, 1, 12, 12)
+        animations.birdToBall:draw(sprites.birdToBall, self.pos.x, self.pos.y, self.vel:angleTo(), 1, 1, 12, 12)
     end
 end
 
@@ -196,7 +201,7 @@ end
 function Player.BallToBird:draw()
     if not self.intro then
         Player.draw(self)
-        animations.ballToBird:draw(sprites.birdToBall, self.absolutePos.x, self.absolutePos.y, self.vel:angleTo(), 1, 1, 12, 12)
+        animations.ballToBird:draw(sprites.birdToBall, self.pos.x, self.pos.y, self.vel:angleTo(), 1, 1, 12, 12)
     end
 end
 

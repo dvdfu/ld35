@@ -62,10 +62,10 @@ end
 function Background.Earth:update(dt)
     Background.update(self, dt)
 
-    if (self.player.pos.y > WORLD.earthHeight and not self.transitionTimer) then
+    if (self.player:getHeight() > WORLD.earthHeight and not self.transitionTimer) then
         self.transitionTimer = Timer.new()
         self.transitionTimer.every(transitionStepTime, function() self:changeAlpha() end)
-    elseif (self.player.pos.y > WORLD.earthHeight and self.alpha < 0) then
+    elseif (self.player:getHeight() > WORLD.earthHeight and self.alpha < 0) then
         Timer.cancel(self.transitionTimer)
         self.alpha = 255
         self.transitionTimer = nil
@@ -93,10 +93,10 @@ function Background.Cloud:update(dt)
 
     self.clouds:updateCreation(dt)
 
-    if (self.player.pos.y > WORLD.cloudHeight and not self.transitionTimer) then
+    if (self.player:getHeight() > WORLD.cloudHeight and not self.transitionTimer) then
         self.transitionTimer = Timer.new()
         self.transitionTimer.every(transitionStepTime, function() self:changeAlpha() end)
-    elseif (self.player.pos.y > WORLD.cloudHeight and self.alpha < 0) then
+    elseif (self.player:getHeight() > WORLD.cloudHeight and self.alpha < 0) then
         Timer.cancel(self.transitionTimer)
         self.alpha = 255
         self.transitionTimer = nil
@@ -120,10 +120,10 @@ end
 
 function Background.Atmosphere:update(dt)
     Background.update(self, dt)
-    if (self.player.pos.y > WORLD.atmosphereHeight and not self.transitionTimer) then
+    if (self.player:getHeight() > WORLD.atmosphereHeight and not self.transitionTimer) then
         self.transitionTimer = Timer.new()
         self.transitionTimer.every(transitionStepTime, function() self:changeAlpha() end)
-    elseif (self.player.pos.y > WORLD.atmosphereHeight and self.alpha < 0) then
+    elseif (self.player:getHeight() > WORLD.atmosphereHeight and self.alpha < 0) then
         Timer.cancel(self.transitionTimer)
         self.alpha = 255
         self.transitionTimer = nil
