@@ -149,32 +149,16 @@ end
 function Game.Play:enteredState()
     Debug('GAME.PLAY', 'Play enteredState.')
     self.player.userHasControl = true
-    self.boosts = {}
     self.player:boost()
 end
 
 function Game.Play:update(dt)
     Game.update(self, dt)
-
     self.camera:lockPosition(self.player.pos.x + Screen.targetW / 2, self.player.pos.y + Screen.targetH / 2)
-
-    for k, boost in pairs(self.boosts) do
-        if boost.dead then
-            table.remove(self.boosts, k)
-        else
-            boost:update(dt)
-        end
-    end
 end
 
 function Game.Play:draw()
     Game.draw(self)
-
-    self.camera:attach()
-    for _, boost in pairs(self.boosts) do
-        boost:draw()
-    end
-    self.camera:detach()
 end
 
 return Game

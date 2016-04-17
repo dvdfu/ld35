@@ -2,6 +2,7 @@ local Class = require('modules/middleclass/middleclass')
 local Stateful = require('modules/stateful/stateful')
 local Timer = require('modules/hump/timer')
 local Clouds = require('clouds')
+local Boosts = require('boosts')
 
 --============================================================================== LOCAL
 
@@ -17,15 +18,18 @@ function Foreground:initialize(player, camera)
     self.player = player
     self.camera = camera
     self.clouds = Clouds:new(0.03, 3, 3, self.player)
+    self.boosts = Boosts:new(player)
     self:gotoState('Earth')
 end
 
 function Foreground:update(dt)
     self.clouds:updateMovement(dt)
+    self.boosts:update(dt)
 end
 
 function Foreground:draw()
     self.clouds:draw()
+    self.boosts:draw()
 
     if (DEBUG) then
         self.camera:detach()
@@ -41,8 +45,6 @@ end
 
 function Foreground.Earth:update(dt)
     Foreground.update(self, dt)
-
-
 end
 
 function Foreground.Earth:draw()
@@ -51,7 +53,7 @@ end
 
 --============================================================================== FOREGROUND.CLOUD
 function Foreground.Cloud:enteredState()
-
+    self.boosts:startGeneration()
 end
 
 function Foreground.Cloud:update(dt)
