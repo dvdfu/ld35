@@ -13,8 +13,9 @@ Foreground.Cloud = Foreground:addState('Cloud')
 Foreground.Atmosphere = Foreground:addState('Atmosphere')
 Foreground.Space = Foreground:addState('Space')
 
-function Foreground:initialize(player)
+function Foreground:initialize(player, camera)
     self.player = player
+    self.camera = camera
     self.clouds = Clouds:new(0.03, 3, 3, self.player)
     self:gotoState('Earth')
 end
@@ -27,7 +28,9 @@ function Foreground:draw()
     self.clouds:draw()
 
     if (DEBUG) then
+        self.camera:detach()
         love.graphics.print('HEIGHT: ' .. math.floor(self.player.pos.y), 10, Screen.targetH - 20)
+        self.camera:attach()
     end
 end
 

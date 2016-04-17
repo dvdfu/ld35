@@ -22,9 +22,10 @@ Background.Atmosphere = Background:addState('Atmosphere')
 Background.Space = Background:addState('Space')
 Background.Transition = Background:addState('Transition')
 
-function Background:initialize(player, foreground)
+function Background:initialize(player, foreground, camera)
     self.player = player
     self.foreground = foreground
+    self.camera = camera
     self.alpha = 255
     self.RGB = earthRGB
     self.nextRGB = cloudRGB
@@ -39,16 +40,12 @@ end
 
 function Background:draw()
     love.graphics.setColor(self.nextRGB.r, self.nextRGB.g, self.nextRGB.b, 255)
-    love.graphics.rectangle('fill', 0, 0, Screen.targetW, Screen.targetH)
+    love.graphics.rectangle('fill', self.camera.x - Screen.targetW, self.camera.y - Screen.targetH, Screen.targetW, Screen.targetH)
     love.graphics.setColor(self.RGB.r, self.RGB.g, self.RGB.b, self.alpha)
-    love.graphics.rectangle('fill', 0, 0, Screen.targetW, Screen.targetH)
+    love.graphics.rectangle('fill', self.camera.x, self.camera.y, Screen.targetW, Screen.targetH)
     love.graphics.setColor(255, 255, 255)
 
     self.clouds:draw()
-
-    if (DEBUG) then
-        love.graphics.print('HEIGHT: ' .. math.floor(self.player.pos.y), 10, Screen.targetH - 20)
-    end
 end
 
 function Background:changeAlpha()

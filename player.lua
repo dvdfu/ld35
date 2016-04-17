@@ -37,7 +37,7 @@ Player.BallToBird.speed = Player.Bird.speed
 Player.BallToBird.animationTime = Player.BirdToBall.animationTime
 
 function Player:initialize(x, y)
-    self.absolutePos = Vector(Screen.targetW / 2, Screen.targetH / 2)
+    self.absolutePos = Vector(0, 0)
     self.pos = Vector(0, 0)
     self.vel = Vector(x, y)
     self.body = HC.circle(self.absolutePos.x, self.absolutePos.y, 8)
@@ -86,10 +86,12 @@ function Player:draw()
         Particles.update('fire', 1 / 60)
         Particles.draw('fire')
 
-        -- r, g, b, a = love.graphics.getColor()
-        -- love.graphics.setColor(255, 0, 0, 255)
-        -- love.graphics.line(self.absolutePos.x, self.absolutePos.y, self.absolutePos.x + self.vel.x * 5, self.absolutePos.y + self.vel.y * 5)
-        -- love.graphics.setColor(r, g, b, a)
+        if DEBUG then
+            r, g, b, a = love.graphics.getColor()
+            love.graphics.setColor(255, 0, 0, 255)
+            love.graphics.line(self.absolutePos.x, self.absolutePos.y, self.absolutePos.x + self.vel.x * 5, self.absolutePos.y + self.vel.y * 5)
+            love.graphics.setColor(r, g, b, a)
+        end
     end
 end
 
