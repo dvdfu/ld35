@@ -95,7 +95,7 @@ function Game.Title:update(dt)
                 self.cameraTimer.after(0.01,
                     function(func)
                         if (self.groundHeight < Screen.targetH) then
-                            self.groundHeight = self.groundHeight - self.ballYStep
+                            self.groundHeight = self.groundHeight - self.player.vel.y
                             self.cameraTimer.after(0.01, func)
                         else
                             self.cameraTimer = nil
