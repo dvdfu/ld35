@@ -69,6 +69,10 @@ end
 function Player.Ball:update(dt)
 	Player.update(self, dt)
 
+	if self.vel:len() < properties.ball.speed then
+		self.vel = self.vel * 1.1
+	end
+
 	Particles.get('fire'):setDirection(self.vel:angleTo(Vector(-1, 0)))
     Particles.emit('fire', self.pos.x, self.pos.y, 4)
 
@@ -101,6 +105,10 @@ end
 
 function Player.Bird:update(dt)
 	Player.update(self, dt)
+
+	if self.vel:len() > properties.bird.speed then
+		self.vel = self.vel * 0.9
+	end
 
 	if Input.pressed('space') then
 		self:gotoState('Ball')
