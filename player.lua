@@ -4,6 +4,7 @@ local HC = require('modules/HC')
 local Stateful = require('modules/stateful/stateful')
 local Vector = require('modules/hump/vector')
 
+local animations = {}
 local sprites = {
     ball = love.graphics.newImage('res/images/baseball.png'),
     ballShadow = love.graphics.newImage('res/images/baseball_shadow.png'),
@@ -15,13 +16,13 @@ local sprites = {
 --============================================================================== PLAYER
 local Player = Class('Player')
 Player:include(Stateful)
-Player.SIZE = 16
 Player.Ball = Player:addState('Ball')
 Player.Bird = Player:addState('Bird')
 Player.BirdToBall = Player:addState('BirdToBall')
 Player.BallToBird = Player:addState('BallToBird')
 
-local animations = {}
+Player.SIZE = 16
+Player.angularSpeed = 0.02
 
 Player.Ball.speed = 10
 Player.Ball.animationTime = 0.05
@@ -65,9 +66,13 @@ end
 
 function Player:update(dt)
     if Input.isDown('up') then
-        self.vel:rotateInplace(-0.02)
+        if self.vel:angleTo() > -math.pi / 2 then
+            self.vel:rotateInplace(-Player.angularSpeed)
+        end
     elseif Input.isDown('down') then
-        self.vel:rotateInplace(0.02)
+        if self.vel:angleTo() < math.pi / 2 then
+            self.vel:rotateInplace(Player.angularSpeed)
+        end
     end
     self.pos.x = self.pos.x + self.vel.x
     self.pos.y = self.pos.y - self.vel.y
@@ -115,7 +120,7 @@ function Player.Ball:update(dt)
     local fire = Particles.get('fire')
     fire:setDirection(self.vel:angleTo(Vector(-1, 0)))
     fire:setSpeed(self.vel:len() * 8, self.vel:len() * 40)
-    Particles.emit('fire', self.absolutePos.x, self.absolutePos.y, 4)
+    Particles.emit('fire', self.absolutePos.x, self.absolutePos.y, self.vel:len() / 20.0)
 
     if Input.pressed('space') then
         self:gotoState('BallToBird')
@@ -123,12 +128,12 @@ function Player.Ball:update(dt)
 end
 
 function Player.Ball:draw()
-    Player.draw(self)
-
     -- animations.fireTrail:update(1 / 60)
     -- animations.fireTrail:draw(sprites.fireTrail, self.absolutePos.x, self.absolutePos.y, self.vel:angleTo(), 1, 1, 68, 12)
 
-    animations.ball:update(1 / 60)
+    Player.draw(self)
+
+    animations.ball:update(self.vel:len() / 1000)
     animations.ball:draw(sprites.ball, self.absolutePos.x, self.absolutePos.y, self.vel:angleTo(), 1, 1, Player.SIZE / 2, Player.SIZE / 2)
 
     love.graphics.setBlendMode('multiply')
@@ -161,12 +166,11 @@ end
 function Player.BirdToBall:update(dt)
     Player.update(self, dt)
     Player.gotoSpeed(self)
+    animations.birdToBall:update(dt)
 end
 
 function Player.BirdToBall:draw()
     Player.draw(self)
-
-    animations.birdToBall:update(1 / 60)
     animations.birdToBall:draw(sprites.birdToBall, self.absolutePos.x, self.absolutePos.y, self.vel:angleTo(), 1, 1, 12, 12)
 end
 
@@ -174,12 +178,11 @@ end
 function Player.BallToBird:update(dt)
     Player.update(self, dt)
     Player.gotoSpeed(self)
+    animations.ballToBird:update(dt)
 end
 
 function Player.BallToBird:draw()
     Player.draw(self)
-
-    animations.ballToBird:update(1 / 60)
     animations.ballToBird:draw(sprites.birdToBall, self.absolutePos.x, self.absolutePos.y, self.vel:angleTo(), 1, 1, 12, 12)
 end
 
