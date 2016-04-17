@@ -2,6 +2,9 @@ require('global')
 local Class = require('modules/middleclass/middleclass')
 local Stateful = require('modules/stateful/stateful')
 local Timer = require('modules/hump/timer')
+local Player = require('player')
+local Star = require('star')
+
 Particles = require('particles')
 
 local Game = Class('Game')
@@ -10,9 +13,8 @@ Game.Title = Game:addState('Title')
 Game.Play = Game:addState('Play')
 Game.End = Game:addState('End')
 
---============================================================================== LOCAL FUNCTIONS
-local Player = require('player')
-local Star = require('star')
+--============================================================================== LOCAL VARIABLES
+local playerHeight = 0
 
 --============================================================================== GAME
 function Game:initialize()
@@ -59,12 +61,12 @@ end
 
 function Game.Play:update(dt)
     Game.update(self, dt)
-    Debug('GAME.PLAY', 'Play update.')
 
     local unitVector = self.player.vel:normalized()
-    Debug('PLAYER', unitVector.x .. ', ' .. unitVector.y)
 
     self.player:update(dt)
+    playerHeight = playerHeight - self.player.vel.y
+
     for k, star in pairs(self.stars) do
         if star.pos.x >= 2 * Screen.targetW or star.pos.x <= -2 * Screen.targetW or star.pos.y >= 2 * Screen.targetH or star.pos.y <= -2 * Screen.targetH then
             table.remove(self.stars, k)
@@ -72,15 +74,11 @@ function Game.Play:update(dt)
             star:update(dt)
         end
     end
-    for k, star in pairs(self.stars) do
-        Debug('STAR' .. k, star.pos.x .. ', ' .. star.pos.y)
-    end
+
     self.starTimer.update(dt)
 end
 
 function Game.Play:draw()
-    Debug('GAME.PLAY', 'Play draw.')
-
     love.graphics.setColor(80, 100, 120)
     love.graphics.rectangle('fill', 0, 0, Screen.targetW, Screen.targetH)
     love.graphics.setColor(255, 255, 255)
