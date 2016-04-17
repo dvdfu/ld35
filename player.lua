@@ -36,11 +36,12 @@ Player.BirdToBall.animationTime = 0.1
 Player.BallToBird.speed = Player.Bird.speed
 Player.BallToBird.animationTime = Player.BirdToBall.animationTime
 
-function Player:initialize()
+function Player:initialize(x, y)
     self.absolutePos = Vector(Screen.targetW / 2, Screen.targetH / 2)
     self.pos = Vector(0, 0)
-    self.vel = Vector(10, 0)
+    self.vel = Vector(x, y)
     self.body = HC.circle(self.absolutePos.x, self.absolutePos.y, 8)
+    self.intro = true
 
     local grid = nil
     grid = Anim8.newGrid(Player.SIZE, Player.SIZE, Player.SIZE * 6, Player.SIZE)
@@ -61,7 +62,7 @@ function Player:initialize()
     grid = Anim8.newGrid(80, 24, 80 * 3, 24)
     animations.fireTrail = Anim8.newAnimation(grid:getFrames('1-3', 1), 0.05)
 
-    self:gotoState('Bird')
+    self:gotoState('Ball')
 end
 
 function Player:update(dt)
@@ -80,13 +81,15 @@ function Player:update(dt)
 end
 
 function Player:draw()
-    Particles.update('fire', 1 / 60)
-    Particles.draw('fire')
+    if not self.intro then
+        Particles.update('fire', 1 / 60)
+        Particles.draw('fire')
 
-    -- r, g, b, a = love.graphics.getColor()
-    -- love.graphics.setColor(255, 0, 0, 255)
-    -- love.graphics.line(self.absolutePos.x, self.absolutePos.y, self.absolutePos.x + self.vel.x * 5, self.absolutePos.y + self.vel.y * 5)
-    -- love.graphics.setColor(r, g, b, a)
+        -- r, g, b, a = love.graphics.getColor()
+        -- love.graphics.setColor(255, 0, 0, 255)
+        -- love.graphics.line(self.absolutePos.x, self.absolutePos.y, self.absolutePos.x + self.vel.x * 5, self.absolutePos.y + self.vel.y * 5)
+        -- love.graphics.setColor(r, g, b, a)
+    end
 end
 
 function Player:boost()
@@ -128,17 +131,19 @@ function Player.Ball:update(dt)
 end
 
 function Player.Ball:draw()
-    -- animations.fireTrail:update(1 / 60)
-    -- animations.fireTrail:draw(sprites.fireTrail, self.absolutePos.x, self.absolutePos.y, self.vel:angleTo(), 1, 1, 68, 12)
+    if not self.intro then
+        -- animations.fireTrail:update(1 / 60)
+        -- animations.fireTrail:draw(sprites.fireTrail, self.absolutePos.x, self.absolutePos.y, self.vel:angleTo(), 1, 1, 68, 12)
 
-    Player.draw(self)
+        Player.draw(self)
 
-    animations.ball:update(self.vel:len() / 1000)
-    animations.ball:draw(sprites.ball, self.absolutePos.x, self.absolutePos.y, self.vel:angleTo(), 1, 1, Player.SIZE / 2, Player.SIZE / 2)
+        animations.ball:update(self.vel:len() / 1000)
+        animations.ball:draw(sprites.ball, self.absolutePos.x, self.absolutePos.y, self.vel:angleTo(), 1, 1, Player.SIZE / 2, Player.SIZE / 2)
 
-    love.graphics.setBlendMode('multiply')
-    love.graphics.draw(sprites.ballShadow, self.absolutePos.x, self.absolutePos.y, 0, 1, 1, Player.SIZE / 2, Player.SIZE / 2)
-    love.graphics.setBlendMode('alpha')
+        love.graphics.setBlendMode('multiply')
+        love.graphics.draw(sprites.ballShadow, self.absolutePos.x, self.absolutePos.y, 0, 1, 1, Player.SIZE / 2, Player.SIZE / 2)
+        love.graphics.setBlendMode('alpha')
+    end
 end
 
 --============================================================================== PLAYER.BIRD
@@ -156,10 +161,12 @@ function Player.Bird:update(dt)
 end
 
 function Player.Bird:draw()
-    Player.draw(self)
+    if not self.intro then
+        Player.draw(self)
 
-    animations.bird:update(1 / 60)
-    animations.bird:draw(sprites.bird, self.absolutePos.x, self.absolutePos.y, self.vel:angleTo(), 1, 1, 12, 12)
+        animations.bird:update(1 / 60)
+        animations.bird:draw(sprites.bird, self.absolutePos.x, self.absolutePos.y, self.vel:angleTo(), 1, 1, 12, 12)
+    end
 end
 
 --============================================================================== PLAYER.BIRDUP
@@ -170,8 +177,10 @@ function Player.BirdToBall:update(dt)
 end
 
 function Player.BirdToBall:draw()
-    Player.draw(self)
-    animations.birdToBall:draw(sprites.birdToBall, self.absolutePos.x, self.absolutePos.y, self.vel:angleTo(), 1, 1, 12, 12)
+    if not self.intro then
+        Player.draw(self)
+        animations.birdToBall:draw(sprites.birdToBall, self.absolutePos.x, self.absolutePos.y, self.vel:angleTo(), 1, 1, 12, 12)
+    end
 end
 
 --============================================================================== PLAYER.BIRDDOWN
@@ -182,8 +191,10 @@ function Player.BallToBird:update(dt)
 end
 
 function Player.BallToBird:draw()
-    Player.draw(self)
-    animations.ballToBird:draw(sprites.birdToBall, self.absolutePos.x, self.absolutePos.y, self.vel:angleTo(), 1, 1, 12, 12)
+    if not self.intro then
+        Player.draw(self)
+        animations.ballToBird:draw(sprites.birdToBall, self.absolutePos.x, self.absolutePos.y, self.vel:angleTo(), 1, 1, 12, 12)
+    end
 end
 
 return Player
