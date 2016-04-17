@@ -31,7 +31,7 @@ Player.BirdToBall.speed = Player.Ball.speed
 Player.BirdToBall.animationTime = 0.1
 
 Player.BallToBird.speed = Player.Bird.speed
-Player.BallToBird.animationTime = 0.1
+Player.BallToBird.animationTime = Player.BirdToBall.animationTime
 
 --============================================================================== PLAYER
 function Player:initialize(x, y)
