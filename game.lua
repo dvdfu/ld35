@@ -2,6 +2,7 @@ require('global')
 local Class = require('modules/middleclass/middleclass')
 local Stateful = require('modules/stateful/stateful')
 local Timer = require('modules/hump/timer')
+local Boost = require('boost')
 local Player = require('player')
 local Star = require('star')
 
@@ -49,6 +50,7 @@ end
 function Game.Play:enteredState()
     Debug('GAME.PLAY', 'Play enteredState.')
     self.player = Player:new(Screen.targetW / 2, Screen.targetH / 2)
+    self.boosts = {}
     self.stars = {}
     self.starTimer = Timer.new()
     self.starTimer.every(0.1,
@@ -57,6 +59,8 @@ function Game.Play:enteredState()
             self:generateStar()
             self:generateStar()
         end)
+
+    -- table.insert(self.boosts, Boost:new(500, 0, self.player))
 end
 
 function Game.Play:update(dt)
@@ -75,6 +79,14 @@ function Game.Play:update(dt)
         end
     end
 
+    for k, boost in pairs(self.boosts) do
+        if boost.dead then
+            table.remove(self.boosts, k)
+        else
+            boost:update(dt)
+        end
+    end
+
     self.starTimer.update(dt)
 end
 
@@ -82,8 +94,11 @@ function Game.Play:draw()
     love.graphics.setColor(80, 100, 120)
     love.graphics.rectangle('fill', 0, 0, Screen.targetW, Screen.targetH)
     love.graphics.setColor(255, 255, 255)
-    for k, star in pairs(self.stars) do
+    for _, star in pairs(self.stars) do
         star:draw()
+    end
+    for _, boost in pairs(self.boosts) do
+        boost:draw()
     end
     self.player:draw()
 end
