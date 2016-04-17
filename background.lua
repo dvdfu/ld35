@@ -70,7 +70,7 @@ function Background.Earth:update(dt)
         self.transitionTimer = Timer.new()
         self.transitionTimer.every(transitionStepTime, function() self:changeAlpha() end)
     elseif (self.player.pos.y > WORLD.earthHeight and self.alpha < 0) then
-        Timer.cancel(self.transitionTimer)
+        self.transitionTimer.clear()
         self.alpha = 255
         self.transitionTimer = nil
         self.foreground:gotoState('Cloud')
@@ -102,7 +102,7 @@ function Background.Cloud:update(dt)
         self.transitionTimer = Timer.new()
         self.transitionTimer.every(transitionStepTime, function() self:changeAlpha() end)
     elseif (self.player.pos.y > WORLD.cloudHeight and self.alpha < 0) then
-        Timer.cancel(self.transitionTimer)
+        self.transitionTimer.clear()
         self.alpha = 255
         self.transitionTimer = nil
         self.foreground:gotoState('Atmosphere')
@@ -134,7 +134,7 @@ function Background.Atmosphere:update(dt)
         self.transitionTimer = Timer.new()
         self.transitionTimer.every(transitionStepTime, function() self:changeAlpha() end)
     elseif (self.player.pos.y > WORLD.atmosphereHeight and self.alpha < 0) then
-        Timer.cancel(self.transitionTimer)
+        self.transitionTimer.clear()
         self.alpha = 255
         self.transitionTimer = nil
         self.foreground:gotoState('Space')
@@ -165,7 +165,7 @@ function Background.Space:update(dt)
             self.transitionTimer = Timer.new()
             self.transitionTimer.every(transitionStepTime, function() self:changeAlpha() end)
     elseif self.player.pos.y > WORLD.spaceHeight and self.alpha < 0 then
-        Timer.cancel(self.transitionTimer)
+        self.transitionTimer.clear()
         self.alpha = 255
         self.transitionTimer = nil
         self.foreground:gotoState('Moon')
@@ -184,6 +184,7 @@ end
 function Background.Moon:enteredState()
     Debug('BACKGROUND', 'Moon enteredState.')
     self.RGB = spaceRGB
+    self.stars.starsTimer.clear()
 end
 
 function Background.Moon:update(dt)

@@ -90,9 +90,11 @@ end
 function Foreground.Moon:enteredState()
     self.player:prepareLanding()
     self.moon = Moon:new(500, -500, self.player)
+    self.boosts.boostsTimer.clear()
 end
 
 function Foreground.Moon:update(dt)
+    Foreground.update(self, dt)
     self.moon:update(dt)
 end
 
