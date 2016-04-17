@@ -129,12 +129,16 @@ function Background.Space:enteredState()
     Debug('BACKGROUND', 'Space enteredState.')
     self.RGB = spaceRGB
     self.stars = {}
-    Timer.after(0.1,
-        function(func)
+    Timer.every(0.1,
+        function()
             self:generateStar() self:generateStar() self:generateStar()
-            self:generateStar() self:generateStar() self:generateStar()
-            Timer.after(self.player.vel:len() < 5 and 2 or 0.1, func)
         end)
+    -- Timer.after(0.1,
+    --     function(func)
+    --         self:generateStar() self:generateStar() self:generateStar()
+    --         self:generateStar() self:generateStar() self:generateStar()
+    --         Timer.after(self.player.vel:len() < 5 and 2 or 0.1, func)
+    --     end)
 end
 
 function Background.Space:update(dt)
