@@ -13,6 +13,7 @@ local sprites = {
     ball = love.graphics.newImage('res/images/baseball.png'),
     ballShadow = love.graphics.newImage('res/images/baseball_shadow.png'),
     bird = love.graphics.newImage('res/images/bird.png'),
+    birdTransform = love.graphics.newImage('res/images/bird_transform.png'),
     fireTrail = love.graphics.newImage('res/images/fire_trail.png')
 }
 
@@ -39,6 +40,7 @@ function Player:initialize(x, y)
 
     grid = Anim8.newGrid(24, 24, 24 * 4, 24)
     animations.bird = Anim8.newAnimation(grid:getFrames('1-4', 1), 0.05)
+    animations.birdTransform = Anim8.newAnimation(grid:getFrames('1-4', 1), 0.05)
 
     grid = Anim8.newGrid(80, 24, 80 * 3, 24)
     animations.fireTrail = Anim8.newAnimation(grid:getFrames('1-3', 1), 0.05)
