@@ -1,5 +1,6 @@
 local Anim8 = require('modules/anim8/anim8')
 local Class = require('modules/middleclass/middleclass')
+local HC = require('modules/HC')
 local Stateful = require('modules/stateful/stateful')
 local Vector = require('modules/hump/vector')
 
@@ -37,6 +38,7 @@ Player.BallToBird.animationTime = Player.BirdToBall.animationTime
 function Player:initialize(x, y)
     self.pos = Vector(x, y)
     self.vel = Vector(10, 0)
+    self.body = HC.circle(x, y, 8)
 
     local grid = nil
     grid = Anim8.newGrid(Player.SIZE, Player.SIZE, Player.SIZE * 6, Player.SIZE)

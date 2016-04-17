@@ -10,3 +10,6 @@
 [submodule "modules/anim8"]
 	path = modules/anim8
 	url = git@github.com:kikito/anim8.git
+[submodule "modules/HC"]
+	path = modules/HC
+	url = git@github.com:vrld/HC.git

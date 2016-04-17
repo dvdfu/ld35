@@ -23,6 +23,7 @@ function Star:draw()
     local prev = self.pos + self.player.vel * self.z * self.lineLengthRatio * self.speedRatio
     love.graphics.setLineWidth(self.z)
     love.graphics.line(self.pos.x, self.pos.y, prev.x, prev.y)
+    love.graphics.setLineWidth(1)
 end
 
 --============================================================================== PLAYER.BALL
