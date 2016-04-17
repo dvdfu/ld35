@@ -2,6 +2,7 @@ local Particles = {}
 
 local sprites = {
     circle = love.graphics.newImage('res/images/particle_circle.png'),
+    circleBig = love.graphics.newImage('res/images/particle_circle_big.png'),
     bar = love.graphics.newImage('res/images/particle_bar.png')
 }
 
@@ -31,6 +32,14 @@ function Particles.initialize()
     emitters.spark:setSpeed(0, 200)
     emitters.spark:setColors(255, 255, 0, 255, 255, 255, 0, 0)
     emitters.spark:setRelativeRotation(true)
+
+    emitters.dust = love.graphics.newParticleSystem(sprites.circleBig)
+    emitters.dust:setParticleLifetime(1, 3)
+    emitters.dust:setDirection(math.pi * 5 / 4)
+    emitters.dust:setSpread(math.pi)
+    emitters.dust:setSpeed(0, 100)
+    emitters.dust:setColors(255, 255, 255, 255, 255, 255, 255, 0)
+
 end
 
 function Particles.get(name)
