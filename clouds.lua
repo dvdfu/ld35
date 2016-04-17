@@ -5,16 +5,19 @@ local Cloud = require('cloud')
 
 local Clouds = Class('Clouds')
 
-local clouds = {}
-
-function Clouds:initialize(player)
+function Clouds:initialize(rate, lowZ, highZ, player)
+    self.rate = rate
+    self.lowZ = lowZ
+    self.highZ = highZ
     self.player = player
+
+    self.clouds = {}
 end
 
 function Clouds:updateMovement(dt)
-    for k, cloud in pairs(clouds) do
+    for k, cloud in pairs(self.clouds) do
         if cloud.dead then
-            table.remove(clouds, k)
+            table.remove(self.clouds, k)
         else
             cloud:update(dt)
         end
@@ -22,13 +25,13 @@ function Clouds:updateMovement(dt)
 end
 
 function Clouds:updateCreation(dt)
-    if math.random() < 0.1 then
-        table.insert(clouds, Cloud:new(Screen.targetW + 120, math.random() * Screen.targetH, self.player))
+    if math.random() < self.rate then
+        table.insert(self.clouds, Cloud:new(Screen.targetW + 120, math.random() * Screen.targetH, self.lowZ, self.highZ, self.player))
     end
 end
 
 function Clouds:draw()
-    for k, cloud in pairs(clouds) do
+    for k, cloud in pairs(self.clouds) do
         cloud:draw()
     end
 

@@ -5,6 +5,7 @@ local Timer = require('modules/hump/timer')
 local Boost = require('boost')
 local Player = require('player')
 local Background = require('background')
+local Foreground = require('foreground')
 
 Particles = require('particles')
 
@@ -46,7 +47,8 @@ end
 function Game.Play:enteredState()
     Debug('GAME.PLAY', 'Play enteredState.')
     self.player = Player:new()
-    self.background = Background:new(self.player)
+    self.foreground = Foreground:new(self.player)
+    self.background = Background:new(self.player, self.foreground)
     self.boosts = {}
 end
 
@@ -56,6 +58,7 @@ function Game.Play:update(dt)
     local unitVector = self.player.vel:normalized()
 
     self.background:update(dt)
+    self.foreground:update(dt)
     self.player:update(dt)
 
     for k, boost in pairs(self.boosts) do
@@ -70,6 +73,7 @@ end
 function Game.Play:draw()
     self.background:draw()
     self.player:draw()
+    self.foreground:draw()
     for _, boost in pairs(self.boosts) do
         boost:draw()
     end

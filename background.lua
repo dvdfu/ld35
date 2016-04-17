@@ -10,10 +10,6 @@ local cloudRGB = RGB(120, 170, 200)
 local atmosphereRGB = RGB(90, 110, 150)
 local spaceRGB = RGB(0, 0, 0)
 
-local earthHeight = 1000
-local cloudHeight = 2000
-local atmosphereHeight = 3000
-
 local transitionStepTime = 0.01
 local transitionStepValue = 5
 
@@ -26,13 +22,14 @@ Background.Atmosphere = Background:addState('Atmosphere')
 Background.Space = Background:addState('Space')
 Background.Transition = Background:addState('Transition')
 
-function Background:initialize(player)
+function Background:initialize(player, foreground)
     self.player = player
+    self.foreground = foreground
     self.alpha = 255
     self.RGB = earthRGB
     self.nextRGB = cloudRGB
     self.transitionTimer = nil
-    self.clouds = Clouds:new(self.player)
+    self.clouds = Clouds:new(0.075, 1, 2, self.player)
     self:gotoState('Earth')
 end
 
@@ -68,13 +65,14 @@ end
 function Background.Earth:update(dt)
     Background.update(self, dt)
 
-    if (self.player.pos.y > earthHeight and not self.transitionTimer) then
+    if (self.player.pos.y > WORLD.earthHeight and not self.transitionTimer) then
         self.transitionTimer = Timer.new()
         self.transitionTimer.every(transitionStepTime, function() self:changeAlpha() end)
-    elseif (self.player.pos.y > earthHeight and self.alpha < 0) then
+    elseif (self.player.pos.y > WORLD.earthHeight and self.alpha < 0) then
         Timer.cancel(self.transitionTimer)
         self.alpha = 255
         self.transitionTimer = nil
+        self.foreground:gotoState('Cloud')
         self:gotoState('Cloud')
     elseif (self.transitionTimer) then
         self.transitionTimer.update(dt)
@@ -98,13 +96,14 @@ function Background.Cloud:update(dt)
 
     self.clouds:updateCreation(dt)
 
-    if (self.player.pos.y > cloudHeight and not self.transitionTimer) then
+    if (self.player.pos.y > WORLD.cloudHeight and not self.transitionTimer) then
         self.transitionTimer = Timer.new()
         self.transitionTimer.every(transitionStepTime, function() self:changeAlpha() end)
-    elseif (self.player.pos.y > cloudHeight and self.alpha < 0) then
+    elseif (self.player.pos.y > WORLD.cloudHeight and self.alpha < 0) then
         Timer.cancel(self.transitionTimer)
         self.alpha = 255
         self.transitionTimer = nil
+        self.foreground:gotoState('Atmosphere')
         self:gotoState('Atmosphere')
     elseif (self.transitionTimer) then
         self.transitionTimer.update(dt)
@@ -124,13 +123,14 @@ end
 
 function Background.Atmosphere:update(dt)
     Background.update(self, dt)
-    if (self.player.pos.y > atmosphereHeight and not self.transitionTimer) then
+    if (self.player.pos.y > WORLD.atmosphereHeight and not self.transitionTimer) then
         self.transitionTimer = Timer.new()
         self.transitionTimer.every(transitionStepTime, function() self:changeAlpha() end)
-    elseif (self.player.pos.y > atmosphereHeight and self.alpha < 0) then
+    elseif (self.player.pos.y > WORLD.atmosphereHeight and self.alpha < 0) then
         Timer.cancel(self.transitionTimer)
         self.alpha = 255
         self.transitionTimer = nil
+        self.foreground:gotoState('Space')
         self:gotoState('Space')
     elseif (self.transitionTimer) then
         self.transitionTimer.update(dt)

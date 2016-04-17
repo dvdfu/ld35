@@ -13,9 +13,9 @@ local sprites = {
     }
 }
 
-function Cloud:initialize(x, y, player)
+function Cloud:initialize(x, y, lowZ, highZ, player)
     self.pos = Vector(x, y)
-    self.z = math.random(1, 3)
+    self.z = math.random(lowZ, highZ)
     self.type = math.random(1, 3)
     self.player = player
     self.body = HC.rectangle(self.pos.x - 80, self.pos.y - 24, 160, 48)
@@ -46,8 +46,9 @@ function Cloud:draw()
     elseif self.z == 2 then
         love.graphics.setColor(228, 248, 255)
     end
+
     love.graphics.draw(sprites.forms[self.type], self.pos.x, self.pos.y, 0, self.z / 3, self.z / 3, 120, 40)
-        love.graphics.setColor(255, 255, 255)
+    love.graphics.setColor(255, 255, 255)
 end
 
 return Cloud
