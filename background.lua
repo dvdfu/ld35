@@ -1,17 +1,14 @@
 local Class = require('modules/middleclass/middleclass')
 local Stateful = require('modules/stateful/stateful')
 local Timer = require('modules/hump/timer')
-local Star = require('star')
+local Clouds = require('clouds')
+local Stars = require('stars')
 
 --============================================================================== LOCAL
 local earthRGB = RGB(140, 210, 230)
 local cloudRGB = RGB(120, 170, 200)
 local atmosphereRGB = RGB(90, 110, 150)
 local spaceRGB = RGB(0, 0, 0)
-
-local earthHeight = 1000
-local cloudHeight = 2000
-local atmosphereHeight = 3000
 
 local transitionStepTime = 0.01
 local transitionStepValue = 5
@@ -25,13 +22,19 @@ Background.Atmosphere = Background:addState('Atmosphere')
 Background.Space = Background:addState('Space')
 Background.Transition = Background:addState('Transition')
 
-function Background:initialize(player)
+function Background:initialize(player, foreground)
     self.player = player
+    self.foreground = foreground
     self.alpha = 255
     self.RGB = earthRGB
     self.nextRGB = cloudRGB
     self.transitionTimer = nil
+    self.clouds = Clouds:new(0.075, 1, 2, self.player)
     self:gotoState('Earth')
+end
+
+function Background:update(dt)
+    self.clouds:updateMovement(dt)
 end
 
 function Background:draw()
@@ -40,6 +43,9 @@ function Background:draw()
     love.graphics.setColor(self.RGB.r, self.RGB.g, self.RGB.b, self.alpha)
     love.graphics.rectangle('fill', 0, 0, Screen.targetW, Screen.targetH)
     love.graphics.setColor(255, 255, 255)
+
+    self.clouds:draw()
+
     if (DEBUG) then
         love.graphics.print('HEIGHT: ' .. math.floor(self.player.pos.y), 10, Screen.targetH - 20)
     end
@@ -57,13 +63,16 @@ function Background.Earth:enteredState()
 end
 
 function Background.Earth:update(dt)
-    if (self.player.pos.y > earthHeight and not self.transitionTimer) then
+    Background.update(self, dt)
+
+    if (self.player.pos.y > WORLD.earthHeight and not self.transitionTimer) then
         self.transitionTimer = Timer.new()
         self.transitionTimer.every(transitionStepTime, function() self:changeAlpha() end)
-    elseif (self.player.pos.y > earthHeight and self.alpha < 0) then
+    elseif (self.player.pos.y > WORLD.earthHeight and self.alpha < 0) then
         Timer.cancel(self.transitionTimer)
         self.alpha = 255
         self.transitionTimer = nil
+        self.foreground:gotoState('Cloud')
         self:gotoState('Cloud')
     elseif (self.transitionTimer) then
         self.transitionTimer.update(dt)
@@ -77,18 +86,24 @@ end
 --============================================================================== BACKGROUND.CLOUD
 function Background.Cloud:enteredState()
     Debug('BACKGROUND', 'Cloud enteredState.')
+
     self.RGB = cloudRGB
     self.nextRGB = atmosphereRGB
 end
 
 function Background.Cloud:update(dt)
-    if (self.player.pos.y > cloudHeight and not self.transitionTimer) then
+    Background.update(self, dt)
+
+    self.clouds:updateCreation(dt)
+
+    if (self.player.pos.y > WORLD.cloudHeight and not self.transitionTimer) then
         self.transitionTimer = Timer.new()
         self.transitionTimer.every(transitionStepTime, function() self:changeAlpha() end)
-    elseif (self.player.pos.y > cloudHeight and self.alpha < 0) then
+    elseif (self.player.pos.y > WORLD.cloudHeight and self.alpha < 0) then
         Timer.cancel(self.transitionTimer)
         self.alpha = 255
         self.transitionTimer = nil
+        self.foreground:gotoState('Atmosphere')
         self:gotoState('Atmosphere')
     elseif (self.transitionTimer) then
         self.transitionTimer.update(dt)
@@ -107,13 +122,15 @@ function Background.Atmosphere:enteredState()
 end
 
 function Background.Atmosphere:update(dt)
-    if (self.player.pos.y > atmosphereHeight and not self.transitionTimer) then
+    Background.update(self, dt)
+    if (self.player.pos.y > WORLD.atmosphereHeight and not self.transitionTimer) then
         self.transitionTimer = Timer.new()
         self.transitionTimer.every(transitionStepTime, function() self:changeAlpha() end)
-    elseif (self.player.pos.y > atmosphereHeight and self.alpha < 0) then
+    elseif (self.player.pos.y > WORLD.atmosphereHeight and self.alpha < 0) then
         Timer.cancel(self.transitionTimer)
         self.alpha = 255
         self.transitionTimer = nil
+        self.foreground:gotoState('Space')
         self:gotoState('Space')
     elseif (self.transitionTimer) then
         self.transitionTimer.update(dt)
@@ -128,45 +145,18 @@ end
 function Background.Space:enteredState()
     Debug('BACKGROUND', 'Space enteredState.')
     self.RGB = spaceRGB
-    self.stars = {}
-    Timer.every(0.1,
-        function()
-            self:generateStar() self:generateStar() self:generateStar()
-        end)
-    -- Timer.after(0.1,
-    --     function(func)
-    --         self:generateStar() self:generateStar() self:generateStar()
-    --         self:generateStar() self:generateStar() self:generateStar()
-    --         Timer.after(self.player.vel:len() < 5 and 2 or 0.1, func)
-    --     end)
+    self.stars = Stars:new(self.player)
 end
 
 function Background.Space:update(dt)
-    for k, star in pairs(self.stars) do
-        if star.pos.x >= 2 * Screen.targetW or star.pos.x <= -2 * Screen.targetW or star.pos.y >= 2 * Screen.targetH or star.pos.y <= -2 * Screen.targetH then
-            table.remove(self.stars, k)
-        else
-            star:update(dt)
-        end
-    end
+    Background.update(self, dt)
+    self.stars:update(dt)
     Timer.update(dt)
 end
 
 function Background.Space:draw()
     Background.draw(self)
-    for k, star in pairs(self.stars) do
-        star:draw()
-    end
-    if (DEBUG) then
-        love.graphics.print('STARS: ' .. #self.stars, 150, Screen.targetH - 20)
-    end
-end
-
-function Background.Space:generateStar()
-    local unitVector = self.player.vel:normalized()
-    local x = math.random(1, Screen.targetW) + unitVector.x * Screen.targetW
-    local y = math.random(1, Screen.targetH) + unitVector.y * Screen.targetH
-    table.insert(self.stars, Star:new(x, y, self.player))
+    self.stars:draw()
 end
 
 return Background
