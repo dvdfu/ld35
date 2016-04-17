@@ -1,6 +1,8 @@
 require('global')
 local Class = require('modules/middleclass/middleclass')
 local Stateful = require('modules/stateful/stateful')
+local Timer = require('modules/hump/timer')
+local Boost = require('boost')
 local Player = require('player')
 local Background = require('background')
 
@@ -45,6 +47,7 @@ function Game.Play:enteredState()
     Debug('GAME.PLAY', 'Play enteredState.')
     self.player = Player:new()
     self.background = Background:new(self.player)
+    self.boosts = {}
 end
 
 function Game.Play:update(dt)
@@ -54,11 +57,22 @@ function Game.Play:update(dt)
 
     self.background:update(dt)
     self.player:update(dt)
+
+    for k, boost in pairs(self.boosts) do
+        if boost.dead then
+            table.remove(self.boosts, k)
+        else
+            boost:update(dt)
+        end
+    end
 end
 
 function Game.Play:draw()
     self.background:draw()
     self.player:draw()
+    for _, boost in pairs(self.boosts) do
+        boost:draw()
+    end
 end
 
 return Game

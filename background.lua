@@ -9,9 +9,9 @@ local cloudRGB = RGB(120, 170, 200)
 local atmosphereRGB = RGB(90, 110, 150)
 local spaceRGB = RGB(0, 0, 0)
 
-local earthHeight = 2000
-local cloudHeight = 5000
-local atmosphereHeight = 8000
+local earthHeight = 1000
+local cloudHeight = 2000
+local atmosphereHeight = 3000
 
 local transitionStepTime = 0.01
 local transitionStepValue = 5
@@ -162,8 +162,7 @@ function Background.Space:generateStar()
     local unitVector = self.player.vel:normalized()
     local x = math.random(1, Screen.targetW) + unitVector.x * Screen.targetW
     local y = math.random(1, Screen.targetH) + unitVector.y * Screen.targetH
-    local z = math.random(1, 3)
-    table.insert(self.stars, Star:new(x, y, z, self.player))
+    table.insert(self.stars, Star:new(x, y, self.player))
 end
 
 return Background

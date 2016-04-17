@@ -1,5 +1,6 @@
 local Anim8 = require('modules/anim8/anim8')
 local Class = require('modules/middleclass/middleclass')
+local HC = require('modules/HC')
 local Stateful = require('modules/stateful/stateful')
 local Vector = require('modules/hump/vector')
 
@@ -38,6 +39,7 @@ function Player:initialize()
     self.absolutePos = Vector(Screen.targetW / 2, Screen.targetH / 2)
     self.pos = Vector(0,0)
     self.vel = Vector(10, 0)
+    self.body = HC.circle(self.absolutePos.x, self.absolutePos.y, 8)
 
     local grid = nil
     grid = Anim8.newGrid(Player.SIZE, Player.SIZE, Player.SIZE * 6, Player.SIZE)
@@ -58,7 +60,7 @@ function Player:initialize()
     grid = Anim8.newGrid(80, 24, 80 * 3, 24)
     animations.fireTrail = Anim8.newAnimation(grid:getFrames('1-3', 1), 0.05)
 
-    self:gotoState('Ball')
+    self:gotoState('Bird')
 end
 
 function Player:update(dt)
@@ -82,9 +84,13 @@ function Player:draw()
     -- love.graphics.setColor(r, g, b, a)
 end
 
+function Player:boost()
+    self.vel = self.vel:normalized() * 50
+end
+
 function Player:gotoSpeed()
     local tolerance = 0.01
-    local rate = 0.1
+    local rate = 0.025
 
     if math.abs(self.vel:len() - self.speed) <= tolerance then
         self.vel = self.vel:normalized() * self.speed
@@ -106,7 +112,9 @@ function Player.Ball:update(dt)
     Player.update(self, dt)
     Player.gotoSpeed(self)
 
-    Particles.get('fire'):setDirection(self.vel:angleTo(Vector(-1, 0)))
+    local fire = Particles.get('fire')
+    fire:setDirection(self.vel:angleTo(Vector(-1, 0)))
+    fire:setSpeed(self.vel:len() * 8, self.vel:len() * 40)
     Particles.emit('fire', self.absolutePos.x, self.absolutePos.y, 4)
 
     if Input.pressed('space') then
