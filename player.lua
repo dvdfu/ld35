@@ -37,7 +37,7 @@ Player.BallToBird.animationTime = Player.BirdToBall.animationTime
 
 function Player:initialize()
     self.absolutePos = Vector(Screen.targetW / 2, Screen.targetH / 2)
-    self.pos = Vector(0,0)
+    self.pos = Vector(0, 0)
     self.vel = Vector(10, 0)
     self.body = HC.circle(self.absolutePos.x, self.absolutePos.y, 8)
 
