@@ -15,13 +15,13 @@ function Star:initialize(x, y, player)
 end
 
 function Star:update(dt)
-    self.prev = self.pos:clone()
-    self.pos = self.pos - self.player.vel * self.z
+
 end
 
 function Star:draw()
+    local point = self.pos - self.player.vel * self.z
     love.graphics.setLineWidth(self.z)
-    love.graphics.line(self.pos.x, self.pos.y, self.prev.x, self.prev.y)
+    love.graphics.line(point.x, point.y, self.pos.x, self.pos.y)
     love.graphics.setLineWidth(1)
 end
 

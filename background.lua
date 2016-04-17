@@ -86,7 +86,7 @@ function Background.Cloud:enteredState()
 
     self.RGB = cloudRGB
     self.nextRGB = atmosphereRGB
-    self.stars = Stars:new(self.player)
+    self.stars = Stars:new(self.player, self.camera)
 end
 
 function Background.Cloud:update(dt)
