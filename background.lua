@@ -162,17 +162,15 @@ function Background.Space:update(dt)
     Background.update(self, dt)
     self.stars:update(dt)
 
-    if self.player.pos.y > WORLD.spaceHeight then
-        if not self.transitionTimer then
+    if self.player.pos.y > WORLD.spaceHeight and not self.transitionTimer then
             self.transitionTimer = Timer.new()
             self.transitionTimer.every(transitionStepTime, function() self:changeAlpha() end)
-        elseif self.alpha < 0 then
-            Timer.cancel(self.transitionTimer)
-            self.alpha = 255
-            self.transitionTimer = nil
-            self.foreground:gotoState('Moon')
-            self:gotoState('Moon')
-        end
+    elseif self.player.pos.y > WORLD.spaceHeight and self.alpha < 0 then
+        Timer.cancel(self.transitionTimer)
+        self.alpha = 255
+        self.transitionTimer = nil
+        self.foreground:gotoState('Moon')
+        self:gotoState('Moon')
     elseif self.transitionTimer then
         self.transitionTimer.update(dt)
     end
@@ -187,7 +185,7 @@ end
 function Background.Moon:enteredState()
     Debug('BACKGROUND', 'Moon enteredState.')
     self.RGB = spaceRGB
-    self.moon = Moon:new(500, -500)
+    self.moon = Moon:new(500, -500, self.player)
 end
 
 function Background.Moon:update(dt)
