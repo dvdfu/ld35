@@ -1,9 +1,8 @@
 require('global')
 local Class = require('modules/middleclass/middleclass')
 local Stateful = require('modules/stateful/stateful')
-local Timer = require('modules/hump/timer')
 local Player = require('player')
-local Star = require('star')
+local Background = require('background')
 
 Particles = require('particles')
 
@@ -49,14 +48,7 @@ end
 function Game.Play:enteredState()
     Debug('GAME.PLAY', 'Play enteredState.')
     self.player = Player:new(Screen.targetW / 2, Screen.targetH / 2)
-    self.stars = {}
-    self.starTimer = Timer.new()
-    self.starTimer.every(0.1,
-        function()
-            self:generateStar()
-            self:generateStar()
-            self:generateStar()
-        end)
+    self.background = Background:new(self.player )
 end
 
 function Game.Play:update(dt)
@@ -67,33 +59,16 @@ function Game.Play:update(dt)
     self.player:update(dt)
     playerHeight = playerHeight - self.player.vel.y
 
-    for k, star in pairs(self.stars) do
-        if star.pos.x >= 2 * Screen.targetW or star.pos.x <= -2 * Screen.targetW or star.pos.y >= 2 * Screen.targetH or star.pos.y <= -2 * Screen.targetH then
-            table.remove(self.stars, k)
-        else
-            star:update(dt)
-        end
-    end
-
-    self.starTimer.update(dt)
+    self.background:update(dt)
 end
 
 function Game.Play:draw()
     love.graphics.setColor(80, 100, 120)
     love.graphics.rectangle('fill', 0, 0, Screen.targetW, Screen.targetH)
     love.graphics.setColor(255, 255, 255)
-    for k, star in pairs(self.stars) do
-        star:draw()
-    end
-    self.player:draw()
-end
 
-function Game.Play:generateStar()
-    local unitVector = self.player.vel:normalized()
-    local x = math.random(1, Screen.targetW) + unitVector.x * Screen.targetW
-    local y = math.random(1, Screen.targetH) + unitVector.y * Screen.targetH
-    local z = math.random(1, 3)
-    table.insert(self.stars, Star:new(x, y, z, self.player))
+    self.player:draw()
+    self.background:draw()
 end
 
 return Game
