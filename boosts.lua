@@ -30,7 +30,7 @@ function Boosts:draw()
     end
 
     if (DEBUG) then
-        love.graphics.print('BOOSTS: ' .. #self.boosts, 300, Screen.targetH - 20)
+        love.graphics.print('BOOSTS: ' .. #self.boosts, 10, Screen.targetH - 35)
     end
 end
 

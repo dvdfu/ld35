@@ -38,7 +38,7 @@ function Stars:draw()
     end
 
     if (DEBUG) then
-        love.graphics.print('STARS: ' .. #self.stars, 150, Screen.targetH - 20)
+        love.graphics.print('STARS: ' .. #self.stars, 10, Screen.targetH - 50)
     end
 end
 
