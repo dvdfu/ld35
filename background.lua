@@ -42,7 +42,7 @@ function Background:draw()
     love.graphics.setColor(self.nextRGB.r, self.nextRGB.g, self.nextRGB.b, 255)
     love.graphics.rectangle('fill', self.camera.x - Screen.targetW, self.camera.y - Screen.targetH, Screen.targetW, Screen.targetH)
     love.graphics.setColor(self.RGB.r, self.RGB.g, self.RGB.b, self.alpha)
-    love.graphics.rectangle('fill', self.camera.x, self.camera.y, Screen.targetW, Screen.targetH)
+    love.graphics.rectangle('fill', self.camera.x - Screen.targetW, self.camera.y - Screen.targetH, Screen.targetW, Screen.targetH)
     love.graphics.setColor(255, 255, 255)
 
     self.clouds:draw()
