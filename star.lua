@@ -6,7 +6,7 @@ local Vector = require('modules/hump/vector')
 local Star = Class('Star')
 Star:include(Stateful)
 
---============================================================================== PLAYER
+--============================================================================== STAR
 function Star:initialize(x, y, z, player)
     self.pos = Vector(x,y)
     self.z = z
@@ -24,7 +24,5 @@ function Star:draw()
     love.graphics.setLineWidth(self.z)
     love.graphics.line(self.pos.x, self.pos.y, prev.x, prev.y)
 end
-
---============================================================================== PLAYER.BALL
 
 return Star
