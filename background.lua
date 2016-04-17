@@ -20,6 +20,7 @@ Background.Earth = Background:addState('Earth')
 Background.Cloud = Background:addState('Cloud')
 Background.Atmosphere = Background:addState('Atmosphere')
 Background.Space = Background:addState('Space')
+Background.Moon = Background:addState('Moon')
 Background.Transition = Background:addState('Transition')
 
 function Background:initialize(player, foreground)
@@ -69,7 +70,7 @@ function Background.Earth:update(dt)
         self.transitionTimer = Timer.new()
         self.transitionTimer.every(transitionStepTime, function() self:changeAlpha() end)
     elseif (self.player.pos.y > WORLD.earthHeight and self.alpha < 0) then
-        Timer.cancel(self.transitionTimer)
+        self.transitionTimer.clear()
         self.alpha = 255
         self.transitionTimer = nil
         self.foreground:gotoState('Cloud')
@@ -94,14 +95,14 @@ end
 
 function Background.Cloud:update(dt)
     Background.update(self, dt)
-
+    self.stars:update(dt)
     self.clouds:updateCreation(dt)
 
     if (self.player.pos.y > WORLD.cloudHeight and not self.transitionTimer) then
         self.transitionTimer = Timer.new()
         self.transitionTimer.every(transitionStepTime, function() self:changeAlpha() end)
     elseif (self.player.pos.y > WORLD.cloudHeight and self.alpha < 0) then
-        Timer.cancel(self.transitionTimer)
+        self.transitionTimer.clear()
         self.alpha = 255
         self.transitionTimer = nil
         self.foreground:gotoState('Atmosphere')
@@ -109,7 +110,6 @@ function Background.Cloud:update(dt)
     elseif (self.transitionTimer) then
         self.transitionTimer.update(dt)
     end
-    self.stars:update(dt)
 end
 
 function Background.Cloud:draw()
@@ -128,11 +128,13 @@ end
 
 function Background.Atmosphere:update(dt)
     Background.update(self, dt)
+    self.stars:update(dt)
+
     if (self.player.pos.y > WORLD.atmosphereHeight and not self.transitionTimer) then
         self.transitionTimer = Timer.new()
         self.transitionTimer.every(transitionStepTime, function() self:changeAlpha() end)
     elseif (self.player.pos.y > WORLD.atmosphereHeight and self.alpha < 0) then
-        Timer.cancel(self.transitionTimer)
+        self.transitionTimer.clear()
         self.alpha = 255
         self.transitionTimer = nil
         self.foreground:gotoState('Space')
@@ -140,7 +142,6 @@ function Background.Atmosphere:update(dt)
     elseif (self.transitionTimer) then
         self.transitionTimer.update(dt)
     end
-    self.stars:update(dt)
 end
 
 function Background.Atmosphere:draw()
@@ -159,9 +160,39 @@ end
 function Background.Space:update(dt)
     Background.update(self, dt)
     self.stars:update(dt)
+
+    if self.player.pos.y > WORLD.spaceHeight and not self.transitionTimer then
+            self.transitionTimer = Timer.new()
+            self.transitionTimer.every(transitionStepTime, function() self:changeAlpha() end)
+    elseif self.player.pos.y > WORLD.spaceHeight and self.alpha < 0 then
+        self.transitionTimer.clear()
+        self.alpha = 255
+        self.transitionTimer = nil
+        self.foreground:gotoState('Moon')
+        self:gotoState('Moon')
+    elseif self.transitionTimer then
+        self.transitionTimer.update(dt)
+    end
 end
 
 function Background.Space:draw()
+    Background.draw(self)
+    self.stars:draw()
+end
+
+--============================================================================== BACKGROUND.MOON
+function Background.Moon:enteredState()
+    Debug('BACKGROUND', 'Moon enteredState.')
+    self.RGB = spaceRGB
+    self.stars.starsTimer.clear()
+end
+
+function Background.Moon:update(dt)
+    Background.update(self, dt)
+    self.stars:update(dt)
+end
+
+function Background.Moon:draw()
     Background.draw(self)
     self.stars:draw()
 end

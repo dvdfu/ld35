@@ -1,8 +1,11 @@
 local Class = require('modules/middleclass/middleclass')
 local Stateful = require('modules/stateful/stateful')
 local Timer = require('modules/hump/timer')
+local Vector = require('modules/hump/vector')
+
 local Clouds = require('clouds')
 local Boosts = require('boosts')
+local Moon = require('moon')
 
 --============================================================================== LOCAL
 
@@ -13,6 +16,7 @@ Foreground.Earth = Foreground:addState('Earth')
 Foreground.Cloud = Foreground:addState('Cloud')
 Foreground.Atmosphere = Foreground:addState('Atmosphere')
 Foreground.Space = Foreground:addState('Space')
+Foreground.Moon = Foreground:addState('Moon')
 
 function Foreground:initialize(player)
     self.player = player
@@ -36,9 +40,7 @@ function Foreground:draw()
 end
 
 --============================================================================== FOREGROUND.EARTH
-function Foreground.Earth:enteredState()
-
-end
+function Foreground.Earth:enteredState() end
 
 function Foreground.Earth:update(dt)
     Foreground.update(self, dt)
@@ -63,9 +65,7 @@ function Foreground.Cloud:draw()
 end
 
 --============================================================================== FOREGROUND.ATMOSPHERE
-function Foreground.Atmosphere:enteredState()
-
-end
+function Foreground.Atmosphere:enteredState() end
 
 function Foreground.Atmosphere:update(dt)
     Foreground.update(self, dt)
@@ -76,9 +76,7 @@ function Foreground.Atmosphere:draw()
 end
 
 --============================================================================== FOREGROUND.SPACE
-function Foreground.Space:enteredState()
-
-end
+function Foreground.Space:enteredState() end
 
 function Foreground.Space:update(dt)
     Foreground.update(self, dt)
@@ -86,6 +84,23 @@ end
 
 function Foreground.Space:draw()
     Foreground.draw(self)
+end
+
+--============================================================================== FOREGROUND.MOON
+function Foreground.Moon:enteredState()
+    self.player:prepareLanding()
+    self.moon = Moon:new(500, -500, self.player)
+    self.boosts.boostsTimer.clear()
+end
+
+function Foreground.Moon:update(dt)
+    Foreground.update(self, dt)
+    self.moon:update(dt)
+end
+
+function Foreground.Moon:draw()
+    Foreground.draw(self)
+    self.moon:draw()
 end
 
 return Foreground
