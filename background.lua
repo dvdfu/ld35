@@ -41,7 +41,7 @@ function Background:draw()
     love.graphics.rectangle('fill', 0, 0, Screen.targetW, Screen.targetH)
     love.graphics.setColor(255, 255, 255)
     if (DEBUG) then
-        love.graphics.print(math.floor(self.player.pos.y), 10, Screen.targetH - 20)
+        love.graphics.print('HEIGHT: ' .. math.floor(self.player.pos.y), 10, Screen.targetH - 20)
     end
 end
 
@@ -129,12 +129,11 @@ function Background.Space:enteredState()
     Debug('BACKGROUND', 'Space enteredState.')
     self.RGB = spaceRGB
     self.stars = {}
-    self.starTimer = Timer.new()
-    self.starTimer.every(0.1,
-        function()
-            self:generateStar()
-            self:generateStar()
-            self:generateStar()
+    Timer.after(0.1,
+        function(func)
+            self:generateStar() self:generateStar() self:generateStar()
+            self:generateStar() self:generateStar() self:generateStar()
+            Timer.after(self.player.vel:len() < 5 and 2 or 0.1, func)
         end)
 end
 
@@ -146,14 +145,16 @@ function Background.Space:update(dt)
             star:update(dt)
         end
     end
-
-    self.starTimer.update(dt)
+    Timer.update(dt)
 end
 
 function Background.Space:draw()
     Background.draw(self)
     for k, star in pairs(self.stars) do
         star:draw()
+    end
+    if (DEBUG) then
+        love.graphics.print('STARS: ' .. #self.stars, 150, Screen.targetH - 20)
     end
 end
 

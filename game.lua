@@ -30,7 +30,7 @@ end
 
 function Game.Title:update(dt)
     Game.update(self, dt)
-    
+
     if Input.pressed('return') then
         self:gotoState('Play')
     end
@@ -44,7 +44,7 @@ end
 function Game.Play:enteredState()
     Debug('GAME.PLAY', 'Play enteredState.')
     self.player = Player:new()
-    self.background = Background:new(self.player )
+    self.background = Background:new(self.player)
 end
 
 function Game.Play:update(dt)
