@@ -26,8 +26,8 @@ function Game:initialize()
     self.camera = Camera.new(0, 0, Screen.targetW, Screen.targetH)
 
     local scale = 1.0
-    for i = 2, 3 do
-        scale = scale - 0.05
+    for i = 1, 2 do
+        scale = scale - 0.1
         self.camera:addLayer(i .. '', scale)
     end
 
