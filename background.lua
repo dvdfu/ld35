@@ -9,9 +9,9 @@ local cloudRGB = RGB(120, 170, 200)
 local atmosphereRGB = RGB(90, 110, 150)
 local spaceRGB = RGB(0, 0, 0)
 
-local earthHeight = 2000
-local cloudHeight = 5000
-local atmosphereHeight = 8000
+local earthHeight = 1000
+local cloudHeight = 2000
+local atmosphereHeight = 3000
 
 local transitionStepTime = 0.01
 local transitionStepValue = 5

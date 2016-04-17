@@ -12,13 +12,11 @@ function Star:initialize(x, y, player)
     self.prev = self.pos:clone()
     self.z = 1 + 2 * math.random()
     self.player = player
-    self.speedRatio = 0.5
-    self.lineLengthRatio = 1
 end
 
 function Star:update(dt)
     self.prev = self.pos:clone()
-    self.pos = self.pos - self.player.vel * self.z * self.speedRatio * 2
+    self.pos = self.pos - self.player.vel * self.z
 end
 
 function Star:draw()
