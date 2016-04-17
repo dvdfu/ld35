@@ -22,6 +22,14 @@ Screen.fakeH = Screen.realH / Screen.scale
 Screen.offsetX = (Screen.realW / Screen.scale - Screen.targetW) / 2
 Screen.offsetY = (Screen.realH / Screen.scale - Screen.targetH) / 2
 
+DEBUG = true
+
+function RGB(r, g, b)
+    return {r = r, g = g, b = b}
+end
+
 function Debug(tag, message)
-    print(tag .. ' | ' .. message)
+    if (DEBUG) then
+        print(tag .. ' | ' .. message)
+    end
 end
