@@ -1,6 +1,7 @@
 local Class = require('modules/middleclass/middleclass')
 local Stateful = require('modules/stateful/stateful')
 local Timer = require('modules/hump/timer')
+local Cloud = require('cloud')
 local Star = require('star')
 
 --============================================================================== LOCAL
@@ -15,6 +16,8 @@ local atmosphereHeight = 3000
 
 local transitionStepTime = 0.01
 local transitionStepValue = 5
+
+local clouds = {}
 
 --============================================================================== BACKGROUND
 local Background = Class('Background')
@@ -34,12 +37,27 @@ function Background:initialize(player)
     self:gotoState('Earth')
 end
 
+function Background:update(dt)
+    for k, cloud in pairs(clouds) do
+        if cloud.dead then
+            table.remove(clouds, k)
+        else
+            cloud:update(dt)
+        end
+    end
+end
+
 function Background:draw()
     love.graphics.setColor(self.nextRGB.r, self.nextRGB.g, self.nextRGB.b, 255)
     love.graphics.rectangle('fill', 0, 0, Screen.targetW, Screen.targetH)
     love.graphics.setColor(self.RGB.r, self.RGB.g, self.RGB.b, self.alpha)
     love.graphics.rectangle('fill', 0, 0, Screen.targetW, Screen.targetH)
     love.graphics.setColor(255, 255, 255)
+
+    for k, cloud in pairs(clouds) do
+        cloud:draw()
+    end
+
     if (DEBUG) then
         love.graphics.print('HEIGHT: ' .. math.floor(self.player.pos.y), 10, Screen.targetH - 20)
     end
@@ -57,6 +75,7 @@ function Background.Earth:enteredState()
 end
 
 function Background.Earth:update(dt)
+    Background.update(self, dt)
     if (self.player.pos.y > earthHeight and not self.transitionTimer) then
         self.transitionTimer = Timer.new()
         self.transitionTimer.every(transitionStepTime, function() self:changeAlpha() end)
@@ -82,6 +101,10 @@ function Background.Cloud:enteredState()
 end
 
 function Background.Cloud:update(dt)
+    Background.update(self, dt)
+    if math.random() < 0.1 then
+        table.insert(clouds, Cloud:new(Screen.targetW + 120, math.random() * Screen.targetH, self.player))
+    end
     if (self.player.pos.y > cloudHeight and not self.transitionTimer) then
         self.transitionTimer = Timer.new()
         self.transitionTimer.every(transitionStepTime, function() self:changeAlpha() end)
@@ -107,6 +130,7 @@ function Background.Atmosphere:enteredState()
 end
 
 function Background.Atmosphere:update(dt)
+    Background.update(self, dt)
     if (self.player.pos.y > atmosphereHeight and not self.transitionTimer) then
         self.transitionTimer = Timer.new()
         self.transitionTimer.every(transitionStepTime, function() self:changeAlpha() end)
@@ -142,6 +166,7 @@ function Background.Space:enteredState()
 end
 
 function Background.Space:update(dt)
+    Background.update(self, dt)
     for k, star in pairs(self.stars) do
         if star.pos.x >= 2 * Screen.targetW or star.pos.x <= -2 * Screen.targetW or star.pos.y >= 2 * Screen.targetH or star.pos.y <= -2 * Screen.targetH then
             table.remove(self.stars, k)
