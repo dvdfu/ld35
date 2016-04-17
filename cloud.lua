@@ -24,7 +24,7 @@ function Cloud:initialize(x, y, player)
 end
 
 function Cloud:update(dt)
-    self.pos = self.pos - self.player.vel / 2 * self.z
+    self.pos = self.pos - self.player.vel * self.z
     self.body:moveTo(self.pos:unpack())
 
     if self.z == 3 then

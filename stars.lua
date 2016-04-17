@@ -10,7 +10,9 @@ function Stars:initialize(player)
     self.stars = {}
     Timer.every(0.1,
         function()
-            self:generateStar() self:generateStar() self:generateStar()
+            self:generateStar()
+            self:generateStar()
+            self:generateStar()
         end)
     -- Timer.after(0.1,
     --     function(func)
@@ -21,6 +23,8 @@ function Stars:initialize(player)
 end
 
 function Stars:update(dt)
+    Timer.update(dt)
+
     for k, star in pairs(self.stars) do
         if star.pos.x >= 2 * Screen.targetW or star.pos.x <= -2 * Screen.targetW or star.pos.y >= 2 * Screen.targetH or star.pos.y <= -2 * Screen.targetH then
             table.remove(self.stars, k)
