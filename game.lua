@@ -8,7 +8,7 @@ local Boost = require('boost')
 local Player = require('player')
 local Background = require('background')
 local Foreground = require('foreground')
-local Camera = require('modules/hump/camera')
+local Camera = require('Camera')
 
 Particles = require('particles')
 
@@ -23,7 +23,7 @@ function Game:initialize()
     Particles.initialize()
 
     self.player = Player:new(0, 0)
-    self.camera = Camera(0, 0)
+    self.camera = Camera.new(0, 0, Screen.targetW, Screen.targetH)
     self.foreground = Foreground:new(self.player, self.camera)
     self.background = Background:new(self.player, self.foreground, self.camera)
 
@@ -37,13 +37,13 @@ function Game:update(dt)
 end
 
 function Game:draw()
-    self.camera:attach()
+    self.camera:push()
 
     self.background:draw()
     self.player:draw()
     self.foreground:draw()
 
-    self.camera:detach()
+    self.camera:pop()
 end
 
 --============================================================================== GAME.TITLE
@@ -63,7 +63,7 @@ function Game.Title:enteredState()
     self.gameLogo = love.graphics.newImage("res/images/logo.png")
     self.gameTitleScreenOffset = Screen.targetH * 2
     self.gameLogoHeight = self.player.absolutePos.y - self.gameTitleScreenOffset + 40
-    self.camera:lookAt(self.player.absolutePos.x + Screen.targetW / 2, -self.gameTitleScreenOffset + Screen.targetH)
+    self.camera:moveTo(self.player.absolutePos.x, -self.gameTitleScreenOffset + Screen.targetH / 2)
 
     self.cameraTimer = nil
     self.cameraMoveState = title
@@ -78,13 +78,13 @@ function Game.Title:update(dt)
         self.cameraTimer = Timer.new()
         self.cameraTimer.after(0.01,
             function(func)
-                x, y = self.camera:cameraCoords(self.player.absolutePos:unpack())
+                x, y = self.camera:toScreenCoordinates(self.player.absolutePos:unpack())
 
                 if y > Screen.targetH / 2 then
                     self.camera:move(0, dt * 200)
 
                     if y < Screen.targetH / 2 then
-                        self.camera:lookAt(self.player.absolutePos.x + Screen.targetW / 2, self.player.absolutePos.y + Screen.targetH / 2)
+                        self.camera:moveTo(self.player.absolutePos.x + Screen.targetW / 2, self.player.absolutePos.y + Screen.targetH / 2)
                         self.cameraMoveState = pitchToBatter
                     else
                         self.cameraTimer.after(0.01, func)
@@ -102,7 +102,7 @@ function Game.Title:update(dt)
                 self.player.vel = Vector(10, -10)
                 self.cameraTimer.after(0.01,
                     function(func)
-                        x, y = self.camera:cameraCoords(0, self.groundHeight)
+                        x, y = self.camera:toScreenCoordinates(0, self.groundHeight)
 
                         if (y < Screen.targetH) then
                             self.groundHeight = self.groundHeight - self.player.vel.y
@@ -113,7 +113,7 @@ function Game.Title:update(dt)
                     end)
             end)
     elseif self.cameraMoveState == pitchToBatter then
-        self.camera:lockPosition(self.player.pos.x + Screen.targetW / 2, self.player.pos.y + Screen.targetH / 2)
+        self.camera:moveTo(self.player.pos.x, self.player.pos.y)
     elseif self.cameraMoveState == pitcherToPlay then
         self:gotoState('Play')
     end
@@ -126,7 +126,7 @@ end
 function Game.Title:draw()
     Game.draw(self)
 
-    self.camera:attach()
+    self.camera:push()
 
     if (self.player.intro) then
         love.graphics.draw(self.gameLogo, self.player.absolutePos.x - self.gameLogo:getWidth() / 2, self.gameLogoHeight)
@@ -142,7 +142,7 @@ function Game.Title:draw()
     love.graphics.rectangle('fill', -Screen.targetW / 2, self.groundHeight, Screen.targetW, Screen.targetH)
     love.graphics.setColor(255, 255, 255)
 
-    self.camera:detach()
+    self.camera:pop()
 end
 
 --============================================================================== GAME.PLAY
@@ -154,7 +154,7 @@ end
 
 function Game.Play:update(dt)
     Game.update(self, dt)
-    self.camera:lockPosition(self.player.pos.x + Screen.targetW / 2, self.player.pos.y + Screen.targetH / 2)
+    self.camera:moveTo(self.player.pos.x, self.player.pos.y)
 end
 
 function Game.Play:draw()

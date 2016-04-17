@@ -39,9 +39,9 @@ function Stars:draw()
     end
 
     if (DEBUG) then
-        self.camera:detach()
+        self.camera:pop()
         love.graphics.print('STARS: ' .. #self.stars, 10, Screen.targetH - 50)
-        self.camera:attach()
+        self.camera:push()
     end
 end
 
