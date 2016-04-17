@@ -5,7 +5,7 @@ local Clouds = require('clouds')
 
 --============================================================================== LOCAL
 
---============================================================================== BACKGROUND
+--============================================================================== FOREGROUND
 local Foreground = Class('Foreground')
 Foreground:include(Stateful)
 Foreground.Earth = Foreground:addState('Earth')
@@ -31,7 +31,7 @@ function Foreground:draw()
     end
 end
 
---============================================================================== BACKGROUND.EARTH
+--============================================================================== FOREGROUND.EARTH
 function Foreground.Earth:enteredState()
 
 end
@@ -46,7 +46,7 @@ function Foreground.Earth:draw()
     Foreground.draw(self)
 end
 
---============================================================================== BACKGROUND.CLOUD
+--============================================================================== FOREGROUND.CLOUD
 function Foreground.Cloud:enteredState()
 
 end
@@ -60,7 +60,7 @@ function Foreground.Cloud:draw()
     Foreground.draw(self)
 end
 
---============================================================================== BACKGROUND.ATMOSPHERE
+--============================================================================== FOREGROUND.ATMOSPHERE
 function Foreground.Atmosphere:enteredState()
 
 end
@@ -73,7 +73,7 @@ function Foreground.Atmosphere:draw()
     Foreground.draw(self)
 end
 
---============================================================================== BACKGROUND.SPACE
+--============================================================================== FOREGROUND.SPACE
 function Foreground.Space:enteredState()
 
 end
