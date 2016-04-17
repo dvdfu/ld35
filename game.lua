@@ -121,7 +121,9 @@ function Game.Title:draw()
         love.graphics.printf("Press ENTER to START!", 0, self.gameLogoHeight + 180, Screen.targetW, 'center')
         self.ballStill:draw(self.ballImage, self.player.absolutePos.x, self.ballY, self.player.vel:angleTo(), 1, 1, Player.SIZE / 2, Player.SIZE / 2)
     end
+    love.graphics.setColor(172, 138, 101)
     love.graphics.rectangle('fill', 0, self.groundHeight, Screen.targetW, Screen.targetH)
+    love.graphics.setColor(255, 255, 255)
     -- love.graphics.print('GAME TITLE GOES HERE', Screen.targetW / 2 - 80, Screen.targetH / 2 - 10)
 end
 
