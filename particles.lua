@@ -6,6 +6,7 @@ local sprites = {
 }
 
 local emitters = {}
+local buffers = {}
 
 function Particles.initialize()
     emitters.cloud = love.graphics.newParticleSystem(sprites.circle)
@@ -19,7 +20,7 @@ function Particles.initialize()
     emitters.fire = love.graphics.newParticleSystem(sprites.circle)
     emitters.fire:setParticleLifetime(0.2, 0.5)
     emitters.fire:setDirection(-math.pi / 2)
-    emitters.fire:setSpread(math.pi / 16)
+    -- emitters.fire:setSpread(math.pi / 16)
     emitters.fire:setSpeed(50, 400)
     emitters.fire:setColors(255, 255, 0, 255, 255, 182, 0, 255, 255, 73, 73, 255, 255, 73, 73, 0)
     emitters.fire:setSizes(1.3, 0.1)
@@ -39,8 +40,18 @@ end
 function Particles.emit(name, x, y, num)
     local emitter = emitters[name]
     if not emitter then return end
+
+    if buffers[name] then
+        buffers[name] = buffers[name] + num
+    else
+        buffers[name] = num
+    end
+
     emitter:setPosition(x, y)
-    emitter:emit(num)
+    while buffers[name] >= 1 do
+        buffers[name] = buffers[name] - 1
+        emitter:emit(1)
+    end
 end
 
 function Particles.update(name, dt)
