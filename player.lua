@@ -37,7 +37,7 @@ function Player:initialize(x, y)
     grid = Anim8.newGrid(Player.SIZE, Player.SIZE, Player.SIZE * 6, Player.SIZE)
     animations.ball = Anim8.newAnimation(grid:getFrames('1-6', 1), 0.05)
 
-    grid = Anim8.newGrid(Player.SIZE, Player.SIZE, Player.SIZE * 4, Player.SIZE)
+    grid = Anim8.newGrid(24, 24, 24 * 4, 24)
     animations.bird = Anim8.newAnimation(grid:getFrames('1-4', 1), 0.05)
 
     grid = Anim8.newGrid(80, 24, 80 * 3, 24)
@@ -55,6 +55,8 @@ function Player:update(dt)
 end
 
 function Player:draw()
+    Particles.update('fire', 1 / 60)
+    Particles.draw('fire')
     -- r, g, b, a = love.graphics.getColor()
     -- love.graphics.setColor(255, 0, 0, 255)
     -- love.graphics.line(self.pos.x, self.pos.y, self.pos.x + self.vel.x * 5, self.pos.y + self.vel.y * 5)
@@ -89,9 +91,6 @@ function Player.Ball:draw()
     -- animations.fireTrail:update(1 / 60)
     -- animations.fireTrail:draw(sprites.fireTrail, self.pos.x, self.pos.y, self.vel:angleTo(), 1, 1, 68, 12)
 
-    Particles.update('fire', 1 / 60)
-    Particles.draw('fire')
-
     animations.ball:update(1 / 60)
     animations.ball:draw(sprites.ball, self.pos.x, self.pos.y, self.vel:angleTo(), 1, 1, Player.SIZE / 2, Player.SIZE / 2)
 
@@ -123,7 +122,7 @@ function Player.Bird:draw()
     Player.draw(self)
 
     animations.bird:update(1 / 60)
-    animations.bird:draw(sprites.bird, self.pos.x, self.pos.y, self.vel:angleTo(), 1, 1, Player.SIZE / 2, Player.SIZE / 2)
+    animations.bird:draw(sprites.bird, self.pos.x, self.pos.y, self.vel:angleTo(), 1, 1, 12, 12)
 end
 
 return Player
