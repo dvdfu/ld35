@@ -1,6 +1,8 @@
 local Class = require('modules/middleclass/middleclass')
 local Stateful = require('modules/stateful/stateful')
 local Timer = require('modules/hump/timer')
+local Vector = require('modules/hump/vector')
+
 local Clouds = require('clouds')
 local Boosts = require('boosts')
 local Moon = require('moon')
@@ -86,6 +88,7 @@ end
 
 --============================================================================== FOREGROUND.MOON
 function Foreground.Moon:enteredState()
+    self.player:prepareLanding()
     self.moon = Moon:new(500, -500, self.player)
 end
 

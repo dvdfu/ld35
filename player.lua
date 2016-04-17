@@ -31,7 +31,7 @@ Player.Bird.speed = 2
 Player.Bird.animationTime = 0.1
 
 Player.BirdToBall.speed = Player.Ball.speed
-Player.BirdToBall.animationTime = 0.1
+Player.BirdToBall.animationTime = 0.05
 
 Player.BallToBird.speed = Player.Bird.speed
 Player.BallToBird.animationTime = Player.BirdToBall.animationTime
@@ -42,7 +42,8 @@ function Player:initialize(x, y)
     self.vel = Vector(x, y)
     self.body = HC.circle(self.absolutePos.x, self.absolutePos.y, 8)
     self.intro = true
-    self.userHasControl = false
+    self.userCanTurn = false
+    self.userCanTransform = true
 
     local grid = nil
     grid = Anim8.newGrid(Player.SIZE, Player.SIZE, Player.SIZE * 6, Player.SIZE)
@@ -67,11 +68,11 @@ function Player:initialize(x, y)
 end
 
 function Player:update(dt)
-    if Input.isDown('up') and self.userHasControl then
+    if Input.isDown('up') and self.userCanTurn then
         if self.vel:angleTo() > -math.pi / 2 then
             self.vel:rotateInplace(-Player.angularSpeed)
         end
-    elseif Input.isDown('down') and self.userHasControl then
+    elseif Input.isDown('down') and self.userCanTurn then
         if self.vel:angleTo() < math.pi / 2 then
             self.vel:rotateInplace(Player.angularSpeed)
         end
@@ -112,8 +113,13 @@ function Player:gotoSpeed()
     end
 end
 
+function Player:prepareLanding()
+    self.userCanTurn = false
+    self.vel = Vector(1, -1):normalized() * self.vel:len()
+end
+
 function Player:halt()
-    self.userHasControl = false
+    self.userCanTransform = false
     self.vel = Vector(0, 0)
 end
 
@@ -131,7 +137,7 @@ function Player.Ball:update(dt)
     fire:setSpeed(self.vel:len() * 8, self.vel:len() * 40)
     Particles.emit('fire', self.absolutePos.x, self.absolutePos.y, self.vel:len() / 20.0)
 
-    if Input.pressed('space') then
+    if self.userCanTransform and Input.pressed('space') then
         self:gotoState('BallToBird')
     end
 end
@@ -161,7 +167,7 @@ function Player.Bird:update(dt)
     Player.update(self, dt)
     Player.gotoSpeed(self)
 
-    if Input.pressed('space') then
+    if self.userCanTransform and Input.pressed('space') then
         self:gotoState('BirdToBall')
     end
 end
@@ -173,6 +179,11 @@ function Player.Bird:draw()
         animations.bird:update(1 / 60)
         animations.bird:draw(sprites.bird, self.absolutePos.x, self.absolutePos.y, self.vel:angleTo(), 1, 1, 12, 12)
     end
+end
+
+function Player.Bird:prepareLanding()
+    Player.prepareLanding(self)
+    self:gotoState('BirdToBall')
 end
 
 --============================================================================== PLAYER.BIRDUP

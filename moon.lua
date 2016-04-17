@@ -14,6 +14,7 @@ function Moon:initialize(x, y, player)
     self.pos = Vector(x, y)
     self.player = player
     self.body = HC.polygon(0, 0, 512, 0, 512, 512)
+    self.impacted = false
     self.impactTimer = 0
 end
 
@@ -23,10 +24,11 @@ function Moon:update(dt)
 
     local collides, dx, dy = self.body:collidesWith(self.player.body)
     if collides then
-        if self.player.userHasControl then
+        if not self.impacted then
+            self.impacted = true
             self.impactTimer = 20
             self.player:halt()
-            self.player.pos = self.player.pos - Vector(dx, dy)
+            self.player.pos = self.player.pos + Vector(dx, dy)
             Particles.emit('dust', self.player.absolutePos.x, self.player.absolutePos.y, 40)
         end
     end
