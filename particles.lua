@@ -21,7 +21,7 @@ function Particles.initialize()
     emitters.fire:setDirection(-math.pi / 2)
     emitters.fire:setSpread(math.pi / 16)
     emitters.fire:setSpeed(50, 400)
-    emitters.fire:setColors(255, 255, 0, 255, 255, 182, 0, 255, 255, 73, 73, 255, 146, 36, 36, 255, 146, 36, 36, 0)
+    emitters.fire:setColors(255, 255, 0, 255, 255, 182, 0, 255, 255, 73, 73, 255, 255, 73, 73, 0)
     emitters.fire:setSizes(1.3, 0.1)
 
     emitters.spark = love.graphics.newParticleSystem(sprites.bar)

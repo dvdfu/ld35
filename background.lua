@@ -41,7 +41,7 @@ function Background:draw()
     love.graphics.rectangle('fill', 0, 0, Screen.targetW, Screen.targetH)
     love.graphics.setColor(255, 255, 255)
     if (DEBUG) then
-        love.graphics.print(self.player.pos.y, 10, Screen.targetH - 20)
+        love.graphics.print(math.floor(self.player.pos.y), 10, Screen.targetH - 20)
     end
 end
 

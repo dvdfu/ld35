@@ -11,6 +11,15 @@ local sprites = {
     fireTrail = love.graphics.newImage('res/images/fire_trail.png')
 }
 
+--============================================================================== PLAYER
+local Player = Class('Player')
+Player:include(Stateful)
+Player.SIZE = 16
+Player.Ball = Player:addState('Ball')
+Player.Bird = Player:addState('Bird')
+Player.BirdToBall = Player:addState('BirdToBall')
+Player.BallToBird = Player:addState('BallToBird')
+
 local animations = {}
 
 Player.Ball.speed = 10
@@ -24,15 +33,6 @@ Player.BirdToBall.animationTime = 0.1
 
 Player.BallToBird.speed = Player.Bird.speed
 Player.BallToBird.animationTime = Player.BirdToBall.animationTime
-
---============================================================================== PLAYER
-local Player = Class('Player')
-Player:include(Stateful)
-Player.SIZE = 16
-Player.Ball = Player:addState('Ball')
-Player.Bird = Player:addState('Bird')
-Player.BirdToBall = Player:addState('BirdToBall')
-Player.BallToBird = Player:addState('BallToBird')
 
 function Player:initialize()
     self.absolutePos = Vector(Screen.targetW / 2, Screen.targetH / 2)
@@ -159,7 +159,7 @@ function Player.BirdToBall:draw()
     Player.draw(self)
 
     animations.birdToBall:update(1 / 60)
-    animations.birdToBall:draw(sprites.birdToBall, self.pos.x, self.pos.y, self.vel:angleTo(), 1, 1, 12, 12)
+    animations.birdToBall:draw(sprites.birdToBall, self.absolutePos.x, self.absolutePos.y, self.vel:angleTo(), 1, 1, 12, 12)
 end
 
 --============================================================================== PLAYER.BIRDDOWN
@@ -172,7 +172,7 @@ function Player.BallToBird:draw()
     Player.draw(self)
 
     animations.ballToBird:update(1 / 60)
-    animations.ballToBird:draw(sprites.birdToBall, self.pos.x, self.pos.y, self.vel:angleTo(), 1, 1, 12, 12)
+    animations.ballToBird:draw(sprites.birdToBall, self.absolutePos.x, self.absolutePos.y, self.vel:angleTo(), 1, 1, 12, 12)
 end
 
 return Player
