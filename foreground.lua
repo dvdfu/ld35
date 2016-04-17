@@ -2,6 +2,7 @@ local Class = require('modules/middleclass/middleclass')
 local Stateful = require('modules/stateful/stateful')
 local Timer = require('modules/hump/timer')
 local Clouds = require('clouds')
+local Boosts = require('boosts')
 
 --============================================================================== LOCAL
 
@@ -16,15 +17,18 @@ Foreground.Space = Foreground:addState('Space')
 function Foreground:initialize(player)
     self.player = player
     self.clouds = Clouds:new(0.03, 3, 3, self.player)
+    self.boosts = Boosts:new(player)
     self:gotoState('Earth')
 end
 
 function Foreground:update(dt)
     self.clouds:updateMovement(dt)
+    self.boosts:update(dt)
 end
 
 function Foreground:draw()
     self.clouds:draw()
+    self.boosts:draw()
 
     if (DEBUG) then
         love.graphics.print('HEIGHT: ' .. math.floor(self.player.pos.y), 10, Screen.targetH - 20)
@@ -38,8 +42,6 @@ end
 
 function Foreground.Earth:update(dt)
     Foreground.update(self, dt)
-
-
 end
 
 function Foreground.Earth:draw()
@@ -48,7 +50,7 @@ end
 
 --============================================================================== FOREGROUND.CLOUD
 function Foreground.Cloud:enteredState()
-
+    self.boosts:startGeneration()
 end
 
 function Foreground.Cloud:update(dt)

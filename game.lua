@@ -131,26 +131,14 @@ end
 function Game.Play:enteredState()
     Debug('GAME.PLAY', 'Play enteredState.')
     self.player.userHasControl = true
-    self.boosts = {}
 end
 
 function Game.Play:update(dt)
     Game.update(self, dt)
-
-    for k, boost in pairs(self.boosts) do
-        if boost.dead then
-            table.remove(self.boosts, k)
-        else
-            boost:update(dt)
-        end
-    end
 end
 
 function Game.Play:draw()
     Game.draw(self)
-    for _, boost in pairs(self.boosts) do
-        boost:draw()
-    end
 end
 
 return Game

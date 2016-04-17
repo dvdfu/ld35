@@ -151,7 +151,6 @@ end
 function Background.Space:update(dt)
     Background.update(self, dt)
     self.stars:update(dt)
-    Timer.update(dt)
 end
 
 function Background.Space:draw()
