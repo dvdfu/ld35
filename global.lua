@@ -1,16 +1,16 @@
 Screen = {
-  --target: optimal game resolution, constant for all screens
-  targetW = 420,
-  targetH = 280,
-  --real: screen size returned by love.graphics
-  realW = 420,
-  realH = 280,
-  --fake: real screen size scaled, fake >= target
-  fakeW = 420,
-  fakeH = 280,
-  scale = 1,
-  offsetX = 0,
-  offsetY = 0
+    --target: optimal game resolution, constant for all screens
+    targetW = 420,
+    targetH = 280,
+    --real: screen size returned by love.graphics
+    realW = 420,
+    realH = 280,
+    --fake: real screen size scaled, fake >= target
+    fakeW = 420,
+    fakeH = 280,
+    scale = 1,
+    offsetX = 0,
+    offsetY = 0
 }
 
 Screen.realW = love.graphics.getWidth()
@@ -23,9 +23,10 @@ Screen.offsetX = (Screen.realW / Screen.scale - Screen.targetW) / 2
 Screen.offsetY = (Screen.realH / Screen.scale - Screen.targetH) / 2
 
 WORLD = {
-  earthHeight = 1000,
-  cloudHeight = 2000,
-  atmosphereHeight = 3000
+    earthHeight = 1000,
+    cloudHeight = 2000,
+    atmosphereHeight = 3000,
+    spaceHeight = 4000
 }
 
 DEBUG = true

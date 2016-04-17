@@ -13,6 +13,7 @@ Foreground.Earth = Foreground:addState('Earth')
 Foreground.Cloud = Foreground:addState('Cloud')
 Foreground.Atmosphere = Foreground:addState('Atmosphere')
 Foreground.Space = Foreground:addState('Space')
+Foreground.Moon = Foreground:addState('Moon')
 
 function Foreground:initialize(player)
     self.player = player

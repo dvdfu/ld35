@@ -2,6 +2,7 @@ local Class = require('modules/middleclass/middleclass')
 local Stateful = require('modules/stateful/stateful')
 local Timer = require('modules/hump/timer')
 local Clouds = require('clouds')
+local Moon = require('moon')
 local Stars = require('stars')
 
 --============================================================================== LOCAL
@@ -20,6 +21,7 @@ Background.Earth = Background:addState('Earth')
 Background.Cloud = Background:addState('Cloud')
 Background.Atmosphere = Background:addState('Atmosphere')
 Background.Space = Background:addState('Space')
+Background.Moon = Background:addState('Moon')
 Background.Transition = Background:addState('Transition')
 
 function Background:initialize(player, foreground)
@@ -109,7 +111,6 @@ function Background.Cloud:update(dt)
     elseif (self.transitionTimer) then
         self.transitionTimer.update(dt)
     end
-    self.stars:update(dt)
 end
 
 function Background.Cloud:draw()
@@ -142,7 +143,6 @@ function Background.Atmosphere:update(dt)
     elseif (self.transitionTimer) then
         self.transitionTimer.update(dt)
     end
-    self.stars:update(dt)
 end
 
 function Background.Atmosphere:draw()
@@ -161,11 +161,45 @@ end
 function Background.Space:update(dt)
     Background.update(self, dt)
     self.stars:update(dt)
+
+    if self.player.pos.y > WORLD.spaceHeight then
+        if not self.transitionTimer then
+            self.transitionTimer = Timer.new()
+            self.transitionTimer.every(transitionStepTime, function() self:changeAlpha() end)
+        elseif self.alpha < 0 then
+            Timer.cancel(self.transitionTimer)
+            self.alpha = 255
+            self.transitionTimer = nil
+            self.foreground:gotoState('Moon')
+            self:gotoState('Moon')
+        end
+    elseif self.transitionTimer then
+        self.transitionTimer.update(dt)
+    end
 end
 
 function Background.Space:draw()
     Background.draw(self)
     self.stars:draw()
+end
+
+--============================================================================== BACKGROUND.MOON
+function Background.Moon:enteredState()
+    Debug('BACKGROUND', 'Moon enteredState.')
+    self.RGB = spaceRGB
+    self.moon = Moon:new(500, -500)
+end
+
+function Background.Moon:update(dt)
+    Background.update(self, dt)
+    self.stars:update(dt)
+    self.moon:update(dt)
+end
+
+function Background.Moon:draw()
+    Background.draw(self)
+    self.stars:draw()
+    self.moon:draw()
 end
 
 return Background

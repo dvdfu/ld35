@@ -30,7 +30,7 @@ end
 
 function Boost:draw()
     love.graphics.draw(sprites.boost, self.pos.x, self.pos.y, 0, 1, 1, 32, 32)
-    self.body:draw('line')
+    -- self.body:draw('line')
 end
 
 return Boost
