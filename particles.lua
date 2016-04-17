@@ -34,12 +34,12 @@ function Particles.initialize()
     emitters.spark:setRelativeRotation(true)
 
     emitters.dust = love.graphics.newParticleSystem(sprites.circleBig)
-    emitters.dust:setParticleLifetime(1, 3)
+    emitters.dust:setParticleLifetime(0, 3)
     emitters.dust:setDirection(math.pi * 5 / 4)
     emitters.dust:setSpread(math.pi)
-    emitters.dust:setSpeed(0, 100)
+    emitters.dust:setSpeed(0, 400)
     emitters.dust:setColors(255, 255, 255, 255, 255, 255, 255, 0)
-
+    emitters.dust:setSizes(1, 0)
 end
 
 function Particles.get(name)

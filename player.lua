@@ -112,6 +112,11 @@ function Player:gotoSpeed()
     end
 end
 
+function Player:halt()
+    self.userHasControl = false
+    self.vel = Vector(0, 0)
+end
+
 --============================================================================== PLAYER.BALL
 function Player.Ball:enteredState()
     Particles.get('fire'):reset()

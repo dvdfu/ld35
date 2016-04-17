@@ -2,7 +2,6 @@ local Class = require('modules/middleclass/middleclass')
 local Stateful = require('modules/stateful/stateful')
 local Timer = require('modules/hump/timer')
 local Clouds = require('clouds')
-local Moon = require('moon')
 local Stars = require('stars')
 
 --============================================================================== LOCAL
@@ -185,19 +184,16 @@ end
 function Background.Moon:enteredState()
     Debug('BACKGROUND', 'Moon enteredState.')
     self.RGB = spaceRGB
-    self.moon = Moon:new(500, -500, self.player)
 end
 
 function Background.Moon:update(dt)
     Background.update(self, dt)
     self.stars:update(dt)
-    self.moon:update(dt)
 end
 
 function Background.Moon:draw()
     Background.draw(self)
     self.stars:draw()
-    self.moon:draw()
 end
 
 return Background

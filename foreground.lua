@@ -3,6 +3,7 @@ local Stateful = require('modules/stateful/stateful')
 local Timer = require('modules/hump/timer')
 local Clouds = require('clouds')
 local Boosts = require('boosts')
+local Moon = require('moon')
 
 --============================================================================== LOCAL
 
@@ -37,9 +38,7 @@ function Foreground:draw()
 end
 
 --============================================================================== FOREGROUND.EARTH
-function Foreground.Earth:enteredState()
-
-end
+function Foreground.Earth:enteredState() end
 
 function Foreground.Earth:update(dt)
     Foreground.update(self, dt)
@@ -64,9 +63,7 @@ function Foreground.Cloud:draw()
 end
 
 --============================================================================== FOREGROUND.ATMOSPHERE
-function Foreground.Atmosphere:enteredState()
-
-end
+function Foreground.Atmosphere:enteredState() end
 
 function Foreground.Atmosphere:update(dt)
     Foreground.update(self, dt)
@@ -77,9 +74,7 @@ function Foreground.Atmosphere:draw()
 end
 
 --============================================================================== FOREGROUND.SPACE
-function Foreground.Space:enteredState()
-
-end
+function Foreground.Space:enteredState() end
 
 function Foreground.Space:update(dt)
     Foreground.update(self, dt)
@@ -87,6 +82,20 @@ end
 
 function Foreground.Space:draw()
     Foreground.draw(self)
+end
+
+--============================================================================== FOREGROUND.MOON
+function Foreground.Moon:enteredState()
+    self.moon = Moon:new(500, -500, self.player)
+end
+
+function Foreground.Moon:update(dt)
+    self.moon:update(dt)
+end
+
+function Foreground.Moon:draw()
+    Foreground.draw(self)
+    self.moon:draw()
 end
 
 return Foreground
