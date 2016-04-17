@@ -19,13 +19,13 @@ local sprites = {
 local animations = {}
 
 local properties = {
-	ball = {
-		speed = 10
-	},
+    ball = {
+        speed = 10
+    },
 
-	bird = {
-		speed = 2
-	}
+    bird = {
+        speed = 2
+    }
 }
 
 --============================================================================== PLAYER
@@ -55,42 +55,42 @@ function Player:update(dt)
 end
 
 function Player:draw()
-	-- r, g, b, a = love.graphics.getColor()
-	-- love.graphics.setColor(255, 0, 0, 255)
-	-- love.graphics.line(self.pos.x, self.pos.y, self.pos.x + self.vel.x * 5, self.pos.y + self.vel.y * 5)
-	-- love.graphics.setColor(r, g, b, a)
+    -- r, g, b, a = love.graphics.getColor()
+    -- love.graphics.setColor(255, 0, 0, 255)
+    -- love.graphics.line(self.pos.x, self.pos.y, self.pos.x + self.vel.x * 5, self.pos.y + self.vel.y * 5)
+    -- love.graphics.setColor(r, g, b, a)
 end
 
 --============================================================================== PLAYER.BALL
 function Player.Ball:enteredState()
-	Particles.get('fire'):reset()
+    Particles.get('fire'):reset()
 end
 
 function Player.Ball:update(dt)
-	Player.update(self, dt)
+    Player.update(self, dt)
 
-	if self.vel:len() < properties.ball.speed then
-		self.vel = self.vel * 1.1
-	end
+    if self.vel:len() < properties.ball.speed then
+        self.vel = self.vel * 1.1
+    end
 
-	Particles.get('fire'):setDirection(self.vel:angleTo(Vector(-1, 0)))
+    Particles.get('fire'):setDirection(self.vel:angleTo(Vector(-1, 0)))
     Particles.emit('fire', self.pos.x, self.pos.y, 4)
 
-	if Input.pressed('space') then
-		self:gotoState('Bird')
-	end
+    if Input.pressed('space') then
+        self:gotoState('Bird')
+    end
 end
 
 function Player.Ball:draw()
-	Player.draw(self)
+    Player.draw(self)
 
-	-- animations.fireTrail:update(1 / 60)
-	-- animations.fireTrail:draw(sprites.fireTrail, self.pos.x, self.pos.y, self.vel:angleTo(), 1, 1, 68, 12)
+    -- animations.fireTrail:update(1 / 60)
+    -- animations.fireTrail:draw(sprites.fireTrail, self.pos.x, self.pos.y, self.vel:angleTo(), 1, 1, 68, 12)
 
-	Particles.update('fire', 1 / 60)
-	Particles.draw('fire')
+    Particles.update('fire', 1 / 60)
+    Particles.draw('fire')
 
-	animations.ball:update(1 / 60)
+    animations.ball:update(1 / 60)
     animations.ball:draw(sprites.ball, self.pos.x, self.pos.y, self.vel:angleTo(), 1, 1, Player.SIZE / 2, Player.SIZE / 2)
 
     love.graphics.setBlendMode('multiply')
@@ -104,21 +104,21 @@ function Player.Bird:enteredState()
 end
 
 function Player.Bird:update(dt)
-	Player.update(self, dt)
+    Player.update(self, dt)
 
-	if self.vel:len() > properties.bird.speed then
-		self.vel = self.vel * 0.9
-	end
+    if self.vel:len() > properties.bird.speed then
+        self.vel = self.vel * 0.9
+    end
 
-	if Input.pressed('space') then
-		self:gotoState('Ball')
-	end
+    if Input.pressed('space') then
+        self:gotoState('Ball')
+    end
 end
 
 function Player.Bird:draw()
-	Player.draw(self)
+    Player.draw(self)
 
-	animations.bird:update(1 / 60)
+    animations.bird:update(1 / 60)
     animations.bird:draw(sprites.bird, self.pos.x, self.pos.y, self.vel:angleTo(), 1, 1, Player.SIZE / 2, Player.SIZE / 2)
 end
 
