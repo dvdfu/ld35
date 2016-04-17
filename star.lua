@@ -9,19 +9,20 @@ Star:include(Stateful)
 --============================================================================== PLAYER
 function Star:initialize(x, y, z, player)
     self.pos = Vector(x,y)
-    self.prev = self.pos
     self.z = z
     self.player = player
+    self.speedRatio = 0.5
+    self.lineLengthRatio = 1
 end
 
 function Star:update(dt)
-    self.prev = self.pos
-    self.pos = self.pos - self.player.vel*dt*self.z
+    self.pos = self.pos - self.player.vel * self.z * self.speedRatio
 end
 
 function Star:draw()
-    love.graphics.setColor(0, 0, 0)
-    love.graphics.line(self.pos.x, self.pos.y, self.prev*0.1, self.prev*0.1)
+    local prev = self.pos + self.player.vel * self.z * self.lineLengthRatio * self.speedRatio
+    love.graphics.setLineWidth(self.z)
+    love.graphics.line(self.pos.x, self.pos.y, prev.x, prev.y)
 end
 
 --============================================================================== PLAYER.BALL
