@@ -42,6 +42,7 @@ function Player:initialize(x, y)
     self.vel = Vector(x, y)
     self.body = HC.circle(self.absolutePos.x, self.absolutePos.y, 8)
     self.intro = true
+    self.userHasControl = false
 
     local grid = nil
     grid = Anim8.newGrid(Player.SIZE, Player.SIZE, Player.SIZE * 6, Player.SIZE)
@@ -66,11 +67,11 @@ function Player:initialize(x, y)
 end
 
 function Player:update(dt)
-    if Input.isDown('up') then
+    if Input.isDown('up') and self.userHasControl then
         if self.vel:angleTo() > -math.pi / 2 then
             self.vel:rotateInplace(-Player.angularSpeed)
         end
-    elseif Input.isDown('down') then
+    elseif Input.isDown('down') and self.userHasControl then
         if self.vel:angleTo() < math.pi / 2 then
             self.vel:rotateInplace(Player.angularSpeed)
         end

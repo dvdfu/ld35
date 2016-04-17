@@ -59,8 +59,6 @@ function Game.Title:enteredState()
 
     self.groundHeight = self.ballY + 80
 
-
-
     self.gameLogo = love.graphics.newImage("res/images/logo.png")
     self.gameLogoHeight = Screen.targetH / 2 - self.gameLogo:getHeight()/2 - 40
 
@@ -88,16 +86,24 @@ function Game.Title:update(dt)
             end)
     elseif self.cameraMoveState == titleToPitcher and self.ballY <= self.player.absolutePos.y then
         self.cameraMoveState = pitchToBatter
+        -- self.player.vel = Vector(10, -10)
+        self.player.vel = Vector(-10, 0)
+        self.player.intro = false
+        self.cameraTimer.after(2,
+            function()
+                self.cameraTimer.after(0.01,
+                    function(func)
+                        if (self.groundHeight < Screen.targetH) then
+                            self.groundHeight = self.groundHeight - self.ballYStep
+                            self.cameraTimer.after(0.01, func)
+                        else
+                            self.cameraTimer = nil
+                            self.cameraMoveState = pitcherToPlay
+                        end
+                    end)
+            end)
+    elseif self.cameraMoveState == pitcherToPlay then
         self:gotoState('Play')
-        -- self.cameraTimer.every(0.01,
-        --     function(func)
-        --
-        --         if (self.ballY > self.player.absolutePos.y) then
-        --             -- Debug('INTRO HEIGHTS', self.gameLogoHeight .. ', ' .. self.ballY)
-        --             self.ballY = self.ballY + self.ballYStep
-        --             self.gameLogoHeight = self.gameLogoHeight + self.ballYStep
-        --         end
-        --     end, 100)
     end
 
     if self.cameraTimer then
@@ -107,11 +113,13 @@ end
 
 function Game.Title:draw()
     Game.draw(self)
-    love.graphics.draw(self.gameLogo, Screen.targetW / 2 - self.gameLogo:getWidth()/2, self.gameLogoHeight)
-    love.graphics.printf("UP and DOWN to control angle", 0, self.gameLogoHeight + 120, Screen.targetW, 'center')
-    love.graphics.printf("SPACE to transform", 0, self.gameLogoHeight + 140, Screen.targetW, 'center')
-    love.graphics.printf("Press ENTER to START!", 0, self.gameLogoHeight + 180, Screen.targetW, 'center')
-    self.ballStill:draw(self.ballImage, self.player.absolutePos.x, self.ballY, self.player.vel:angleTo(), 1, 1, Player.SIZE / 2, Player.SIZE / 2)
+    if (self.player.intro) then
+        love.graphics.draw(self.gameLogo, Screen.targetW / 2 - self.gameLogo:getWidth()/2, self.gameLogoHeight)
+        love.graphics.printf("UP and DOWN to control angle", 0, self.gameLogoHeight + 120, Screen.targetW, 'center')
+        love.graphics.printf("SPACE to transform", 0, self.gameLogoHeight + 140, Screen.targetW, 'center')
+        love.graphics.printf("Press ENTER to START!", 0, self.gameLogoHeight + 180, Screen.targetW, 'center')
+        self.ballStill:draw(self.ballImage, self.player.absolutePos.x, self.ballY, self.player.vel:angleTo(), 1, 1, Player.SIZE / 2, Player.SIZE / 2)
+    end
     love.graphics.rectangle('fill', 0, self.groundHeight, Screen.targetW, Screen.targetH)
     -- love.graphics.print('GAME TITLE GOES HERE', Screen.targetW / 2 - 80, Screen.targetH / 2 - 10)
 end
@@ -120,7 +128,7 @@ end
 function Game.Play:enteredState()
     Debug('GAME.PLAY', 'Play enteredState.')
     self.player.vel = Vector(10, -10)
-    self.player.intro = false
+    self.player.userHasControl = true
     self.boosts = {}
 end
 
