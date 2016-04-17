@@ -58,6 +58,9 @@ function Background:draw()
         cloud:draw()
     end
 
+    Particles.update('cloud', 1 / 60)
+    Particles.draw('cloud')
+
     if (DEBUG) then
         love.graphics.print('HEIGHT: ' .. math.floor(self.player.pos.y), 10, Screen.targetH - 20)
     end
