@@ -40,7 +40,7 @@ function Player:initialize(x, y)
     self.absolutePos = Vector(0, 0)
     self.pos = Vector(0, 0)
     self.vel = Vector(x, y)
-    self.body = HC.circle(self.absolutePos.x, self.absolutePos.y, 8)
+    self.body = HC.circle(self.pos.x, self.pos.y, 8)
     self.intro = true
     self.userCanTurn = false
     self.userCanTransform = true
@@ -79,6 +79,8 @@ function Player:update(dt)
     end
     self.pos.x = self.pos.x + self.vel.x
     self.pos.y = self.pos.y + self.vel.y
+
+    self.body:moveTo(self.pos:unpack())
 end
 
 function Player:draw()

@@ -16,7 +16,7 @@ end
 
 function Star:update(dt)
     self.prev = self.pos:clone()
-    self.pos = self.pos - self.player.vel / 2 * self.z
+    self.pos = self.pos - self.player.vel * self.z
 end
 
 function Star:draw()
