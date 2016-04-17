@@ -13,29 +13,30 @@ local sprites = {
     }
 }
 
-function Cloud:initialize(x, y, lowZ, highZ, player)
+function Cloud:initialize(x, y, lowZ, highZ, player, camera)
     self.pos = Vector(x, y)
     self.z = math.random(lowZ, highZ)
     self.type = math.random(1, 3)
     self.player = player
+    self.camera = camera
     self.body = HC.rectangle(self.pos.x - 80, self.pos.y - 24, 160, 48)
     self.body:scale(self.z / 3)
     self.dead = false
 end
 
 function Cloud:update(dt)
-    self.pos = self.pos - self.player.vel * self.z
     self.body:moveTo(self.pos:unpack())
 
     if self.z == 3 then
         local collides, dx, dy = self.body:collidesWith(self.player.body)
         if collides then
             Particles.get('cloud'):setDirection(self.player.vel:angleTo(Vector(-1, 0)))
-            Particles.emit('cloud', self.player.absolutePos.x, self.player.absolutePos.y, 1)
+            Particles.emit('cloud', self.player.pos.x, self.player.pos.y, 1)
         end
     end
 
-    if self.pos.x + 120 < 0 or self.pos.y - 80 > Screen.targetH then
+    x, y = self.camera:toScreenCoordinates(self.pos:unpack())
+    if x + 120 < 0 then
         self.dead = true
     end
 end

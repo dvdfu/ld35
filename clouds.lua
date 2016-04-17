@@ -5,11 +5,12 @@ local Cloud = require('cloud')
 
 local Clouds = Class('Clouds')
 
-function Clouds:initialize(rate, lowZ, highZ, player)
+function Clouds:initialize(rate, lowZ, highZ, player, camera)
     self.rate = rate
     self.lowZ = lowZ
     self.highZ = highZ
     self.player = player
+    self.camera = camera
 
     self.clouds = {}
 end
@@ -26,7 +27,7 @@ end
 
 function Clouds:updateCreation(dt)
     if math.random() < self.rate then
-        table.insert(self.clouds, Cloud:new(Screen.targetW + 120, math.random() * Screen.targetH, self.lowZ, self.highZ, self.player))
+        table.insert(self.clouds, Cloud:new(Screen.targetW + 120 + self.player.pos.x - Screen.targetW / 2, math.random() * Screen.targetH + self.player.pos.y - Screen.targetH / 2, self.lowZ, self.highZ, self.player, self.camera))
     end
 end
 

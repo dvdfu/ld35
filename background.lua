@@ -31,7 +31,7 @@ function Background:initialize(player, foreground, camera)
     self.RGB = earthRGB
     self.nextRGB = cloudRGB
     self.transitionTimer = nil
-    self.clouds = Clouds:new(0.075, 1, 2, self.player)
+    self.clouds = Clouds:new(0.075, 1, 2, self.player, self.camera)
     self:gotoState('Earth')
 end
 
@@ -47,6 +47,12 @@ function Background:draw()
     love.graphics.setColor(255, 255, 255)
 
     self.clouds:draw()
+
+    if (DEBUG) then
+        self.camera:pop()
+        love.graphics.print('CLOUDS: ' .. #self.clouds.clouds, 10, Screen.targetH - 70)
+        self.camera:push()
+    end
 end
 
 function Background:changeAlpha()
