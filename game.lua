@@ -107,8 +107,7 @@ function Game.Play:generateStar()
     local unitVector = self.player.vel:normalized()
     local x = math.random(1, Screen.targetW) + unitVector.x * Screen.targetW
     local y = math.random(1, Screen.targetH) + unitVector.y * Screen.targetH
-    local z = math.random(1, 3)
-    table.insert(self.stars, Star:new(x, y, z, self.player))
+    table.insert(self.stars, Star:new(x, y, self.player))
 end
 
 return Game
