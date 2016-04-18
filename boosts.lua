@@ -28,6 +28,9 @@ function Boosts:update(dt)
 end
 
 function Boosts:draw()
+    if self.boosts then
+        Boost:updateFeatherAnimation()
+    end
     for k, boost in pairs(self.boosts) do
         boost:draw()
     end
