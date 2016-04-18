@@ -24,13 +24,14 @@ function Ground:initialize(player, camera)
 end
 
 function Ground:update(dt)
-    local collides, dx, dy = self.body:collidesWith(self.player.body)
-    if not self.impacted and not self.player.intro and collides then
-        self.impacted = true
-        self.player:halt()
-        self.camera:shake(25, 0.3, {})
-        self.player.pos = self.player.pos - Vector(dx, dy)
-        Particles.emit('dust', self.player.pos.x, self.player.pos.y, 40)
+    if self.player.state ~= self.player.STATE.DEAD then
+        local collides, dx, dy = self.body:collidesWith(self.player.body)
+        if not self.player.intro and collides then
+            self.player:halt()
+            self.camera:shake(25, 0.3, {})
+            self.player.pos = self.player.pos - Vector(dx, dy)
+            Particles.emit('dust', self.player.pos.x, self.player.pos.y, 40)
+        end
     end
     Particles.update('dust', dt)
 end

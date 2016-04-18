@@ -219,7 +219,6 @@ end
 function Background.Moon:enteredState()
     Debug('BACKGROUND', 'Moon enteredState.')
     self.RGB = spaceRGB
-    self.stars.starsTimer.clear()
 end
 
 function Background.Moon:update(dt)

@@ -22,19 +22,23 @@ Player.BirdToBall = Player:addState('BirdToBall')
 Player.BallToBird = Player:addState('BallToBird')
 
 Player.SIZE = 16
-Player.angularSpeed = 0.02
 
-Player.Ball.speed = 15
+Player.ballAngularSpeed = 0.03
+Player.ballMinimumSpeed = 4
+
+Player.birdFallSpeedX = 1
+Player.birdFallSpeedY = 7
+Player.birdFlappySpeedX = 1
+Player.birdFlappySpeedY = -7
+Player.birdFlappyDecayRateX = 0.1
+Player.birdFlappyDecayRateY = 0.15
+
 Player.Ball.animationTime = 0.05
-
-Player.Bird.speed = 4
 Player.Bird.animationTime = 0.1
-
-Player.BirdToBall.speed = Player.Ball.speed
 Player.BirdToBall.animationTime = 0.05
-
-Player.BallToBird.speed = Player.Bird.speed
 Player.BallToBird.animationTime = Player.BirdToBall.animationTime
+
+Player.STATE = { BIRD = 0, BALL = 1, DEAD = 2 }
 
 function Player:initialize(x, y)
     self.pos = Vector(0, 0)
@@ -43,6 +47,7 @@ function Player:initialize(x, y)
     self.intro = true
     self.userCanTurn = false
     self.userCanTransform = true
+    self.fallSpeed = 1
 
     local grid = nil
     grid = Anim8.newGrid(Player.SIZE, Player.SIZE, Player.SIZE * 6, Player.SIZE)
@@ -53,32 +58,25 @@ function Player:initialize(x, y)
 
     grid = Anim8.newGrid(24, 24, 24 * 6, 24)
     animations.birdToBall = Anim8.newAnimation(grid:getFrames('1-6', 1), Player.BirdToBall.animationTime, function()
+            self.state = Player.STATE.BALL
             self:gotoState('Ball')
         end)
 
     animations.ballToBird = Anim8.newAnimation(grid:getFrames('6-1', 1), Player.BallToBird.animationTime, function()
+            self.state = Player.STATE.BIRD
             self:gotoState('Bird')
         end)
 
     grid = Anim8.newGrid(80, 24, 80 * 3, 24)
     animations.fireTrail = Anim8.newAnimation(grid:getFrames('1-3', 1), 0.05)
 
+    self.state = Player.STATE.BALL
     self:gotoState('Ball')
 end
 
 function Player:update(dt)
-    if Input.isDown('up') and self.userCanTurn then
-        if self.vel:angleTo() > -math.pi / 2 then
-            self.vel:rotateInplace(-Player.angularSpeed)
-        end
-    elseif Input.isDown('down') and self.userCanTurn then
-        if self.vel:angleTo() < math.pi / 2 then
-            self.vel:rotateInplace(Player.angularSpeed)
-        end
-    end
     self.pos.x = self.pos.x + self.vel.x
     self.pos.y = self.pos.y + self.vel.y
-
     self.body:moveTo(self.pos:unpack())
 end
 
@@ -100,21 +98,37 @@ function Player:draw()
 end
 
 function Player:boost()
-    self.vel = self.vel:normalized() * 30
+    if self.state == Player.STATE.BIRD then
+        self:gotoState('BirdToBall')
+    end
+    self.vel = Vector(20,-20)
 end
 
 function Player:gotoSpeed()
-    local tolerance = 0.01
-    local rate = 0.025
+    if self.state == Player.STATE.BALL then
+        local tolerance = 3
+        local rate = 0.0075
 
-    if math.abs(self.vel:len() - self.speed) <= tolerance then
-        self.vel = self.vel:normalized() * self.speed
-    end
+        if math.abs(self.vel:len() - Player.ballMinimumSpeed) <= tolerance then
+            self:gotoState('BallToBird')
+        end
 
-    if self.vel:len() < self.speed then
-        self.vel = self.vel * (1 + rate)
-    elseif self.vel:len() > self.speed then
-        self.vel = self.vel * (1 - rate)
+        if self.vel:len() < Player.ballMinimumSpeed then
+            self.vel = self.vel * (1 + rate)
+        elseif self.vel:len() > Player.ballMinimumSpeed then
+            self.vel = self.vel * (1 - rate)
+        end
+    elseif self.state == Player.STATE.BIRD then
+        if self.vel.y < Player.birdFallSpeedY then
+            self.vel.y = self.vel.y + Player.birdFlappyDecayRateY
+        elseif self.vel.y > Player.birdFallSpeedY then
+            self.vel.y = self.vel.y - Player.birdFlappyDecayRateY
+        end
+        if self.vel.x < Player.birdFallSpeedX then
+            self.vel.x = self.vel.x + Player.birdFlappyDecayRateX
+        elseif self.vel.x > Player.birdFallSpeedX then
+            self.vel.x = self.vel.x - Player.birdFlappyDecayRateX
+        end
     end
 end
 
@@ -128,7 +142,10 @@ end
 
 function Player:halt()
     self.userCanTransform = false
+    self.userCanTurn = false
+    self.state = Player.STATE.DEAD
     self.vel = Vector(0, 0)
+    self:gotoState('Ball')
 end
 
 
@@ -138,6 +155,15 @@ function Player.Ball:enteredState()
 end
 
 function Player.Ball:update(dt)
+    if Input.isDown('up') and self.userCanTurn then
+        if self.vel:angleTo() > -math.pi / 2 then
+            self.vel:rotateInplace(-Player.ballAngularSpeed)
+        end
+    elseif Input.isDown('down') and self.userCanTurn then
+        if self.vel:angleTo() < math.pi / 2 then
+            self.vel:rotateInplace(Player.ballAngularSpeed)
+        end
+    end
     Player.update(self, dt)
     Player.gotoSpeed(self)
 
@@ -148,7 +174,7 @@ function Player.Ball:update(dt)
         Particles.emit('fire', 0, 0, self.vel:len() / 3)
     end
 
-    if self.userCanTransform and Input.pressed('space') then
+    if self.userCanTransform and Input.pressed('t') then
         self:gotoState('BallToBird')
     end
 end
@@ -178,8 +204,12 @@ function Player.Bird:update(dt)
     Player.update(self, dt)
     Player.gotoSpeed(self)
 
-    if self.userCanTransform and Input.pressed('space') then
-        self:gotoState('BirdToBall')
+    if Input.pressed('space') then
+        self.vel = Vector(Player.birdFlappySpeedX, Player.birdFlappySpeedY)
+    end
+
+    if self.userCanTransform and Input.pressed('t') then
+        self:boost()
     end
 end
 

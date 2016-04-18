@@ -37,8 +37,8 @@ end
 
 function Boosts:generateBoost()
     local unitVector = self.player.vel:normalized()
-    local x = math.random(1, Screen.targetW) + unitVector.x * Screen.targetW
-    local y = math.random(1, Screen.targetH) + unitVector.y * Screen.targetH
+    local x = math.random(Screen.targetW/2, Screen.targetW) + unitVector.x * Screen.targetW
+    local y = math.random(1, Screen.targetH/2) + unitVector.y * Screen.targetH
     table.insert(self.boosts, Boost:new(x + self.player.pos.x - Screen.targetW / 2, y + self.player.pos.y - Screen.targetH / 2, self.player, self.camera))
 end
 
