@@ -69,7 +69,7 @@ end
 function Foreground.Earth:enteredState()
     self.ground = Ground:new(self.player, self.camera)
 
-    if self.boosts and self.boostsTimer then
+    if self.boosts and self.boosts.boostsTimer then
         self.boosts.boostsTimer.clear()
     end
 end
