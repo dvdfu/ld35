@@ -184,9 +184,6 @@ end
 
 function Player.Ball:draw()
     if not self.intro then
-        -- animations.fireTrail:update(1 / 60)
-        -- animations.fireTrail:draw(sprites.fireTrail, self.pos.x, self.pos.y, self.vel:angleTo(), 1, 1, 68, 12)
-
         Player.draw(self)
 
         animations.ball:update(self.vel:len() / 1000)
