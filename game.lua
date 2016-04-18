@@ -24,6 +24,7 @@ function Game:initialize()
 
     self.player = Player:new(0, 0)
     self.camera = Camera.new(0, 0, Screen.targetW, Screen.targetH)
+    self.camTarget = Vector(0, 0)
 
     local scale = 1.0
     for i = 1, 2 do
@@ -41,6 +42,9 @@ function Game:update(dt)
     self.background:update(dt)
     self.player:update(dt)
     self.foreground:update(dt)
+
+    local d = self.camTarget - Vector(self.camera.x, self.camera.y)
+    self.camera:move(d.x / 4, d.y / 4)
 end
 
 function Game:draw()
@@ -70,7 +74,7 @@ function Game.Title:enteredState()
     self.gameLogo = love.graphics.newImage("res/images/logo.png")
     self.gameTitleScreenOffset = Screen.targetH * 2
     self.gameLogoHeight = -self.gameTitleScreenOffset + 40
-    self.camera:moveTo(0, -self.gameTitleScreenOffset + Screen.targetH / 2)
+    self.camTarget = Vector(0, -self.gameTitleScreenOffset + Screen.targetH / 2)
 
     self.cameraTimer = nil
     self.cameraMoveState = title
@@ -87,10 +91,10 @@ function Game.Title:update(dt)
                 x, y = self.camera:toScreenCoordinates(0, 0)
 
                 if y > Screen.targetH / 2 then
-                    self.camera:move(0, dt * 200)
+                    self.camTarget = Vector(0, dt * 200)
 
                     if y < Screen.targetH / 2 then
-                        self.camera:moveTo(Screen.targetW / 2, Screen.targetH / 2)
+                        self.camTarget = Vector(Screen.targetW / 2, Screen.targetH / 2)
                         self.cameraMoveState = pitchToBatter
                     else
                         self.cameraTimer.after(0.01, func)
@@ -119,7 +123,7 @@ function Game.Title:update(dt)
                     end)
             end)
     elseif self.cameraMoveState == pitchToBatter then
-        self.camera:moveTo(self.player.pos.x, self.player.pos.y)
+        self.camTarget = Vector(self.player.pos.x, self.player.pos.y)
     elseif self.cameraMoveState == pitcherToPlay then
         self:gotoState('Play')
     end
@@ -160,7 +164,7 @@ end
 
 function Game.Play:update(dt)
     Game.update(self, dt)
-    self.camera:moveTo(self.player.pos.x, self.player.pos.y)
+    self.camTarget = Vector(self.player.pos.x, self.player.pos.y)
 end
 
 function Game.Play:draw()
