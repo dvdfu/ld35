@@ -43,9 +43,9 @@ end
 
 function Cloud:draw()
     if self.z == 1 then
-        love.graphics.setColor(200, 240, 255)
+        love.graphics.setColor(210, 220, 230)
     elseif self.z == 2 then
-        love.graphics.setColor(228, 248, 255)
+        love.graphics.setColor(220, 230, 240)
     end
 
     love.graphics.draw(sprites.forms[self.type], self.pos.x, self.pos.y, 0, self.z / 3, self.z / 3, 120, 40)

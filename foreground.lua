@@ -36,7 +36,7 @@ function Foreground:update(dt)
 
     if self.player:getHeight() > WORLD.cloudHeight and self.player:getHeight() < WORLD.cloudHeight + 60 then
         Particles.get('cloud'):setDirection(self.player.vel:angleTo(Vector(-1, 0)))
-        Particles.emit('cloud', self.player.pos.x, self.player.pos.y, 10)
+        Particles.emit('cloud', self.player.pos.x, self.player.pos.y, self.player.vel:len() / 6)
     end
 end
 
@@ -53,10 +53,11 @@ function Foreground:draw()
     --draw thick cloud layer
     self.camera:pop()
     local x, y = (self.player.pos.x * -2) % Screen.targetW, self.player:getHeight()
-    love.graphics.draw(sprites.cloudLayer, x, y - WORLD.cloudHeight + 320, 0, 1, 1, 0, 64)
     love.graphics.draw(sprites.cloudLayer, x, y - WORLD.cloudHeight + 160, 0, 1, 1, 0, 64)
-    love.graphics.draw(sprites.cloudLayer, x - Screen.targetW, y - WORLD.cloudHeight + 320, 0, 1, 1, 0, 64)
+    love.graphics.draw(sprites.cloudLayer, x, y - WORLD.cloudHeight + 320, 0, 1, 1, 0, 64)
     love.graphics.draw(sprites.cloudLayer, x - Screen.targetW, y - WORLD.cloudHeight + 160, 0, 1, 1, 0, 64)
+    love.graphics.draw(sprites.cloudLayer, x - Screen.targetW, y - WORLD.cloudHeight + 320, 0, 1, 1, 0, 64)
+
     love.graphics.setColor(203, 219, 252)
     love.graphics.rectangle('fill', 0, y - WORLD.cloudHeight + 160, Screen.targetW, 160)
     love.graphics.setColor(255, 255, 255)

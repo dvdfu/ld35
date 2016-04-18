@@ -12,7 +12,8 @@ local spaceRGB = RGB(0, 0, 0)
 
 local sprites = {
     earth = love.graphics.newImage('res/images/earth.png'),
-    earthClouds = love.graphics.newImage('res/images/earth_clouds.png')
+    earthClouds = love.graphics.newImage('res/images/earth_clouds.png'),
+    cloudLayerBack = love.graphics.newImage('res/images/cloud_layer_back.png')
 }
 --============================================================================== BACKGROUND
 local Background = Class('Background')
@@ -87,6 +88,16 @@ function Background:draw()
     end
 end
 
+function Background:drawCloudLayer()
+    self.camera:pop()
+    local x, y = (self.player.pos.x * -1) % Screen.targetW, self.player:getHeight()
+    love.graphics.draw(sprites.cloudLayerBack, x, y - WORLD.cloudHeight + 160 - 64, 0, 1, 1, 0, 64)
+    love.graphics.draw(sprites.cloudLayerBack, x, y - WORLD.cloudHeight + 320 + 64, 0, 1, 1, 0, 64)
+    love.graphics.draw(sprites.cloudLayerBack, x - Screen.targetW, y - WORLD.cloudHeight + 160 - 64, 0, 1, 1, 0, 64)
+    love.graphics.draw(sprites.cloudLayerBack, x - Screen.targetW, y - WORLD.cloudHeight + 320 + 64, 0, 1, 1, 0, 64)
+    self.camera:push()
+end
+
 function Background:drawEarth()
     self.camera:pop()
     love.graphics.draw(sprites.earth, 0, Screen.targetH + (self.player:getHeight() - WORLD.cloudHeight) / 22, 0, 1, 1, 0, 128)
@@ -140,6 +151,7 @@ end
 
 function Background.Cloud:draw()
     Background.draw(self)
+    self:drawCloudLayer()
 end
 
 --============================================================================== BACKGROUND.ATMOSPHERE
@@ -172,6 +184,7 @@ function Background.Atmosphere:draw()
     love.graphics.setColor(255, 255, 255, 255)
 
     self:drawEarth()
+    self:drawCloudLayer()
 end
 
 --============================================================================== BACKGROUND.SPACE
@@ -197,6 +210,7 @@ function Background.Space:draw()
     Background.draw(self)
     self.stars:draw()
     self:drawEarth()
+    self:drawCloudLayer()
 end
 
 --============================================================================== BACKGROUND.MOON
