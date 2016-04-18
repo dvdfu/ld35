@@ -31,6 +31,7 @@ function Boosts:draw()
     end
 
     if (DEBUG) then
+        love.graphics.setFont(FONT.babyblue)
         love.graphics.print('BOOSTS: ' .. #self.boosts, 10, Screen.targetH - 35)
     end
 end

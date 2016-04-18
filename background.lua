@@ -83,6 +83,7 @@ function Background:draw()
 
     if (DEBUG) then
         self.camera:pop()
+        love.graphics.setFont(FONT.babyblue)
         love.graphics.print('CLOUDS: ' .. #self.clouds.clouds, 10, Screen.targetH - 70)
         self.camera:push()
     end
