@@ -10,6 +10,8 @@ local sprites = {
     boost = love.graphics.newImage('res/images/boost.png'),
     feather = love.graphics.newImage('res/images/feather.png')
 }
+local grid = Anim8.newGrid(128, 64, 128 * 8, 64)
+animations.feather = Anim8.newAnimation(grid:getFrames('1-8', 1), 0.2)
 
 function Boost:initialize(x, y, player, camera)
     self.pos = Vector(x, y)
@@ -17,13 +19,10 @@ function Boost:initialize(x, y, player, camera)
     self.camera = camera
     self.body = HC.circle(x, y, 24)
     self.dead = false
-
-    local grid = Anim8.newGrid(128, 64, 128 * 8, 64)
-    animations.feather = Anim8.newAnimation(grid:getFrames('1-8', 1), 0.3)
 end
 
 function Boost:update(dt)
-    self.pos = self.pos + Vector(0, 0.2)
+    self.pos = self.pos + Vector(0, 1)
     self.body:moveTo(self.pos:unpack())
 
     local collides, _, _ = self.body:collidesWith(self.player.body)
@@ -36,9 +35,14 @@ function Boost:update(dt)
 end
 
 function Boost:draw()
-    animations.feather:update(1 / 60)
     animations.feather:draw(sprites.feather, self.pos.x, self.pos.y, 0, 1, 1, 64, 48)
-    self.body:draw('line')
+    if DEBUG then
+        self.body:draw('line')
+    end
+end
+
+function Boost:updateFeatherAnimation()
+    animations.feather:update(1 / 60)
 end
 
 return Boost

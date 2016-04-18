@@ -100,6 +100,8 @@ end
 function Player:boost()
     if self.state == Player.STATE.BIRD then
         self:gotoState('BirdToBall')
+    else
+        self:gotoState('Ball')
     end
     self.vel = Vector(20,-20)
 end
@@ -110,7 +112,6 @@ function Player:gotoSpeed()
         local rate = 0.0075
 
         if math.abs(self.vel:len() - Player.ballMinimumSpeed) <= tolerance then
-            Debug('WHYYYYY','')
             self:gotoState('BallToBird')
         end
 
@@ -139,11 +140,12 @@ end
 
 function Player:prepareLanding()
     self.userCanTurn = false
+    self.userCanTransform = false
+    self.vel = Vector(20, -20)
+    self:gotoState('Ball')
 end
 
 function Player:halt()
-    self.userCanTransform = false
-    self.userCanTurn = false
     self.state = Player.STATE.DEAD
     self.vel = Vector(0, 0)
     self:gotoState('Ball')
@@ -175,7 +177,7 @@ function Player.Ball:update(dt)
         Particles.emit('fire', 0, 0, self.vel:len() / 3)
     end
 
-    if self.userCanTransform and Input.pressed('t') then
+    if DEBUG and Input.pressed('t') then
         self:gotoState('BallToBird')
     end
 end
@@ -205,13 +207,13 @@ function Player.Bird:update(dt)
     Player.update(self, dt)
     Player.gotoSpeed(self)
 
-    if Input.pressed('space') then
+    if self.userCanTransform and Input.pressed('up') then
         self.vel = Vector(Player.birdFlappySpeedX, Player.birdFlappySpeedY)
         animations.bird:pauseAtStart()
         animations.bird:resume()
     end
 
-    if self.userCanTransform and Input.pressed('t') then
+    if DEBUG and Input.pressed('t') then
         self:boost()
     end
 end

@@ -43,7 +43,7 @@ function Background:initialize(player, foreground, camera)
     self.camera = camera
     self.RGB = earthRGB
     self.nextRGB = cloudRGB
-    self.clouds = Clouds:new(0.075, 1, 2, self.player, self.camera)
+    self.clouds = Clouds:new(WORLD.backgroundCloudProbability, 1, 2, self.player, self.camera)
 
     self.backgroundShader = love.graphics.newShader[[
         extern vec3 currentRGB;
@@ -61,7 +61,8 @@ end
 
 function Background:update(dt)
     self.clouds:updateMovement(dt)
-
+    self.clouds:updateCreation(dt)
+    
     if self.player:getHeight() > WORLD.cloudHeight + 600 then
         Song.space:setVolume(1)
         Song.backing:setVolume(1)
@@ -76,19 +77,17 @@ function Background:update(dt)
 end
 
 function Background:draw()
-    -- love.graphics.setColor(self.nextRGB.r, self.nextRGB.g, self.nextRGB.b, 255)
     self.backgroundShader:sendColor('currentRGB', {self.RGB.r, self.RGB.g, self.RGB.b, self.RGB.a})
     self.backgroundShader:sendColor('nextRGB', {self.nextRGB.r, self.nextRGB.g, self.nextRGB.b, self.nextRGB.a})
 
     if self.upperHeight then
-        -- Debug(math.abs((math.abs(self.player.pos.y) - self.lowerHeight) / (self.upperHeight - self.lowerHeight)), '')
         self.backgroundShader:send('h', 1 - math.abs((math.abs(self.player.pos.y) - self.lowerHeight) / (self.upperHeight - self.lowerHeight)))
     else
         self.backgroundShader:send('h', 0.0)
     end
 
     love.graphics.setShader(self.backgroundShader)
-        love.graphics.rectangle('fill', self.camera.x - Screen.targetW / 2, self.camera.y - Screen.targetH / 2, Screen.targetW, Screen.targetH)
+        love.graphics.rectangle('fill', self.camera.x - Screen.targetW / 2 / self.camera.scaleX, self.camera.y - Screen.targetH / 2 / self.camera.scaleY, Screen.targetW / self.camera.scaleX, Screen.targetH / self.camera.scaleY)
     love.graphics.setShader()
 
     self.clouds:draw()
@@ -151,7 +150,6 @@ end
 
 function Background.Cloud:update(dt)
     Background.update(self, dt)
-    self.clouds:updateCreation(dt)
 
     if (self.player:getHeight() > self.upperHeight) then
         self.foreground:gotoState('Atmosphere')
