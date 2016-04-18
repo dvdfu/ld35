@@ -23,10 +23,10 @@ Screen.offsetX = (Screen.realW / Screen.scale - Screen.targetW) / 2
 Screen.offsetY = (Screen.realH / Screen.scale - Screen.targetH) / 2
 
 WORLD = {
-    earthHeight = 1000,
-    cloudHeight = 2000,
-    atmosphereHeight = 3000,
-    spaceHeight = 4000
+    earthHeight = 2000,
+    cloudHeight = 4000,
+    atmosphereHeight = 6000,
+    spaceHeight = 8000
 }
 
 DEBUG = true

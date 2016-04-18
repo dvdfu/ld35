@@ -127,7 +127,6 @@ end
 
 function Background.Cloud:update(dt)
     Background.update(self, dt)
-    self.stars:update(dt)
     self.clouds:updateCreation(dt)
 
     if (self.player:getHeight() > self.upperHeight) then
@@ -141,9 +140,6 @@ end
 
 function Background.Cloud:draw()
     Background.draw(self)
-    love.graphics.setColor(255, 255, 255, 64)
-    self.stars:draw()
-    love.graphics.setColor(255, 255, 255, 255)
 end
 
 --============================================================================== BACKGROUND.ATMOSPHERE
