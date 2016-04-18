@@ -7,7 +7,8 @@ local Ground = Class('Ground')
 
 local animations = {}
 local sprites = {
-    pitcher = love.graphics.newImage('res/images/pitcher.png')
+    pitcher = love.graphics.newImage('res/images/pitcher.png'),
+    batter = love.graphics.newImage('res/images/batter.png')
 }
 
 --============================================================================== Ground
@@ -21,6 +22,10 @@ function Ground:initialize(player, camera)
     local grid = Anim8.newGrid(160, 128, 160 * 6, 128)
     animations.pitcher = Anim8.newAnimation(grid:getFrames('1-6', 1), 0.1, 'pauseAtEnd')
     animations.pitcher:pauseAtStart()
+
+    local grid = Anim8.newGrid(160, 128, 160 * 4, 128)
+    animations.batter = Anim8.newAnimation(grid:getFrames('1-4', 1), 0.1, 'pauseAtEnd')
+    animations.batter:pauseAtStart()
 end
 
 function Ground:update(dt)
@@ -48,6 +53,13 @@ function Ground:draw()
 
     animations.pitcher:update(1 / 60)
     animations.pitcher:draw(sprites.pitcher, 0, INTRO.groundHeight - 128)
+
+    animations.batter:update(1 / 60)
+    animations.batter:draw(sprites.batter, -500, INTRO.groundHeight - 128, 0, 1, 1, 100)
+end
+
+function Ground:startBatter()
+    animations.batter:resume()
 end
 
 function Ground:startPitcher()
