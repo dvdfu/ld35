@@ -75,7 +75,7 @@ function Background:draw()
     end
 
     love.graphics.setShader(self.backgroundShader)
-        love.graphics.rectangle('fill', self.camera.x - Screen.targetW / 2, self.camera.y - Screen.targetH / 2, Screen.targetW, Screen.targetH)
+        love.graphics.rectangle('fill', self.camera.x - Screen.targetW / 2 / self.camera.scaleX, self.camera.y - Screen.targetH / 2 / self.camera.scaleY, Screen.targetW / self.camera.scaleX, Screen.targetH / self.camera.scaleY)
     love.graphics.setShader()
 
     self.clouds:draw()

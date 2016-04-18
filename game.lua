@@ -44,6 +44,7 @@ end
 function Game:update(dt)
     self.background:update(dt)
     self.player:update(dt)
+    self.camera:zoomTo(math.max(self.player.pos.y / WORLD.spaceHeight + 1, 0.52118472042539))
     self.camera:update(dt)
     self.foreground:update(dt)
 
