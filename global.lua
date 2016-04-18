@@ -16,7 +16,6 @@ Screen = {
 Screen.realW = love.graphics.getWidth()
 Screen.realH = love.graphics.getHeight()
 Screen.scale = math.min(Screen.realW / Screen.targetW, Screen.realH / Screen.targetH)
--- Screen.scale = math.floor(Screen.scale + 0.5)
 Screen.fakeW = Screen.realW / Screen.scale
 Screen.fakeH = Screen.realH / Screen.scale
 Screen.offsetX = (Screen.realW / Screen.scale - Screen.targetW) / 2
