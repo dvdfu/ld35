@@ -105,7 +105,7 @@ function Game.Title:update(dt)
             end)
     elseif self.cameraMoveState == pitching then
         self.cameraMoveState = pitchToBatter
-        self.player.vel = Vector(-5, 0)
+        self.player.vel = Vector(-Player.Ball.speed, 0)
         self.player.intro = false
         self.cameraTimer.after(2,
             function()

@@ -43,7 +43,7 @@ end
 
 function Boosts:startGeneration()
     self.boostsTimer = Timer.new()
-    self.boostsTimer.every(0.5,
+    self.boostsTimer.every(2,
         function()
             self:generateBoost()
         end)

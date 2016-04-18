@@ -24,10 +24,10 @@ Player.BallToBird = Player:addState('BallToBird')
 Player.SIZE = 16
 Player.angularSpeed = 0.02
 
-Player.Ball.speed = 10
+Player.Ball.speed = 20
 Player.Ball.animationTime = 0.05
 
-Player.Bird.speed = 2
+Player.Bird.speed = 4
 Player.Bird.animationTime = 0.1
 
 Player.BirdToBall.speed = Player.Ball.speed

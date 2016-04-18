@@ -9,19 +9,18 @@ Star:include(Stateful)
 --============================================================================== STAR
 function Star:initialize(x, y, player)
     self.pos = Vector(x, y)
-    self.prev = self.pos:clone()
-    self.z = 1 + 2 * math.random()
+    self.z = math.random(1, 3)
     self.player = player
 end
 
 function Star:update(dt)
-    self.prev = self.pos:clone()
-    self.pos = self.pos - self.player.vel * self.z
 end
 
 function Star:draw()
     love.graphics.setLineWidth(self.z)
-    love.graphics.line(self.pos.x, self.pos.y, self.prev.x, self.prev.y)
+    love.graphics.setLineStyle('smooth')
+    local point = self.pos - self.player.vel/self.player.vel:len() * (self.player.vel:len()- self.player.Bird.speed + 1) * self.z
+    love.graphics.line(self.pos.x, self.pos.y, point.x, point.y)
     love.graphics.setLineWidth(1)
 end
 
