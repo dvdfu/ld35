@@ -5,6 +5,7 @@ local Vector = require('modules/hump/vector')
 
 local Clouds = require('clouds')
 local Boosts = require('boosts')
+local Ground = require('ground')
 local Moon = require('moon')
 
 --============================================================================== LOCAL
@@ -65,14 +66,18 @@ function Foreground:draw()
 end
 
 --============================================================================== FOREGROUND.EARTH
-function Foreground.Earth:enteredState() end
+function Foreground.Earth:enteredState()
+    self.ground = Ground:new(self.player, self.camera)
+end
 
 function Foreground.Earth:update(dt)
     Foreground.update(self, dt)
+    self.ground:update(dt)
 end
 
 function Foreground.Earth:draw()
     Foreground.draw(self)
+    self.ground:draw()
 end
 
 --============================================================================== FOREGROUND.CLOUD

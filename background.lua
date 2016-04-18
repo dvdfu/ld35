@@ -69,7 +69,7 @@ function Background:draw()
     self.backgroundShader:sendColor('nextRGB', {self.nextRGB.r, self.nextRGB.g, self.nextRGB.b, self.nextRGB.a})
 
     if self.upperHeight then
-        Debug(math.abs((math.abs(self.player.pos.y) - self.lowerHeight) / (self.upperHeight - self.lowerHeight)), '')
+        -- Debug(math.abs((math.abs(self.player.pos.y) - self.lowerHeight) / (self.upperHeight - self.lowerHeight)), '')
         self.backgroundShader:send('h', 1 - math.abs((math.abs(self.player.pos.y) - self.lowerHeight) / (self.upperHeight - self.lowerHeight)))
     else
         self.backgroundShader:send('h', 0.0)
@@ -125,11 +125,6 @@ end
 
 function Background.Earth:draw()
     Background.draw(self)
-
-    love.graphics.setColor(172, 138, 101)
-    x, _ = self.camera:toWorldCoordinates(0, 0)
-    love.graphics.rectangle('fill', x, INTRO.groundHeight, Screen.targetW, Screen.targetH)
-    love.graphics.setColor(255, 255, 255)
 end
 
 --============================================================================== BACKGROUND.CLOUD
