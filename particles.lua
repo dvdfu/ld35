@@ -43,9 +43,9 @@ function Particles.initialize()
     emitters.dust:setParticleLifetime(0, 3)
     emitters.dust:setDirection(-math.pi / 2)
     emitters.dust:setSpread(math.pi)
-    emitters.dust:setSpeed(0, 400)
+    emitters.dust:setSpeed(0, 200)
     emitters.dust:setColors(172, 138, 101, 255, 172, 138, 101, 0)
-    emitters.dust:setSizes(1, 0)
+    emitters.dust:setSizes(0.5, 0)
 end
 
 function Particles.get(name)

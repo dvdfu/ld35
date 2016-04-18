@@ -71,9 +71,10 @@ function Game.Title:enteredState()
     -- self.pitcherAnimation = Anim8.newAnimation(grid:getFrames('1-6', 1), Player.Ball.animationTime)
 
     self.gameLogo = love.graphics.newImage("res/images/logo.png")
-    self.gameTitleScreenOffset = Screen.targetH * 2
-    self.gameLogoHeight = -self.gameTitleScreenOffset + 40
-    self.camTarget = Vector(0, -self.gameTitleScreenOffset + Screen.targetH / 2)
+    local gameTitleScreenOffset = Screen.targetH * 1.5
+    self.gameLogoHeight = -gameTitleScreenOffset + 40
+    self.camTarget = Vector(0, -gameTitleScreenOffset + Screen.targetH / 2)
+    self.camera:moveTo(self.camTarget.x, self.camTarget.y)
 
     self.cameraTimer = nil
     self.cameraMoveState = title
@@ -82,37 +83,27 @@ end
 function Game.Title:update(dt)
     Game.update(self, dt)
 
-    if Input.pressed('return') and self.cameraMoveState == title then
+    if self.cameraMoveState == title and Input.pressed('return') then
         self.cameraMoveState = titleToPitcher
         self.cameraTimer = Timer.new()
-        self.cameraTimer.after(0.01,
-            function(func)
-                x, y = self.camera:toScreenCoordinates(0, 0)
-
-                if y > Screen.targetH / 2 then
-                    self.camTarget = Vector(0, dt * 200)
-
-                    if y < Screen.targetH / 2 then
-                        self.camTarget = Vector(Screen.targetW / 2, Screen.targetH / 2)
-                        self.cameraMoveState = pitchToBatter
-                    else
-                        self.cameraTimer.after(0.01, func)
-                    end
-                else
+        self.camTarget = Vector(0, 0)
+        self.cameraTimer.after(1, function(func)
+                self.foreground.ground:startPitcher()
+                self.cameraTimer.after(0.5, function()
                     self.cameraMoveState = pitching
-                end
+                end)
             end)
     elseif self.cameraMoveState == pitching then
         self.cameraMoveState = pitchToBatter
         self.player.vel = Vector(-Player.Ball.speed, 0)
         self.player.intro = false
-        self.cameraTimer.after(2, function()
-            self.player.vel = Vector(10, -10)
+        self.cameraTimer.after(1, function()
+            self.player.vel = Vector(40, -40)
         end)
     elseif self.cameraMoveState == pitchToBatter then
         self.camTarget = Vector(self.player.pos.x, self.player.pos.y)
 
-        _, y = self.camera:toScreenCoordinates(0, INTRO.groundHeight)
+        local _, y = self.camera:toScreenCoordinates(0, INTRO.groundHeight)
         if (y >= Screen.targetH) then
             self.cameraMoveState = pitcherToPlay
         end

@@ -1,8 +1,14 @@
+local Anim8 = require('modules/anim8/anim8')
 local Class = require('modules/middleclass/middleclass')
 local HC = require('modules/HC')
 local Vector = require('modules/hump/vector')
 
 local Ground = Class('Ground')
+
+local animations = {}
+local sprites = {
+    pitcher = love.graphics.newImage('res/images/pitcher.png')
+}
 
 --============================================================================== Ground
 function Ground:initialize(player, camera)
@@ -10,11 +16,17 @@ function Ground:initialize(player, camera)
     self.camera = camera
     self.body = HC.polygon(0, 0, Screen.targetW, 0, Screen.targetW, Screen.targetH, 0, Screen.targetH)
     self.pos = Vector(0, 0)
+    self.impacted = false
+
+    local grid = Anim8.newGrid(160, 128, 160 * 6, 128)
+    animations.pitcher = Anim8.newAnimation(grid:getFrames('1-6', 1), 0.1, 'pauseAtEnd')
+    animations.pitcher:pauseAtStart()
 end
 
 function Ground:update(dt)
     local collides, dx, dy = self.body:collidesWith(self.player.body)
-    if not self.player.intro and collides then
+    if not self.impacted and not self.player.intro and collides then
+        self.impacted = true
         self.player:halt()
         self.camera:shake(25, 0.3, {})
         self.player.pos = self.player.pos - Vector(dx, dy)
@@ -32,6 +44,13 @@ function Ground:draw()
     love.graphics.setColor(172, 138, 101)
     love.graphics.rectangle('fill', x, y, Screen.targetW, Screen.targetH)
     love.graphics.setColor(255, 255, 255)
+
+    animations.pitcher:update(1 / 60)
+    animations.pitcher:draw(sprites.pitcher, 0, INTRO.groundHeight - 128)
+end
+
+function Ground:startPitcher()
+    animations.pitcher:resume()
 end
 
 return Ground
