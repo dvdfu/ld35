@@ -93,7 +93,10 @@ function Game.Title:update(dt)
         self.cameraMoveState = pitchToBatter
         self.player.vel = Vector(-20, 0)
         self.player.intro = false
-        self.cameraTimer.after(1, function()
+        self.cameraTimer.after(0.3, function()
+            self.foreground.ground:startBatter()
+        end)
+        self.cameraTimer.after(0.5, function()
             self.player.vel = Vector(40, -40)
         end)
     elseif self.cameraMoveState == pitchToBatter then
