@@ -64,6 +64,16 @@ function Background:changeAlpha()
     self.alpha = self.alpha - transitionStepValue
 end
 
+function Background:drawEarth()
+    self.camera:pop()
+    love.graphics.draw(sprites.earth, 0, Screen.targetH + (self.player:getHeight() - WORLD.cloudHeight) / 22, 0, 1, 1, 0, 128)
+    love.graphics.setColor(0, 20, 40, 80)
+    love.graphics.draw(sprites.earthClouds, 0, Screen.targetH + (self.player:getHeight() - WORLD.cloudHeight) / 18 + 6, 0, 1, 1, 0, 144)
+    love.graphics.setColor(255, 255, 255, 255)
+    love.graphics.draw(sprites.earthClouds, 0, Screen.targetH + (self.player:getHeight() - WORLD.cloudHeight) / 18, 0, 1, 1, 0, 144)
+    self.camera:push()
+end
+
 --============================================================================== BACKGROUND.EARTH
 function Background.Earth:enteredState()
     Debug('BACKGROUND', 'Earth enteredState.')
@@ -132,10 +142,12 @@ function Background.Atmosphere:enteredState()
     Debug('BACKGROUND', 'Atmosphere enteredState.')
     self.RGB = atmosphereRGB
     self.nextRGB = spaceRGB
+    self.earthTimer = 0
 end
 
 function Background.Atmosphere:update(dt)
     Background.update(self, dt)
+    self.earthTimer = self.earthTimer + dt
 
     self.stars:update(dt)
     if (self.player:getHeight() > WORLD.atmosphereHeight and not self.transitionTimer) then
@@ -157,6 +169,8 @@ function Background.Atmosphere:draw()
     love.graphics.setColor(255, 255, 255, 128)
     self.stars:draw()
     love.graphics.setColor(255, 255, 255, 255)
+
+    self:drawEarth()
 end
 
 --============================================================================== BACKGROUND.SPACE
@@ -186,6 +200,7 @@ end
 function Background.Space:draw()
     Background.draw(self)
     self.stars:draw()
+    self:drawEarth()
 end
 
 --============================================================================== BACKGROUND.MOON
@@ -203,6 +218,11 @@ end
 function Background.Moon:draw()
     Background.draw(self)
     self.stars:draw()
+
+    self.camera:pop()
+    love.graphics.draw(sprites.earth, 0, Screen.targetH + (self.player:getHeight() - WORLD.cloudHeight) / 15, 0, 1, 1, 0, 96)
+    love.graphics.draw(sprites.earthClouds, 0, Screen.targetH + (self.player:getHeight() - WORLD.cloudHeight) / 12, 0, 1, 1, 0, 100)
+    self.camera:push()
 end
 
 return Background

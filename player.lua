@@ -72,7 +72,7 @@ function Player:update(dt)
             self.vel:rotateInplace(-Player.angularSpeed)
         end
     elseif Input.isDown('down') and self.userCanTurn then
-        if self.vel:angleTo() < math.pi / 2 then
+        if self.vel:angleTo() < 0 then
             self.vel:rotateInplace(Player.angularSpeed)
         end
     end
