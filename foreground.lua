@@ -47,6 +47,7 @@ function Foreground:draw()
 
     if (DEBUG) then
         self.camera:pop()
+        love.graphics.setFont(FONT.babyblue)
         love.graphics.print('HEIGHT: ' .. math.floor(self.player:getHeight()), 10, Screen.targetH - 20)
         self.camera:push()
     end

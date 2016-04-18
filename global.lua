@@ -33,7 +33,11 @@ WORLD = {
     spaceHeight = 14000
 }
 
-DEBUG = true
+FONT = {
+    babyblue = love.graphics.newFont('res/fonts/babyblue.ttf', 16)
+}
+
+DEBUG = false
 
 function RGB(r, g, b)
     return {r = r, g = g, b = b}
@@ -41,6 +45,7 @@ end
 
 function Debug(tag, message)
     if (DEBUG) then
+        love.graphics.setFont(FONT.babyblue)
         print(tag .. ' | ' .. message)
     end
 end

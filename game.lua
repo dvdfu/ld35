@@ -19,9 +19,7 @@ Game.Title = Game:addState('Title')
 Game.Play = Game:addState('Play')
 Game.End = Game:addState('End')
 
-function Game:initialize()
-    Particles.initialize()
-
+function Game:startup()
     self.player = Player:new(0, 0)
     self.camera = Camera.new(0, 0, Screen.targetW, Screen.targetH)
     self.camTarget = Vector(0, 0)
@@ -34,7 +32,12 @@ function Game:initialize()
 
     self.foreground = Foreground:new(self.player, self.camera)
     self.background = Background:new(self.player, self.foreground, self.camera)
+end
 
+function Game:initialize()
+    Particles.initialize()
+
+    self:startup()
     self:gotoState('Title')
 end
 
@@ -117,6 +120,7 @@ function Game.Title:draw()
     if (self.player.intro) then
         love.graphics.draw(self.gameLogo, -self.gameLogo:getWidth() / 2, self.gameLogoHeight)
 
+        love.graphics.setFont(FONT.babyblue)
         love.graphics.printf("UP and DOWN to control angle", -Screen.targetW / 2, self.gameLogoHeight + self.gameLogo:getHeight() + 40, Screen.targetW, 'center')
         love.graphics.printf("SPACE to transform", -Screen.targetW / 2, self.gameLogoHeight + self.gameLogo:getHeight() + 60, Screen.targetW, 'center')
         love.graphics.printf("Press ENTER to START!", -Screen.targetW / 2, self.gameLogoHeight + self.gameLogo:getHeight() + 80, Screen.targetW, 'center')
@@ -136,10 +140,33 @@ end
 function Game.Play:update(dt)
     Game.update(self, dt)
     self.camTarget = Vector(self.player.pos.x, self.player.pos.y)
+    if (self.player.state == Player.STATE.DEAD) then
+        self:gotoState('End')
+    end
 end
 
 function Game.Play:draw()
     Game.draw(self)
+end
+
+--============================================================================== GAME.END
+function Game.End:enteredState()
+    Debug('GAME.END', 'End enteredState.')
+end
+
+function Game.End:update(dt)
+    Game.update(self, dt)
+    if Input.pressed('return') then
+        self:startup()
+        self:gotoState('Title')
+    end
+end
+
+function Game.End:draw()
+    Game.draw(self)
+    love.graphics.setFont(FONT.babyblue)
+    love.graphics.printf("GAME OVER", 0, Screen.targetH / 2 + 70, Screen.targetW, 'center')
+    love.graphics.printf("Press ENTER to play again!", 0, Screen.targetH / 2 + 90, Screen.targetW, 'center')
 end
 
 return Game
