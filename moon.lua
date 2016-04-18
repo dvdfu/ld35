@@ -10,9 +10,10 @@ local sprites = {
 }
 
 --============================================================================== MOON
-function Moon:initialize(player)
+function Moon:initialize(player, camera)
     self.pos = player.pos + (player.vel:normalized() * 500 - Vector(256, 256))
     self.player = player
+    self.camera = camera
     self.body = HC.polygon(0, 0, 512, 0, 512, 512)
     self.impacted = false
     self.impactTimer = 0
@@ -29,6 +30,7 @@ function Moon:update(dt)
             self.impactTimer = 20
             self.player:halt()
             self.player.pos = self.player.pos - Vector(dx, dy)
+            self.camera:shake(100, 1, {})
             Particles.emit('dust', self.player.pos.x, self.player.pos.y, 40)
         end
     end

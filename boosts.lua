@@ -5,8 +5,9 @@ local Boost = require('boost')
 
 local Boosts = Class('Boosts')
 
-function Boosts:initialize(player)
+function Boosts:initialize(player, camera)
     self.player = player
+    self.camera = camera
     self.boosts = {}
     self.boostsTimer = nil
 end
@@ -38,7 +39,7 @@ function Boosts:generateBoost()
     local unitVector = self.player.vel:normalized()
     local x = math.random(1, Screen.targetW) + unitVector.x * Screen.targetW
     local y = math.random(1, Screen.targetH) + unitVector.y * Screen.targetH
-    table.insert(self.boosts, Boost:new(x + self.player.pos.x - Screen.targetW / 2, y + self.player.pos.y - Screen.targetH / 2, self.player))
+    table.insert(self.boosts, Boost:new(x + self.player.pos.x - Screen.targetW / 2, y + self.player.pos.y - Screen.targetH / 2, self.player, self.camera))
 end
 
 function Boosts:startGeneration()

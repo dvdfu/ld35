@@ -27,7 +27,7 @@ function Foreground:initialize(player, camera)
     self.player = player
     self.camera = camera
     self.clouds = Clouds:new(0.03, 3, 3, self.player, self.camera)
-    self.boosts = Boosts:new(player)
+    self.boosts = Boosts:new(player, camera)
     self:gotoState('Earth')
 end
 
@@ -119,7 +119,7 @@ end
 --============================================================================== FOREGROUND.MOON
 function Foreground.Moon:enteredState()
     self.player:prepareLanding()
-    self.moon = Moon:new(self.player)
+    self.moon = Moon:new(self.player, self.camera)
     self.boosts.boostsTimer.clear()
 end
 

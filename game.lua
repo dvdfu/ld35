@@ -41,6 +41,7 @@ end
 function Game:update(dt)
     self.background:update(dt)
     self.player:update(dt)
+    self.camera:update(dt)
     self.foreground:update(dt)
 
     local d = self.camTarget - Vector(self.camera.x, self.camera.y)
