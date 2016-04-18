@@ -85,7 +85,10 @@ end
 function Player:draw()
     if not self.intro then
         Particles.update('fire', 1 / 60)
+        love.graphics.push()
+        love.graphics.translate(self.pos:unpack())
         Particles.draw('fire')
+        love.graphics.pop()
 
         if DEBUG then
             r, g, b, a = love.graphics.getColor()
@@ -142,7 +145,7 @@ function Player.Ball:update(dt)
         local fire = Particles.get('fire')
         fire:setDirection(self.vel:angleTo(Vector(-1, 0)))
         fire:setSpeed(self.vel:len() * 8, self.vel:len() * 40)
-        Particles.emit('fire', self.pos.x, self.pos.y, self.vel:len() / 3)
+        Particles.emit('fire', 0, 0, self.vel:len() / 3)
     end
 
     if self.userCanTransform and Input.pressed('space') then
