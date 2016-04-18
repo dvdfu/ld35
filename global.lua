@@ -36,7 +36,7 @@ FONT = {
     babyblue = love.graphics.newFont('res/fonts/babyblue.ttf', 16)
 }
 
-DEBUG = false
+DEBUG = true
 
 function RGB(r, g, b)
     return {r = r, g = g, b = b}
