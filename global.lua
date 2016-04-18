@@ -22,6 +22,10 @@ Screen.fakeH = Screen.realH / Screen.scale
 Screen.offsetX = (Screen.realW / Screen.scale - Screen.targetW) / 2
 Screen.offsetY = (Screen.realH / Screen.scale - Screen.targetH) / 2
 
+INTRO = {
+    groundHeight = 80
+}
+
 WORLD = {
     earthHeight = 2000,
     cloudHeight = 4000,

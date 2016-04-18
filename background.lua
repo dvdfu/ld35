@@ -125,6 +125,11 @@ end
 
 function Background.Earth:draw()
     Background.draw(self)
+
+    love.graphics.setColor(172, 138, 101)
+    x, _ = self.camera:toWorldCoordinates(0, 0)
+    love.graphics.rectangle('fill', x, INTRO.groundHeight, Screen.targetW, Screen.targetH)
+    love.graphics.setColor(255, 255, 255)
 end
 
 --============================================================================== BACKGROUND.CLOUD

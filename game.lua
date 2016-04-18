@@ -69,8 +69,6 @@ function Game.Title:enteredState()
     -- self.pitcherImage = love.graphics.newImage('res/images/baseball.png')
     -- self.pitcherAnimation = Anim8.newAnimation(grid:getFrames('1-6', 1), Player.Ball.animationTime)
 
-    self.groundHeight = 80
-
     self.gameLogo = love.graphics.newImage("res/images/logo.png")
     self.gameTitleScreenOffset = Screen.targetH * 2
     self.gameLogoHeight = -self.gameTitleScreenOffset + 40
@@ -107,23 +105,16 @@ function Game.Title:update(dt)
         self.cameraMoveState = pitchToBatter
         self.player.vel = Vector(-Player.Ball.speed, 0)
         self.player.intro = false
-        self.cameraTimer.after(2,
-            function()
-                self.player.vel = Vector(10, -10)
-                self.cameraTimer.after(0.01,
-                    function(func)
-                        x, y = self.camera:toScreenCoordinates(0, self.groundHeight)
-
-                        if (y < Screen.targetH) then
-                            self.groundHeight = self.groundHeight - self.player.vel.y
-                            self.cameraTimer.after(0.01, func)
-                        else
-                            self.cameraMoveState = pitcherToPlay
-                        end
-                    end)
-            end)
+        self.cameraTimer.after(2, function()
+            self.player.vel = Vector(10, -10)
+        end)
     elseif self.cameraMoveState == pitchToBatter then
         self.camTarget = Vector(self.player.pos.x, self.player.pos.y)
+
+        _, y = self.camera:toScreenCoordinates(0, INTRO.groundHeight)
+        if (y >= Screen.targetH) then
+            self.cameraMoveState = pitcherToPlay
+        end
     elseif self.cameraMoveState == pitcherToPlay then
         self:gotoState('Play')
     end
@@ -147,10 +138,6 @@ function Game.Title:draw()
 
         self.ballStill:draw(self.ballImage, 0, 0, self.player.vel:angleTo(), 1, 1, Player.SIZE / 2, Player.SIZE / 2)
     end
-
-    love.graphics.setColor(172, 138, 101)
-    love.graphics.rectangle('fill', -Screen.targetW / 2, self.groundHeight, Screen.targetW, Screen.targetH)
-    love.graphics.setColor(255, 255, 255)
 
     self.camera:pop()
 end
