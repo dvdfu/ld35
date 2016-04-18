@@ -11,7 +11,7 @@ local sprites = {
 
 --============================================================================== MOON
 function Moon:initialize(player)
-    self.pos = player.pos + Vector(100, -500)
+    self.pos = player.pos + (player.vel:normalized() * 500 - Vector(256, 256))
     self.player = player
     self.body = HC.polygon(0, 0, 512, 0, 512, 512)
     self.impacted = false

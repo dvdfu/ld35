@@ -121,7 +121,6 @@ end
 
 function Player:prepareLanding()
     self.userCanTurn = false
-    self.vel = Vector(1, -1):normalized() * self.vel:len()
 end
 
 function Player:halt()
@@ -143,7 +142,7 @@ function Player.Ball:update(dt)
         local fire = Particles.get('fire')
         fire:setDirection(self.vel:angleTo(Vector(-1, 0)))
         fire:setSpeed(self.vel:len() * 8, self.vel:len() * 40)
-        Particles.emit('fire', self.pos.x, self.pos.y, self.vel:len() / 5.0)
+        Particles.emit('fire', self.pos.x, self.pos.y, self.vel:len() / 3)
     end
 
     if self.userCanTransform and Input.pressed('space') then

@@ -13,6 +13,11 @@ local spaceRGB = RGB(0, 0, 0)
 local transitionStepTime = 0.01
 local transitionStepValue = 5
 
+local sprites = {
+    earth = love.graphics.newImage('res/images/earth.png'),
+    earthClouds = love.graphics.newImage('res/images/earth_clouds.png')
+}
+
 --============================================================================== BACKGROUND
 local Background = Class('Background')
 Background:include(Stateful)
