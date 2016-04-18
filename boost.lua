@@ -9,9 +9,10 @@ local sprites = {
     boost = love.graphics.newImage('res/images/boost.png')
 }
 
-function Boost:initialize(x, y, player)
+function Boost:initialize(x, y, player, camera)
     self.pos = Vector(x, y)
     self.player = player
+    self.camera = camera
     self.body = HC.circle(x, y, 24)
     self.dead = false
 end
@@ -23,6 +24,7 @@ function Boost:update(dt)
     local collides, _, _ = self.body:collidesWith(self.player.body)
     if collides then
         --collision logic
+        -- self.camera:shake(10, 0.5, {})
         self.player:boost()
         self.dead = true
     end
