@@ -1,64 +1,87 @@
 local Class = require('modules/middleclass/middleclass')
 local Stateful = require('modules/stateful/stateful')
 local Timer = require('modules/hump/timer')
-local Star = require('star')
 
 local Stars = Class('Stars')
 
 function Stars:initialize(player, camera)
     self.player = player
     self.camera = camera
-    self.stars = {}
-    self.starsTimer = Timer.new()
-    self.starsTimer.every(0.05,
-        function()
-            self:generateStar()
-            self:generateStar()
-            self:generateStar()
-        end)
-    -- Timer.after(0.1,
-    --     function(func)
-    --         self:generateStar() self:generateStar() self:generateStar()
-    --         self:generateStar() self:generateStar() self:generateStar()
-    --         Timer.after(self.player.vel:len() < 5 and 2 or 0.1, func)
-    --     end)
+
+    self.starShader = love.graphics.newShader[[
+        extern vec2 pos;
+        extern vec2 vel;
+        extern number scale;
+        extern number lowHeight;
+        extern number highHeight;
+
+        number hash(number n) {
+            return fract((1 + cos(n)) * 415.92653);
+        }
+
+        number hash2d(vec2 p) {
+            float xHash = hash(p.x * 37.0);
+            float yHash = hash(p.y * 57.0);
+            return fract(xHash + yHash);
+        }
+
+        number isStar(vec2 sc, vec2 p) {
+            vec2 res = vec2(15.0, 15.0);
+            number star = hash2d((sc + floor(p)) / res);
+
+            if (star >= 0.9997) {
+                return star;
+            } else {
+                return 0.0;
+            }
+        }
+
+        vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords) {
+            vec4 pixel = Texel(texture, texture_coords);
+
+            vec2 scaledPos = pos * scale;
+            number star = isStar(screen_coords, scaledPos);
+            for (number i = 0; i < length(vel) * scale; i += 0.2) {
+                star += isStar(screen_coords, scaledPos + normalize(vel) * i);
+            }
+
+            number a = 0.0;
+            if (star != 0.0) {
+                a = (-pos.y - lowHeight)/(highHeight - lowHeight) * 0.8;
+            }
+
+            vec3 pix = pixel.rgb * star;
+            return vec4(pix, a);
+        }
+    ]]
+
+    self.starShader:send('lowHeight', WORLD.cloudHeight - 500)
+    self.starShader:send('highHeight', WORLD.atmosphereHeight)
 end
 
 function Stars:update(dt)
-    self.starsTimer.update(dt)
-    for k, star in pairs(self.stars) do
-        if star.pos.x >= 2 * Screen.targetW + self.player.pos.x or star.pos.x <= -2 * Screen.targetW + self.player.pos.x or star.pos.y >= 2 * Screen.targetH + self.player.pos.y or star.pos.y <= -2 * Screen.targetH + self.player.pos.y then
-            table.remove(self.stars, k)
-        else
-            star:update(dt)
-        end
-    end
+
 end
 
 function Stars:draw()
-    for _, star in pairs(self.stars) do
-        if star.z ~= 3 then
-            layer = self.camera:getLayer((3 - star.z) .. '')
-            layer:push()
-            star:draw()
-            layer:pop()
-        else
-            star:draw()
-        end
-    end
+    self.starShader:send('pos', {self.player.pos.x, self.player.pos.y})
+    self.starShader:send('vel', {self.player.vel.x, self.player.vel.y})
+    self.starShader:send('scale', 1.0)
+    love.graphics.setShader(self.starShader)
+        love.graphics.rectangle('fill', self.camera.x - Screen.targetW / 2, self.camera.y - Screen.targetH / 2, Screen.targetW, Screen.targetH)
+    love.graphics.setShader()
 
-    if (DEBUG) then
-        self.camera:pop()
-        love.graphics.print('STARS: ' .. #self.stars, 10, Screen.targetH - 50)
-        self.camera:push()
-    end
-end
+    layer = self.camera:getLayer('1')
+    self.starShader:send('scale', layer:getRelativeScale())
+    love.graphics.setShader(self.starShader)
+        love.graphics.rectangle('fill', self.camera.x - Screen.targetW / 2, self.camera.y - Screen.targetH / 2, Screen.targetW, Screen.targetH)
+    love.graphics.setShader()
 
-function Stars:generateStar()
-    local unitVector = self.player.vel:normalized()
-    local x = math.random(1, Screen.targetW) + unitVector.x * Screen.targetW
-    local y = math.random(1, Screen.targetH) + unitVector.y * Screen.targetH
-    table.insert(self.stars, Star:new(x + self.player.pos.x - Screen.targetW / 2, y + self.player.pos.y - Screen.targetH / 2, self.player))
+    layer = self.camera:getLayer('2')
+    self.starShader:send('scale', layer:getRelativeScale())
+    love.graphics.setShader(self.starShader)
+        love.graphics.rectangle('fill', self.camera.x - Screen.targetW / 2, self.camera.y - Screen.targetH / 2, Screen.targetW, Screen.targetH)
+    love.graphics.setShader()
 end
 
 return Stars
