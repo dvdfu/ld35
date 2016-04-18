@@ -23,7 +23,7 @@ function Boost:initialize(x, y, player, camera)
 end
 
 function Boost:update(dt)
-    self.pos = self.pos + Vector(0, 0.2)
+    self.pos = self.pos + Vector(0, 1)
     self.body:moveTo(self.pos:unpack())
 
     local collides, _, _ = self.body:collidesWith(self.player.body)
