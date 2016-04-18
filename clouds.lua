@@ -32,8 +32,15 @@ function Clouds:updateCreation(dt)
 end
 
 function Clouds:draw()
-    for k, cloud in pairs(self.clouds) do
-        cloud:draw()
+    for _, cloud in pairs(self.clouds) do
+        if math.floor(cloud.z) ~= 3 then
+            layer = self.camera:getLayer(3 - math.floor(cloud.z) .. '')
+            layer:push()
+            cloud:draw()
+            layer:pop()
+        else
+            cloud:draw()
+        end
     end
 
     Particles.update('cloud', 1 / 60)
