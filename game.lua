@@ -20,6 +20,10 @@ Song = {
     ending = love.audio.newSource('res/sound/music_end.mp3')
 }
 
+SFX = {
+    sweep = love.audio.newSource('res/sound/sweep.mp3')
+}
+
 --============================================================================== GAME
 local Game = Class('Game')
 Game:include(Stateful)
