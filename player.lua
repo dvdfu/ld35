@@ -98,12 +98,12 @@ function Player:draw()
 end
 
 function Player:boost()
+    self.vel = Vector(20,-20)
     if self.state == Player.STATE.BIRD then
         self:gotoState('BirdToBall')
     else
         self:gotoState('Ball')
     end
-    self.vel = Vector(20,-20)
 end
 
 function Player:gotoSpeed()
@@ -237,6 +237,15 @@ function Player.BirdToBall:update(dt)
     Player.update(self, dt)
     Player.gotoSpeed(self)
     animations.birdToBall:update(dt)
+    if Input.isDown('up') and self.userCanTurn then
+        if self.vel:angleTo() > -math.pi / 2 then
+            self.vel:rotateInplace(-Player.ballAngularSpeed)
+        end
+    elseif Input.isDown('down') and self.userCanTurn then
+        if self.vel:angleTo() < math.pi / 2 then
+            self.vel:rotateInplace(Player.ballAngularSpeed)
+        end
+    end
 end
 
 function Player.BirdToBall:draw()
