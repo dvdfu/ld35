@@ -23,7 +23,8 @@ Song = {
 SFX = {
     sweep = love.audio.newSource('res/sound/sweep.mp3'),
     bat = love.audio.newSource('res/sound/bat.wav'),
-    crashLanding = love.audio.newSource('res/sound/crash_landing.wav')
+    crashLanding = love.audio.newSource('res/sound/crash_landing.wav'),
+    flap = love.audio.newSource('res/sound/flap.wav')
 }
 
 --============================================================================== GAME

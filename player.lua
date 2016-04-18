@@ -211,6 +211,7 @@ function Player.Bird:update(dt)
         self.vel = Vector(Player.birdFlappySpeedX, Player.birdFlappySpeedY)
         animations.bird:pauseAtStart()
         animations.bird:resume()
+        SFX.flap:play()
     end
 
     if DEBUG and Input.pressed('t') then
