@@ -65,12 +65,12 @@ function Game.Title:enteredState()
     -- self.pitcherImage = love.graphics.newImage('res/images/baseball.png')
     -- self.pitcherAnimation = Anim8.newAnimation(grid:getFrames('1-6', 1), Player.Ball.animationTime)
 
-    self.groundHeight = self.player.absolutePos.y + 80
+    self.groundHeight = 80
 
     self.gameLogo = love.graphics.newImage("res/images/logo.png")
     self.gameTitleScreenOffset = Screen.targetH * 2
-    self.gameLogoHeight = self.player.absolutePos.y - self.gameTitleScreenOffset + 40
-    self.camera:moveTo(self.player.absolutePos.x, -self.gameTitleScreenOffset + Screen.targetH / 2)
+    self.gameLogoHeight = -self.gameTitleScreenOffset + 40
+    self.camera:moveTo(0, -self.gameTitleScreenOffset + Screen.targetH / 2)
 
     self.cameraTimer = nil
     self.cameraMoveState = title
@@ -78,20 +78,19 @@ end
 
 function Game.Title:update(dt)
     Game.update(self, dt)
-    -- Debug('INTRO HEIGHTS', self.gameLogoHeight .. ' | ' .. self.ballY .. ' -> ' .. self.player.absolutePos.y .. ', step = ' .. self.ballYStep)
 
     if Input.pressed('return') and self.cameraMoveState == title then
         self.cameraMoveState = titleToPitcher
         self.cameraTimer = Timer.new()
         self.cameraTimer.after(0.01,
             function(func)
-                x, y = self.camera:toScreenCoordinates(self.player.absolutePos:unpack())
+                x, y = self.camera:toScreenCoordinates(0, 0)
 
                 if y > Screen.targetH / 2 then
                     self.camera:move(0, dt * 200)
 
                     if y < Screen.targetH / 2 then
-                        self.camera:moveTo(self.player.absolutePos.x + Screen.targetW / 2, self.player.absolutePos.y + Screen.targetH / 2)
+                        self.camera:moveTo(Screen.targetW / 2, Screen.targetH / 2)
                         self.cameraMoveState = pitchToBatter
                     else
                         self.cameraTimer.after(0.01, func)
@@ -136,13 +135,13 @@ function Game.Title:draw()
     self.camera:push()
 
     if (self.player.intro) then
-        love.graphics.draw(self.gameLogo, self.player.absolutePos.x - self.gameLogo:getWidth() / 2, self.gameLogoHeight)
+        love.graphics.draw(self.gameLogo, -self.gameLogo:getWidth() / 2, self.gameLogoHeight)
 
         love.graphics.printf("UP and DOWN to control angle", -Screen.targetW / 2, self.gameLogoHeight + self.gameLogo:getHeight() + 40, Screen.targetW, 'center')
         love.graphics.printf("SPACE to transform", -Screen.targetW / 2, self.gameLogoHeight + self.gameLogo:getHeight() + 60, Screen.targetW, 'center')
         love.graphics.printf("Press ENTER to START!", -Screen.targetW / 2, self.gameLogoHeight + self.gameLogo:getHeight() + 80, Screen.targetW, 'center')
 
-        self.ballStill:draw(self.ballImage, self.player.absolutePos.x, self.player.absolutePos.y, self.player.vel:angleTo(), 1, 1, Player.SIZE / 2, Player.SIZE / 2)
+        self.ballStill:draw(self.ballImage, 0, 0, self.player.vel:angleTo(), 1, 1, Player.SIZE / 2, Player.SIZE / 2)
     end
 
     love.graphics.setColor(172, 138, 101)

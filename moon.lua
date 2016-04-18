@@ -10,8 +10,8 @@ local sprites = {
 }
 
 --============================================================================== MOON
-function Moon:initialize(x, y, player)
-    self.pos = Vector(x, y)
+function Moon:initialize(player)
+    self.pos = player.pos + Vector(100, -500)
     self.player = player
     self.body = HC.polygon(0, 0, 512, 0, 512, 512)
     self.impacted = false
@@ -28,22 +28,20 @@ function Moon:update(dt)
             self.impacted = true
             self.impactTimer = 20
             self.player:halt()
-            self.player.pos = self.player.pos + Vector(dx, dy)
-            Particles.emit('dust', self.player.absolutePos.x, self.player.absolutePos.y, 40)
+            self.player.pos = self.player.pos - Vector(dx, dy)
+            Particles.emit('dust', self.player.pos.x, self.player.pos.y, 40)
         end
     end
 end
 
 function Moon:draw()
-    -- self.body:draw('line')
-
     Particles.update('dust', 1 / 60)
     Particles.draw('dust')
     love.graphics.draw(sprites.moon, self.pos:unpack())
 
     if self.impactTimer > 0 then
         love.graphics.setColor(255, 255, 255, self.impactTimer * 255 / 20)
-        love.graphics.draw(sprites.impact, self.player.absolutePos.x, self.player.absolutePos.y, 0, 1 + self.impactTimer / 20, 1 + self.impactTimer / 20, 116, 8)
+        love.graphics.draw(sprites.impact, self.player.pos.x, self.player.pos.y, 0, 1 + self.impactTimer / 20, 1 + self.impactTimer / 20, 116, 8)
         love.graphics.setColor(255, 255, 255, 255)
         self.impactTimer = self.impactTimer - 1
     end
