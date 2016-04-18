@@ -31,8 +31,10 @@ function Boosts:draw()
     end
 
     if (DEBUG) then
+        self.camera:pop()
         love.graphics.setFont(FONT.babyblue)
         love.graphics.print('BOOSTS: ' .. #self.boosts, 10, Screen.targetH - 35)
+        self.camera:push()
     end
 end
 

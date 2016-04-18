@@ -38,7 +38,10 @@ end
 function Boost:draw()
     animations.feather:update(1 / 60)
     animations.feather:draw(sprites.feather, self.pos.x, self.pos.y, 0, 1, 1, 64, 48)
-    self.body:draw('line')
+
+    if DEBUG then
+        self.body:draw('line')
+    end
 end
 
 return Boost
