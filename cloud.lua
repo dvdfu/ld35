@@ -31,7 +31,7 @@ function Cloud:update(dt)
         local collides, dx, dy = self.body:collidesWith(self.player.body)
         if collides then
             Particles.get('cloud'):setDirection(self.player.vel:angleTo(Vector(-1, 0)))
-            Particles.emit('cloud', self.player.pos.x, self.player.pos.y, 1)
+            Particles.emit('cloud', 0, 0, 1)
         end
     end
 

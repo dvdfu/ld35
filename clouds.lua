@@ -44,7 +44,10 @@ function Clouds:draw()
     end
 
     Particles.update('cloud', 1 / 60)
+    love.graphics.push()
+    love.graphics.translate(self.player.pos:unpack())
     Particles.draw('cloud')
+    love.graphics.pop()
 end
 
 return Clouds

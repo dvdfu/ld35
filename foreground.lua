@@ -36,7 +36,7 @@ function Foreground:update(dt)
 
     if self.player:getHeight() > WORLD.cloudHeight and self.player:getHeight() < WORLD.cloudHeight + 60 then
         Particles.get('cloud'):setDirection(self.player.vel:angleTo(Vector(-1, 0)))
-        Particles.emit('cloud', self.player.pos.x, self.player.pos.y, self.player.vel:len() / 6)
+        Particles.emit('cloud', 0, 0, self.player.vel:len() / 6)
     end
 end
 
