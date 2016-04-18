@@ -21,7 +21,8 @@ Song = {
 }
 
 SFX = {
-    sweep = love.audio.newSource('res/sound/sweep.mp3')
+    sweep = love.audio.newSource('res/sound/sweep.mp3'),
+    bat = love.audio.newSource('res/sound/bat.wav')
 }
 
 --============================================================================== GAME
@@ -128,6 +129,7 @@ function Game.Title:update(dt)
             self.cameraMoveState = pitcherToPlay
         end
     elseif self.cameraMoveState == pitcherToPlay then
+        SFX.bat:play()
         self:gotoState('Play')
     end
 
