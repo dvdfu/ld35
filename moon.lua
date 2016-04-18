@@ -27,6 +27,11 @@ function Moon:update(dt)
         local collides, dx, dy = self.body:collidesWith(self.player.body)
         if collides then
             if not self.impacted then
+                Song.melody:stop()
+                Song.backing:stop()
+                Song.space:stop()
+                Song.ending:setLooping(true)
+                Song.ending:play()
                 self.impacted = true
                 self.impactTimer = 20
                 self.player:halt()

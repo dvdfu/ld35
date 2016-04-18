@@ -15,7 +15,9 @@ Particles = require('particles')
 Song = {
     melody = love.audio.newSource('res/sound/music_melody.mp3'),
     backing = love.audio.newSource('res/sound/music_backing.mp3'),
-    space = love.audio.newSource('res/sound/music_space.mp3')
+    space = love.audio.newSource('res/sound/music_space.mp3'),
+    title = love.audio.newSource('res/sound/music_title.mp3'),
+    ending = love.audio.newSource('res/sound/music_end.mp3')
 }
 
 --============================================================================== GAME
@@ -81,15 +83,19 @@ function Game.Title:enteredState()
     self.cameraTimer = nil
     self.cameraMoveState = title
 
+    Song.title:setLooping(true)
+    Song.title:play()
     Song.melody:stop()
     Song.backing:stop()
     Song.space:stop()
+    Song.ending:stop()
 end
 
 function Game.Title:update(dt)
     Game.update(self, dt)
 
     if self.cameraMoveState == title and Input.pressed('return') then
+        Song.title:stop()
         self.cameraMoveState = titleToPitcher
         self.cameraTimer = Timer.new()
         self.camTarget = Vector(0, 0)
