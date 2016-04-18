@@ -9,6 +9,10 @@ local Moon = require('moon')
 
 --============================================================================== LOCAL
 
+local sprites = {
+    cloudLayer = love.graphics.newImage('res/images/cloud_layer.png')
+}
+
 --============================================================================== FOREGROUND
 local Foreground = Class('Foreground')
 Foreground:include(Stateful)
@@ -40,6 +44,16 @@ function Foreground:draw()
         love.graphics.print('HEIGHT: ' .. math.floor(self.player:getHeight()), 10, Screen.targetH - 20)
         self.camera:push()
     end
+
+    -- if self.player:getHeight() > WORLD.cloudHeight - 400 and self.player:getHeight() < WORLD.cloudHeight + 400 then
+    self.camera:pop()
+    love.graphics.draw(sprites.cloudLayer, 0, self.player:getHeight() - WORLD.cloudHeight - 400, 0, 1, 1, 0, 64)
+    love.graphics.draw(sprites.cloudLayer, 0, self.player:getHeight() - WORLD.cloudHeight - 100, 0, 1, 1, 0, 64)
+    love.graphics.setColor(203, 219, 252)
+    love.graphics.rectangle('fill', 0, self.player:getHeight() - WORLD.cloudHeight - 400, Screen.targetW, 300)
+    love.graphics.setColor(255, 255, 255)
+    self.camera:push()
+    -- end
 end
 
 --============================================================================== FOREGROUND.EARTH

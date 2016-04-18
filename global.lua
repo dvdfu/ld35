@@ -29,7 +29,7 @@ WORLD = {
     spaceHeight = 4000
 }
 
-DEBUG = false
+DEBUG = true
 
 function RGB(r, g, b)
     return {r = r, g = g, b = b}
