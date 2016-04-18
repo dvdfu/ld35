@@ -225,4 +225,9 @@ function Player.BallToBird:draw()
     end
 end
 
+function Player.BallToBird:prepareLanding()
+    Player.prepareLanding(self)
+    self:gotoState('Ball')
+end
+
 return Player
