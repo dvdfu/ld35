@@ -34,7 +34,8 @@ function Clouds:updateCreation(dt)
     for i = 1, math.floor(self.player.vel.x) do
         xi = self.player.pos.x - i
         if self:hash(xi) < self.rate then
-            x, y = Screen.targetW + 120 + xi - Screen.targetW / 2 / self.camera.scaleX, math.random(WORLD.earthHeight, WORLD.cloudHeight - 100)
+            x, _ = self.camera:toWorldCoordinates(Screen.targetW + 120 + xi - Screen.targetW / 2, 0)
+            y = math.random(WORLD.earthHeight, WORLD.cloudHeight - 100)
             table.insert(self.clouds, Cloud:new(x, -y, self.lowZ, self.highZ, self.player, self.camera))
         end
     end
