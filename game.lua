@@ -12,6 +12,12 @@ local Camera = require('Camera')
 
 Particles = require('particles')
 
+Song = {
+    melody = love.audio.newSource('res/sound/music_melody.mp3'),
+    backing = love.audio.newSource('res/sound/music_backing.mp3'),
+    space = love.audio.newSource('res/sound/music_space.mp3')
+}
+
 --============================================================================== GAME
 local Game = Class('Game')
 Game:include(Stateful)
@@ -74,6 +80,10 @@ function Game.Title:enteredState()
 
     self.cameraTimer = nil
     self.cameraMoveState = title
+
+    Song.melody:stop()
+    Song.backing:stop()
+    Song.space:stop()
 end
 
 function Game.Title:update(dt)
@@ -138,6 +148,14 @@ function Game.Play:enteredState()
     self.player.userCanTurn = true
     self.player.vel = Vector(20,-20)
     self.player:boost()
+
+    Song.melody:setLooping(true)
+    Song.melody:play()
+    Song.backing:setLooping(true)
+    Song.backing:play()
+    Song.space:setLooping(true)
+    Song.space:play()
+    Song.space:setVolume(0)
 end
 
 function Game.Play:update(dt)

@@ -61,6 +61,14 @@ end
 
 function Background:update(dt)
     self.clouds:updateMovement(dt)
+
+    if self.player:getHeight() > WORLD.cloudHeight + 600 then
+        Song.space:setVolume(1)
+    elseif self.player:getHeight() < WORLD.cloudHeight then
+        Song.space:setVolume(0)
+    else
+        Song.space:setVolume(1 - (WORLD.cloudHeight + 600 - self.player:getHeight()) / 600)
+    end
 end
 
 function Background:draw()
