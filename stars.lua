@@ -67,20 +67,20 @@ function Stars:draw()
     self.starShader:send('pos', {self.player.pos.x, self.player.pos.y})
     self.starShader:send('vel', {self.player.vel.x, self.player.vel.y})
     self.starShader:send('scale', 1.0)
-    love.graphics.setShader(self.starShader)
-        love.graphics.rectangle('fill', self.camera.x - Screen.targetW / 2, self.camera.y - Screen.targetH / 2, Screen.targetW, Screen.targetH)
-    love.graphics.setShader()
+    self:drawStars()
 
     layer = self.camera:getLayer('1')
     self.starShader:send('scale', layer:getRelativeScale())
-    love.graphics.setShader(self.starShader)
-        love.graphics.rectangle('fill', self.camera.x - Screen.targetW / 2, self.camera.y - Screen.targetH / 2, Screen.targetW, Screen.targetH)
-    love.graphics.setShader()
+    self:drawStars()
 
     layer = self.camera:getLayer('2')
     self.starShader:send('scale', layer:getRelativeScale())
+    self:drawStars()
+end
+
+function Stars:drawStars()
     love.graphics.setShader(self.starShader)
-        love.graphics.rectangle('fill', self.camera.x - Screen.targetW / 2, self.camera.y - Screen.targetH / 2, Screen.targetW, Screen.targetH)
+        love.graphics.rectangle('fill', self.camera.x - Screen.targetW / 2 / self.camera.scaleX, self.camera.y - Screen.targetH / 2 / self.camera.scaleY, Screen.targetW / self.camera.scaleX, Screen.targetH / self.camera.scaleY)
     love.graphics.setShader()
 end
 
