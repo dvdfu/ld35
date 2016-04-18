@@ -62,13 +62,6 @@ end
 local title, titleToPitcher, pitching, pitchToBatter, pitcherToPlay = 0, 1, 2, 3
 function Game.Title:enteredState()
     local grid = Anim8.newGrid(Player.SIZE, Player.SIZE, Player.SIZE * 6, Player.SIZE)
-    self.ballImage = love.graphics.newImage('res/images/baseball.png')
-    self.ballStill = Anim8.newAnimation(grid:getFrames('1-6', 1), Player.Ball.animationTime)
-
-    -- TODO: Add the pitcher image
-    -- grid = Anim8.newGrid(Player.SIZE, Player.SIZE, Player.SIZE * 6, Player.SIZE)
-    -- self.pitcherImage = love.graphics.newImage('res/images/baseball.png')
-    -- self.pitcherAnimation = Anim8.newAnimation(grid:getFrames('1-6', 1), Player.Ball.animationTime)
 
     self.gameLogo = love.graphics.newImage("res/images/logo.png")
     local gameTitleScreenOffset = Screen.targetH * 1.5
@@ -127,8 +120,6 @@ function Game.Title:draw()
         love.graphics.printf("UP and DOWN to control angle", -Screen.targetW / 2, self.gameLogoHeight + self.gameLogo:getHeight() + 40, Screen.targetW, 'center')
         love.graphics.printf("SPACE to transform", -Screen.targetW / 2, self.gameLogoHeight + self.gameLogo:getHeight() + 60, Screen.targetW, 'center')
         love.graphics.printf("Press ENTER to START!", -Screen.targetW / 2, self.gameLogoHeight + self.gameLogo:getHeight() + 80, Screen.targetW, 'center')
-
-        self.ballStill:draw(self.ballImage, 0, 0, self.player.vel:angleTo(), 1, 1, Player.SIZE / 2, Player.SIZE / 2)
     end
 
     self.camera:pop()
@@ -138,6 +129,7 @@ end
 function Game.Play:enteredState()
     Debug('GAME.PLAY', 'Play enteredState.')
     self.player.userCanTurn = true
+    self.player.vel = Vector(20,-20)
     self.player:boost()
 end
 
