@@ -19,7 +19,7 @@ end
 function Star:draw()
     love.graphics.setLineWidth(self.z)
     love.graphics.setLineStyle('smooth')
-    local point = self.pos - self.player.vel/self.player.vel:len() * (self.player.vel:len()- self.player.Bird.speed + 1) * self.z
+    local point = self.pos - self.player.vel/self.player.vel:len() * (self.player.vel:len() - self.player.birdFallSpeedX + 1) * self.z
     love.graphics.line(self.pos.x, self.pos.y, point.x, point.y)
     love.graphics.setLineWidth(1)
 end

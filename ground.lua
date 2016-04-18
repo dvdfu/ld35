@@ -13,11 +13,13 @@ function Ground:initialize(player, camera)
 end
 
 function Ground:update(dt)
-    local collides, dx, dy = self.body:collidesWith(self.player.body)
-    if not self.player.intro and collides then
-        self.player:halt()
-        self.camera:shake(25, 0.3, {})
-        self.player.pos = self.player.pos - Vector(dx, dy)
+    if self.player.state ~= self.player.STATE.DEAD then
+        local collides, dx, dy = self.body:collidesWith(self.player.body)
+        if not self.player.intro and collides then
+            self.player:halt()
+            self.camera:shake(25, 0.3, {})
+            self.player.pos = self.player.pos - Vector(dx, dy)
+        end
     end
 end
 
