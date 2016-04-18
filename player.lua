@@ -110,7 +110,6 @@ function Player:gotoSpeed()
         local rate = 0.0075
 
         if math.abs(self.vel:len() - Player.ballMinimumSpeed) <= tolerance then
-            Debug('WHYYYYY','')
             self:gotoState('BallToBird')
         end
 
