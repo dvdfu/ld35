@@ -69,8 +69,9 @@ function Background:update(dt)
         Song.space:setVolume(0)
         Song.backing:setVolume(0)
     else
-        Song.space:setVolume(1 - (WORLD.cloudHeight + 600 - self.player:getHeight()) / 600)
-        Song.backing:setVolume(1 - (WORLD.earthHeight + 600 - self.player:getHeight()) / 600)
+        local a = 1 - (WORLD.cloudHeight + 600 - self.player:getHeight()) / 600
+        Song.space:setVolume(a)
+        Song.backing:setVolume(a)
     end
 end
 
