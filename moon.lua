@@ -31,16 +31,16 @@ function Moon:update(dt)
                 self.impactTimer = 20
                 self.player:halt()
                 self.player.pos = self.player.pos - Vector(dx, dy)
-                self.camera:shake(100, 1, {})
-                Particles.emit('dust', self.player.pos.x, self.player.pos.y, 40)
+                self.camera:shake(100, 0.3, {})
+                Particles.emit('moon', self.player.pos.x, self.player.pos.y, 40)
             end
         end
     end
 end
 
 function Moon:draw()
-    Particles.update('dust', 1 / 60)
-    Particles.draw('dust')
+    Particles.update('moon', 1 / 60)
+    Particles.draw('moon')
     love.graphics.draw(sprites.moon, self.pos:unpack())
 
     if self.impactTimer > 0 then
