@@ -18,7 +18,9 @@ function Ground:update(dt)
         self.player:halt()
         self.camera:shake(25, 0.3, {})
         self.player.pos = self.player.pos - Vector(dx, dy)
+        Particles.emit('dust', self.player.pos.x, self.player.pos.y, 40)
     end
+    Particles.update('dust', dt)
 end
 
 function Ground:draw()
@@ -26,6 +28,7 @@ function Ground:draw()
     y = INTRO.groundHeight
     self.body:moveTo(x + Screen.targetW / 2, y + Screen.targetH / 2)
 
+    Particles.draw('dust')
     love.graphics.setColor(172, 138, 101)
     love.graphics.rectangle('fill', x, y, Screen.targetW, Screen.targetH)
     love.graphics.setColor(255, 255, 255)

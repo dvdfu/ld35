@@ -31,12 +31,20 @@ function Particles.initialize()
     emitters.spark:setColors(255, 255, 0, 255, 255, 255, 0, 0)
     emitters.spark:setRelativeRotation(true)
 
+    emitters.moon = love.graphics.newParticleSystem(sprites.circleBig)
+    emitters.moon:setParticleLifetime(0, 3)
+    emitters.moon:setDirection(math.pi * 5 / 4)
+    emitters.moon:setSpread(math.pi)
+    emitters.moon:setSpeed(0, 400)
+    emitters.moon:setColors(255, 255, 255, 255, 255, 255, 255, 0)
+    emitters.moon:setSizes(1, 0)
+
     emitters.dust = love.graphics.newParticleSystem(sprites.circleBig)
     emitters.dust:setParticleLifetime(0, 3)
-    emitters.dust:setDirection(math.pi * 5 / 4)
+    emitters.dust:setDirection(-math.pi / 2)
     emitters.dust:setSpread(math.pi)
     emitters.dust:setSpeed(0, 400)
-    emitters.dust:setColors(255, 255, 255, 255, 255, 255, 255, 0)
+    emitters.dust:setColors(172, 138, 101, 255, 172, 138, 101, 0)
     emitters.dust:setSizes(1, 0)
 end
 
