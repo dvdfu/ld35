@@ -16,8 +16,10 @@ function Boosts:update(dt)
     if self.boostsTimer then
         self.boostsTimer.update(dt)
     end
+
     for k, boost in pairs(self.boosts) do
-        if boost.dead or boost.pos.x >= 2 * Screen.targetW + self.player.pos.x or boost.pos.x <= -2 * Screen.targetW + self.player.pos.x or boost.pos.y >= 2 * Screen.targetH + self.player.pos.y or boost.pos.y <= -2 * Screen.targetH + self.player.pos.y then
+        x, _ = self.camera:toScreenCoordinates(boost.pos:unpack())
+        if boost.dead or x + 64 < 0 then
             table.remove(self.boosts, k)
         else
             boost:update(dt)
@@ -40,9 +42,8 @@ end
 
 function Boosts:generateBoost()
     local unitVector = self.player.vel:normalized()
-    local x = math.random(Screen.targetW/2, Screen.targetW) + unitVector.x * Screen.targetW
-    local y = math.random(1, Screen.targetH/2) + unitVector.y * Screen.targetH
-    table.insert(self.boosts, Boost:new(x + self.player.pos.x - Screen.targetW / 2, y + self.player.pos.y - Screen.targetH / 2, self.player, self.camera))
+    x, y = self.camera:toWorldCoordinates(math.random(Screen.targetW/2, Screen.targetW) + unitVector.x * Screen.targetW, math.random(1, Screen.targetH/2) + unitVector.y * Screen.targetH)
+    table.insert(self.boosts, Boost:new(x, y, self.player, self.camera))
 end
 
 function Boosts:startGeneration()
