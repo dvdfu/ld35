@@ -17,7 +17,7 @@ function Boost:initialize(x, y, player)
 end
 
 function Boost:update(dt)
-    self.pos = self.pos - self.player.vel
+    self.pos = self.pos - self.player.vel / 2
     self.body:moveTo(self.pos:unpack())
 
     local collides, _, _ = self.body:collidesWith(self.player.body)

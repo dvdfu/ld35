@@ -18,9 +18,10 @@ Foreground.Atmosphere = Foreground:addState('Atmosphere')
 Foreground.Space = Foreground:addState('Space')
 Foreground.Moon = Foreground:addState('Moon')
 
-function Foreground:initialize(player)
+function Foreground:initialize(player, camera)
     self.player = player
-    self.clouds = Clouds:new(0.03, 3, 3, self.player)
+    self.camera = camera
+    self.clouds = Clouds:new(0.03, 3, 3, self.player, self.camera)
     self.boosts = Boosts:new(player)
     self:gotoState('Earth')
 end
@@ -35,7 +36,9 @@ function Foreground:draw()
     self.boosts:draw()
 
     if (DEBUG) then
-        love.graphics.print('HEIGHT: ' .. math.floor(self.player.pos.y), 10, Screen.targetH - 20)
+        self.camera:pop()
+        love.graphics.print('HEIGHT: ' .. math.floor(self.player:getHeight()), 10, Screen.targetH - 20)
+        self.camera:push()
     end
 end
 
@@ -89,7 +92,7 @@ end
 --============================================================================== FOREGROUND.MOON
 function Foreground.Moon:enteredState()
     self.player:prepareLanding()
-    self.moon = Moon:new(500, -500, self.player)
+    self.moon = Moon:new(self.player)
     self.boosts.boostsTimer.clear()
 end
 
