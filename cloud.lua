@@ -35,7 +35,7 @@ function Cloud:update(dt)
         end
     end
 
-    x, y = self.camera:toScreenCoordinates(self.pos:unpack())
+    x, _ = self.camera:toScreenCoordinates(self.pos:unpack())
     if x + 120 < 0 then
         self.dead = true
     end
