@@ -23,15 +23,17 @@ function Moon:update(dt)
     self.pos = self.pos - self.player.vel
     self.body:moveTo(self.pos.x + 341, self.pos.y + 170)
 
-    local collides, dx, dy = self.body:collidesWith(self.player.body)
-    if collides then
-        if not self.impacted then
-            self.impacted = true
-            self.impactTimer = 20
-            self.player:halt()
-            self.player.pos = self.player.pos - Vector(dx, dy)
-            self.camera:shake(100, 0.3, {})
-            Particles.emit('moon', self.player.pos.x, self.player.pos.y, 40)
+    if self.player.state ~= self.player.STATE.DEAD then
+        local collides, dx, dy = self.body:collidesWith(self.player.body)
+        if collides then
+            if not self.impacted then
+                self.impacted = true
+                self.impactTimer = 20
+                self.player:halt()
+                self.player.pos = self.player.pos - Vector(dx, dy)
+                self.camera:shake(100, 0.3, {})
+                Particles.emit('moon', self.player.pos.x, self.player.pos.y, 40)
+            end
         end
     end
 end
