@@ -14,7 +14,7 @@ end
 
 function Ground:update(dt)
     local collides, dx, dy = self.body:collidesWith(self.player.body)
-    if collides then
+    if not self.player.intro and collides then
         self.player:halt()
         self.player.pos = self.player.pos - Vector(dx, dy)
     end
