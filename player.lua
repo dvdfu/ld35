@@ -26,16 +26,16 @@ Player.SIZE = 16
 Player.ballAngularSpeed = 0.03
 Player.ballMinimumSpeed = 4
 
-Player.birdFallSpeedX = 1
-Player.birdFallSpeedY = 7
-Player.birdFlappySpeedX = 1
-Player.birdFlappySpeedY = -7
+Player.birdFallSpeedX = 3
+Player.birdFallSpeedY = 3
+Player.birdFlappySpeedX = 3
+Player.birdFlappySpeedY = -4
 Player.birdFlappyDecayRateX = 0.1
 Player.birdFlappyDecayRateY = 0.15
 
 Player.Ball.animationTime = 0.05
 Player.Bird.animationTime = 0.1
-Player.BirdToBall.animationTime = 0.05
+Player.BirdToBall.animationTime = 0.1
 Player.BallToBird.animationTime = Player.BirdToBall.animationTime
 
 Player.STATE = { BIRD = 0, BALL = 1, DEAD = 2 }
@@ -54,7 +54,7 @@ function Player:initialize(x, y)
     animations.ball = Anim8.newAnimation(grid:getFrames('1-6', 1), Player.Ball.animationTime)
 
     grid = Anim8.newGrid(24, 24, 24 * 4, 24)
-    animations.bird = Anim8.newAnimation(grid:getFrames('1-4', 1), Player.Bird.animationTime)
+    animations.bird = Anim8.newAnimation(grid:getFrames('1-4', 1), Player.Bird.animationTime, 'pauseAtEnd')
 
     grid = Anim8.newGrid(24, 24, 24 * 6, 24)
     animations.birdToBall = Anim8.newAnimation(grid:getFrames('1-6', 1), Player.BirdToBall.animationTime, function()
@@ -206,6 +206,8 @@ function Player.Bird:update(dt)
 
     if Input.pressed('space') then
         self.vel = Vector(Player.birdFlappySpeedX, Player.birdFlappySpeedY)
+        animations.bird:pauseAtStart()
+        animations.bird:resume()
     end
 
     if self.userCanTransform and Input.pressed('t') then
@@ -218,7 +220,7 @@ function Player.Bird:draw()
         Player.draw(self)
 
         animations.bird:update(1 / 60)
-        animations.bird:draw(sprites.bird, self.pos.x, self.pos.y, self.vel:angleTo(), 1, 1, 12, 12)
+        animations.bird:draw(sprites.bird, self.pos.x, self.pos.y, 0, 1, 1, 12, 12)
     end
 end
 
@@ -237,7 +239,7 @@ end
 function Player.BirdToBall:draw()
     if not self.intro then
         Player.draw(self)
-        animations.birdToBall:draw(sprites.birdToBall, self.pos.x, self.pos.y, self.vel:angleTo(), 1, 1, 12, 12)
+        animations.birdToBall:draw(sprites.birdToBall, self.pos.x, self.pos.y, 0, 1, 1, 12, 12)
     end
 end
 
@@ -251,7 +253,7 @@ end
 function Player.BallToBird:draw()
     if not self.intro then
         Player.draw(self)
-        animations.ballToBird:draw(sprites.birdToBall, self.pos.x, self.pos.y, self.vel:angleTo(), 1, 1, 12, 12)
+        animations.ballToBird:draw(sprites.birdToBall, self.pos.x, self.pos.y, 0, 1, 1, 12, 12)
     end
 end
 
