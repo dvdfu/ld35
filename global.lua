@@ -29,14 +29,18 @@ WORLD = {
     earthHeight = 2000,
     cloudHeight = 4000,
     atmosphereHeight = 7000,
-    spaceHeight = 14000
+    spaceHeight = 14000,
+
+    backgroundCloudProbability = 0.05
 }
+
+WORLD.foregroundCloudProbability = WORLD.backgroundCloudProbability / 3
 
 FONT = {
     babyblue = love.graphics.newFont('res/fonts/babyblue.ttf', 16)
 }
 
-DEBUG = false
+DEBUG = true
 
 function RGB(r, g, b)
     return {r = r, g = g, b = b}
