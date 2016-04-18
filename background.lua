@@ -154,7 +154,9 @@ function Background.Atmosphere:update(dt)
     Background.update(self, dt)
     self.earthTimer = self.earthTimer + dt
 
-    self.stars:update(dt)
+    if (math.random(0, 10) == 0) then
+        self.stars:update(dt)
+    end
 
     if (self.player:getHeight() > self.upperHeight) then
         self.foreground:gotoState('Space')

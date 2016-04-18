@@ -24,7 +24,7 @@ Player.BallToBird = Player:addState('BallToBird')
 Player.SIZE = 16
 Player.angularSpeed = 0.02
 
-Player.Ball.speed = 20
+Player.Ball.speed = 15
 Player.Ball.animationTime = 0.05
 
 Player.Bird.speed = 4
@@ -97,7 +97,7 @@ function Player:draw()
 end
 
 function Player:boost()
-    self.vel = self.vel:normalized() * 50
+    self.vel = self.vel:normalized() * 30
 end
 
 function Player:gotoSpeed()

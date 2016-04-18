@@ -10,7 +10,7 @@ function Stars:initialize(player, camera)
     self.camera = camera
     self.stars = {}
     self.starsTimer = Timer.new()
-    self.starsTimer.every(0.1,
+    self.starsTimer.every(0.05,
         function()
             self:generateStar()
             self:generateStar()
