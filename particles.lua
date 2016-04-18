@@ -11,12 +11,12 @@ local buffers = {}
 
 function Particles.initialize()
     emitters.cloud = love.graphics.newParticleSystem(sprites.circle)
-    emitters.cloud:setParticleLifetime(0.3, 1)
-    emitters.cloud:setSpread(math.pi / 16)
+    emitters.cloud:setParticleLifetime(0.3, 2)
+    emitters.cloud:setSpread(math.pi / 2)
     emitters.cloud:setLinearAcceleration(0, 200)
     emitters.cloud:setSpeed(50, 200)
     emitters.cloud:setColors(255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0)
-    emitters.cloud:setSizes(1, 0.5)
+    emitters.cloud:setSizes(1, 0.2)
 
     emitters.fire = love.graphics.newParticleSystem(sprites.circle)
     emitters.fire:setParticleLifetime(0, 0.2)

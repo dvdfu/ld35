@@ -218,6 +218,7 @@ end
 function Background.Moon:draw()
     Background.draw(self)
     self.stars:draw()
+    self:drawEarth()
 
     self.camera:pop()
     love.graphics.draw(sprites.earth, 0, Screen.targetH + (self.player:getHeight() - WORLD.cloudHeight) / 15, 0, 1, 1, 0, 96)
