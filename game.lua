@@ -29,7 +29,8 @@ local sprites = {
     endingFly = love.graphics.newImage('res/images/ending_fly.png'),
     endingBird = love.graphics.newImage('res/images/ending_bird.png'),
     endingDebris = love.graphics.newImage('res/images/ending_debris.png'),
-    endingBubble = love.graphics.newImage('res/images/ending_bubble.png')
+    endingBubble = love.graphics.newImage('res/images/ending_bubble.png'),
+    endingSpace = love.graphics.newImage('res/images/ending_space.png')
 }
 
 --============================================================================== GAME
@@ -213,22 +214,33 @@ end
 function Game.Cutscene:enteredState()
     Debug('GAME.CUTSCENE', 'Cutscene enteredState.')
     self.cutsceneTimer = 0
+
+    local grid = Anim8.newGrid(420, 280, 420 * 4, 280)
+    self.flyAnimation = Anim8.newAnimation(grid:getFrames('1-4', 1), 0.3)
 end
 
 function Game.Cutscene:update(dt)
     self.cutsceneTimer = self.cutsceneTimer + dt
+    self.flyAnimation:update(dt)
 end
 
 function Game.Cutscene:draw()
     if self.cutsceneTimer > 12 then
-        love.graphics.draw(sprites.endingFly)
+        love.graphics.draw(sprites.endingSpace)
+        self.flyAnimation:draw(sprites.endingFly)
     elseif self.cutsceneTimer > 8 then
         local a = self.cutsceneTimer - 8
         love.graphics.draw(sprites.endingBird)
         love.graphics.draw(sprites.endingDebris, Screen.targetW / 2, Screen.targetH / 2, 0, 1 + a / 32, 1 + a / 32, Screen.targetW / 2, Screen.targetH / 2)
     elseif self.cutsceneTimer > 4 then
         local a = (self.cutsceneTimer - 4) / 4
-        love.graphics.draw(sprites.endingMoon)
+
+        love.graphics.setColor(0, 0, 0)
+        love.graphics.rectangle('fill', 0, 0, Screen.targetW, Screen.targetH)
+        love.graphics.setColor(255, 255, 255, 255)
+
+        love.graphics.draw(sprites.endingMoon, a * 6 * (math.random() - 0.5), a * 6 * (math.random() - 0.5))
+
         love.graphics.setBlendMode('add')
         love.graphics.setColor(200 * a, 230 * a, 255 * a, 255)
         love.graphics.rectangle('fill', 0, 0, Screen.targetW, Screen.targetH)
@@ -236,7 +248,9 @@ function Game.Cutscene:draw()
         love.graphics.setBlendMode('alpha')
     else
         love.graphics.draw(sprites.endingMoon)
-        love.graphics.draw(sprites.endingBubble)
+        if math.floor(self.cutsceneTimer * 4) % 2 == 0 then
+            love.graphics.draw(sprites.endingBubble)
+        end
     end
 end
 
