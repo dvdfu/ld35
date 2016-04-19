@@ -29,7 +29,7 @@ function Stars:initialize(player, camera)
             vec2 res = vec2(15.0, 15.0);
             number star = hash2d((sc + floor(p)) / res);
 
-            if (star >= 0.9997) {
+            if (star >= 0.9999) {
                 return star;
             } else {
                 return 0.0;

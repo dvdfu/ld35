@@ -98,6 +98,7 @@ function Game.Title:enteredState()
     self.camTarget = Vector(0, -gameTitleScreenOffset + Screen.targetH / 2)
     self.camera:moveTo(self.camTarget.x, self.camTarget.y)
 
+    self.titleTimer = 0
     self.cameraTimer = nil
     self.cameraMoveState = title
 
@@ -111,6 +112,7 @@ end
 
 function Game.Title:update(dt)
     Game.update(self, dt)
+    self.titleTimer = self.titleTimer + dt
 
     if self.cameraMoveState == title and Input.pressed('return') then
         Song.title:stop()
@@ -156,13 +158,15 @@ function Game.Title:draw()
     self.camera:push()
 
     if (self.player.intro) then
-        love.graphics.draw(self.gameLogo, -self.gameLogo:getWidth() / 2, self.gameLogoHeight)
+        love.graphics.draw(self.gameLogo, -self.gameLogo:getWidth() / 2, self.gameLogoHeight + 4 * math.sin(self.titleTimer * 4))
 
-        love.graphics.setFont(FONT.babyblue)
-        love.graphics.printf("As a bird, press UP to flag your wings", -Screen.targetW / 2, self.gameLogoHeight + self.gameLogo:getHeight() + 30, Screen.targetW, 'center')
-        love.graphics.printf("Collect feathers to transform!", -Screen.targetW / 2, self.gameLogoHeight + self.gameLogo:getHeight() + 50, Screen.targetW, 'center')
-        love.graphics.printf("As a ball, use UP and DOWN to control your angle", -Screen.targetW / 2, self.gameLogoHeight + self.gameLogo:getHeight() + 70, Screen.targetW, 'center')
-        love.graphics.printf("Press ENTER to START!", -Screen.targetW / 2, self.gameLogoHeight + self.gameLogo:getHeight() + 90, Screen.targetW, 'center')
+        love.graphics.setFont(FONT.redalert)
+        love.graphics.setColor(63, 63, 116)
+        love.graphics.printf("As a bird, press UP to flag your wings", -Screen.targetW / 2,           self.gameLogoHeight + self.gameLogo:getHeight() + 30, Screen.targetW, 'center')
+        love.graphics.printf("Collect feathers to transform!", -Screen.targetW / 2,                   self.gameLogoHeight + self.gameLogo:getHeight() + 43, Screen.targetW, 'center')
+        love.graphics.printf("As a ball, use UP and DOWN to control your angle", -Screen.targetW / 2, self.gameLogoHeight + self.gameLogo:getHeight() + 56, Screen.targetW, 'center')
+        love.graphics.printf("Press ENTER to START!", -Screen.targetW / 2,                            self.gameLogoHeight + self.gameLogo:getHeight() + 92, Screen.targetW, 'center')
+        love.graphics.setColor(255, 255, 255)
     end
 
     self.camera:pop()
@@ -233,6 +237,13 @@ function Game.Cutscene:draw()
     if self.cutsceneTimer > 12 then
         love.graphics.draw(sprites.endingSpace)
         self.flyAnimation:draw(sprites.endingFly)
+
+        love.graphics.setFont(FONT.redalert)
+        love.graphics.setColor(63, 63, 116)
+        love.graphics.print("Made by @dvdfu, Hamdan Javeed and Seikun Kambashi", 80, Screen.targetH / 2 + 60)
+        love.graphics.setColor(255, 255, 255)
+        love.graphics.print("Thank you for playing!", 80, Screen.targetH / 2 + 73)
+
     elseif self.cutsceneTimer > 8 then
         local a = self.cutsceneTimer - 8
         love.graphics.draw(sprites.endingBird)
@@ -253,7 +264,7 @@ function Game.Cutscene:draw()
         love.graphics.setBlendMode('alpha')
     else
         love.graphics.draw(sprites.endingMoon)
-        if math.floor(self.cutsceneTimer * 4) % 2 == 0 then
+        if math.floor(self.cutsceneTimer * 4) % 4 > 0 then
             love.graphics.draw(sprites.endingBubble)
         end
     end
