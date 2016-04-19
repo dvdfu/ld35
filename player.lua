@@ -99,6 +99,9 @@ end
 
 function Player:boost()
     self.vel = Vector(20,-20)
+
+    SFX.sweep:play()
+
     if self.state == Player.STATE.BIRD then
         self:gotoState('BirdToBall')
     else

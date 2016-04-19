@@ -29,7 +29,6 @@ function Boost:update(dt)
     if collides then
         --collision logic
         -- self.camera:shake(10, 0.5, {})
-        SFX.sweep:play()
         self.player:boost()
         self.dead = true
     end
