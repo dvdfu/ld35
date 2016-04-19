@@ -149,9 +149,10 @@ function Game.Title:draw()
         love.graphics.draw(self.gameLogo, -self.gameLogo:getWidth() / 2, self.gameLogoHeight)
 
         love.graphics.setFont(FONT.babyblue)
-        love.graphics.printf("UP and DOWN to control angle", -Screen.targetW / 2, self.gameLogoHeight + self.gameLogo:getHeight() + 40, Screen.targetW, 'center')
-        love.graphics.printf("SPACE to transform", -Screen.targetW / 2, self.gameLogoHeight + self.gameLogo:getHeight() + 60, Screen.targetW, 'center')
-        love.graphics.printf("Press ENTER to START!", -Screen.targetW / 2, self.gameLogoHeight + self.gameLogo:getHeight() + 80, Screen.targetW, 'center')
+        love.graphics.printf("As a bird, press UP to flag your wings", -Screen.targetW / 2, self.gameLogoHeight + self.gameLogo:getHeight() + 30, Screen.targetW, 'center')
+        love.graphics.printf("Collect feathers to transform!", -Screen.targetW / 2, self.gameLogoHeight + self.gameLogo:getHeight() + 50, Screen.targetW, 'center')
+        love.graphics.printf("As a ball, use UP and DOWN to control your angle", -Screen.targetW / 2, self.gameLogoHeight + self.gameLogo:getHeight() + 70, Screen.targetW, 'center')
+        love.graphics.printf("Press ENTER to START!", -Screen.targetW / 2, self.gameLogoHeight + self.gameLogo:getHeight() + 90, Screen.targetW, 'center')
     end
 
     self.camera:pop()

@@ -17,7 +17,7 @@ function Boost:initialize(x, y, player, camera)
     self.pos = Vector(x, y)
     self.player = player
     self.camera = camera
-    self.body = HC.circle(x, y, 24)
+    self.body = HC.rectangle(x, y, 60, 24) -- HC.circle(x, y, 24)
     self.dead = false
 end
 
