@@ -62,7 +62,7 @@ end
 function Background:update(dt)
     self.clouds:updateMovement(dt)
     self.clouds:updateCreation(dt)
-    
+
     if self.player:getHeight() > WORLD.cloudHeight + 600 then
         Song.space:setVolume(1)
         Song.backing:setVolume(1)
@@ -94,7 +94,7 @@ function Background:draw()
 
     if (DEBUG) then
         self.camera:pop()
-        love.graphics.setFont(FONT.babyblue)
+        love.graphics.setFont(FONT.redalert)
         love.graphics.print('CLOUDS: ' .. #self.clouds.clouds, 10, Screen.targetH - 70)
         self.camera:push()
     end
@@ -112,11 +112,11 @@ end
 
 function Background:drawEarth()
     self.camera:pop()
-    love.graphics.draw(sprites.earth, 0, Screen.targetH + (self.player:getHeight() - WORLD.cloudHeight) / 22, 0, 1, 1, 0, 128)
+    love.graphics.draw(sprites.earth, 0, Screen.targetH + (self.player:getHeight() - WORLD.cloudHeight) / 40, 0, 1, 1, 0, 128)
     love.graphics.setColor(0, 20, 40, 80)
-    love.graphics.draw(sprites.earthClouds, 0, Screen.targetH + (self.player:getHeight() - WORLD.cloudHeight) / 18 + 6, 0, 1, 1, 0, 144)
+    love.graphics.draw(sprites.earthClouds, 0, Screen.targetH + (self.player:getHeight() - WORLD.cloudHeight) / 36 + 6, 0, 1, 1, 0, 144)
     love.graphics.setColor(255, 255, 255, 255)
-    love.graphics.draw(sprites.earthClouds, 0, Screen.targetH + (self.player:getHeight() - WORLD.cloudHeight) / 18, 0, 1, 1, 0, 144)
+    love.graphics.draw(sprites.earthClouds, 0, Screen.targetH + (self.player:getHeight() - WORLD.cloudHeight) / 36, 0, 1, 1, 0, 144)
     self.camera:push()
 end
 --============================================================================== BACKGROUND.EARTH

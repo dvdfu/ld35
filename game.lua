@@ -27,12 +27,22 @@ SFX = {
     flap = love.audio.newSource('res/sound/flap.wav')
 }
 
+local sprites = {
+    endingMoon = love.graphics.newImage('res/images/ending_moon.png'),
+    endingFly = love.graphics.newImage('res/images/ending_fly.png'),
+    endingBird = love.graphics.newImage('res/images/ending_bird.png'),
+    endingDebris = love.graphics.newImage('res/images/ending_debris.png'),
+    endingBubble = love.graphics.newImage('res/images/ending_bubble.png'),
+    endingSpace = love.graphics.newImage('res/images/ending_space.png')
+}
+
 --============================================================================== GAME
 local Game = Class('Game')
 Game:include(Stateful)
 Game.Title = Game:addState('Title')
 Game.Play = Game:addState('Play')
 Game.End = Game:addState('End')
+Game.Cutscene = Game:addState('Cutscene')
 
 function Game:startup()
     self.player = Player:new(0, 0)
@@ -88,6 +98,7 @@ function Game.Title:enteredState()
     self.camTarget = Vector(0, -gameTitleScreenOffset + Screen.targetH / 2)
     self.camera:moveTo(self.camTarget.x, self.camTarget.y)
 
+    self.titleTimer = 0
     self.cameraTimer = nil
     self.cameraMoveState = title
 
@@ -101,6 +112,7 @@ end
 
 function Game.Title:update(dt)
     Game.update(self, dt)
+    self.titleTimer = self.titleTimer + dt
 
     if self.cameraMoveState == title and Input.pressed('return') then
         Song.title:stop()
@@ -146,13 +158,15 @@ function Game.Title:draw()
     self.camera:push()
 
     if (self.player.intro) then
-        love.graphics.draw(self.gameLogo, -self.gameLogo:getWidth() / 2, self.gameLogoHeight)
+        love.graphics.draw(self.gameLogo, -self.gameLogo:getWidth() / 2, self.gameLogoHeight + 4 * math.sin(self.titleTimer * 4))
 
-        love.graphics.setFont(FONT.babyblue)
-        love.graphics.printf("As a bird, press UP to flag your wings", -Screen.targetW / 2, self.gameLogoHeight + self.gameLogo:getHeight() + 30, Screen.targetW, 'center')
-        love.graphics.printf("Collect feathers to transform!", -Screen.targetW / 2, self.gameLogoHeight + self.gameLogo:getHeight() + 50, Screen.targetW, 'center')
-        love.graphics.printf("As a ball, use UP and DOWN to control your angle", -Screen.targetW / 2, self.gameLogoHeight + self.gameLogo:getHeight() + 70, Screen.targetW, 'center')
-        love.graphics.printf("Press ENTER to START!", -Screen.targetW / 2, self.gameLogoHeight + self.gameLogo:getHeight() + 90, Screen.targetW, 'center')
+        love.graphics.setFont(FONT.redalert)
+        love.graphics.setColor(63, 63, 116)
+        love.graphics.printf("As a bird, press UP to flag your wings", -Screen.targetW / 2,           self.gameLogoHeight + self.gameLogo:getHeight() + 30, Screen.targetW, 'center')
+        love.graphics.printf("Collect feathers to transform!", -Screen.targetW / 2,                   self.gameLogoHeight + self.gameLogo:getHeight() + 43, Screen.targetW, 'center')
+        love.graphics.printf("As a ball, use UP and DOWN to control your angle", -Screen.targetW / 2, self.gameLogoHeight + self.gameLogo:getHeight() + 56, Screen.targetW, 'center')
+        love.graphics.printf("Press ENTER to START!", -Screen.targetW / 2,                            self.gameLogoHeight + self.gameLogo:getHeight() + 92, Screen.targetW, 'center')
+        love.graphics.setColor(255, 255, 255)
     end
 
     self.camera:pop()
@@ -190,21 +204,70 @@ end
 --============================================================================== GAME.END
 function Game.End:enteredState()
     Debug('GAME.END', 'End enteredState.')
+    self.endTimer = Timer.new()
+    self.endTimer.after(4, function()
+        self:gotoState('Cutscene')
+    end)
 end
 
 function Game.End:update(dt)
     Game.update(self, dt)
-    if Input.pressed('return') then
-        self:startup()
-        self:gotoState('Title')
-    end
+    self.endTimer.update(dt)
 end
 
 function Game.End:draw()
     Game.draw(self)
-    love.graphics.setFont(FONT.babyblue)
-    love.graphics.printf("GAME OVER", 0, Screen.targetH / 2 + 70, Screen.targetW, 'center')
-    love.graphics.printf("Press ENTER to play again!", 0, Screen.targetH / 2 + 90, Screen.targetW, 'center')
+end
+
+--============================================================================== GAME.CUTSCENE
+function Game.Cutscene:enteredState()
+    Debug('GAME.CUTSCENE', 'Cutscene enteredState.')
+    self.cutsceneTimer = 0
+
+    local grid = Anim8.newGrid(420, 280, 420 * 4, 280)
+    self.flyAnimation = Anim8.newAnimation(grid:getFrames('1-4', 1), 0.3)
+end
+
+function Game.Cutscene:update(dt)
+    self.cutsceneTimer = self.cutsceneTimer + dt
+    self.flyAnimation:update(dt)
+end
+
+function Game.Cutscene:draw()
+    if self.cutsceneTimer > 12 then
+        love.graphics.draw(sprites.endingSpace)
+        self.flyAnimation:draw(sprites.endingFly)
+
+        love.graphics.setFont(FONT.redalert)
+        love.graphics.setColor(63, 63, 116)
+        love.graphics.print("Made by @dvdfu, Hamdan Javeed and Seikun Kambashi", 80, Screen.targetH / 2 + 60)
+        love.graphics.setColor(255, 255, 255)
+        love.graphics.print("Thank you for playing!", 80, Screen.targetH / 2 + 73)
+
+    elseif self.cutsceneTimer > 8 then
+        local a = self.cutsceneTimer - 8
+        love.graphics.draw(sprites.endingBird)
+        love.graphics.draw(sprites.endingDebris, Screen.targetW / 2, Screen.targetH / 2, 0, 1 + a / 32, 1 + a / 32, Screen.targetW / 2, Screen.targetH / 2)
+    elseif self.cutsceneTimer > 4 then
+        local a = (self.cutsceneTimer - 4) / 4
+
+        love.graphics.setColor(0, 0, 0)
+        love.graphics.rectangle('fill', 0, 0, Screen.targetW, Screen.targetH)
+        love.graphics.setColor(255, 255, 255, 255)
+
+        love.graphics.draw(sprites.endingMoon, a * 6 * (math.random() - 0.5), a * 6 * (math.random() - 0.5))
+
+        love.graphics.setBlendMode('add')
+        love.graphics.setColor(200 * a, 230 * a, 255 * a, 255)
+        love.graphics.rectangle('fill', 0, 0, Screen.targetW, Screen.targetH)
+        love.graphics.setColor(255, 255, 255, 255)
+        love.graphics.setBlendMode('alpha')
+    else
+        love.graphics.draw(sprites.endingMoon)
+        if math.floor(self.cutsceneTimer * 4) % 4 > 0 then
+            love.graphics.draw(sprites.endingBubble)
+        end
+    end
 end
 
 return Game

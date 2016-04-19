@@ -28,7 +28,7 @@ INTRO = {
 WORLD = {
     earthHeight = 2000,
     cloudHeight = 4000,
-    atmosphereHeight = 7000,
+    atmosphereHeight = 9000,
     spaceHeight = 14000,
 
     backgroundCloudProbability = 0.05
@@ -37,10 +37,10 @@ WORLD = {
 WORLD.foregroundCloudProbability = WORLD.backgroundCloudProbability / 3
 
 FONT = {
-    babyblue = love.graphics.newFont('res/fonts/babyblue.ttf', 16)
+    redalert = love.graphics.newFont('res/fonts/redalert.ttf', 13)
 }
 
-DEBUG = true
+DEBUG = false
 
 function RGB(r, g, b)
     return {r = r, g = g, b = b}
@@ -48,7 +48,7 @@ end
 
 function Debug(tag, message)
     if (DEBUG) then
-        love.graphics.setFont(FONT.babyblue)
+        love.graphics.setFont(FONT.redalert)
         print(tag .. ' | ' .. message)
     end
 end
