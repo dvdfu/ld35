@@ -98,12 +98,15 @@ function Player:draw()
 end
 
 function Player:boost()
+    self.vel = Vector(20,-20)
+
+    SFX.sweep:play()
+
     if self.state == Player.STATE.BIRD then
         self:gotoState('BirdToBall')
     else
         self:gotoState('Ball')
     end
-    self.vel = Vector(20,-20)
 end
 
 function Player:gotoSpeed()
@@ -184,9 +187,6 @@ end
 
 function Player.Ball:draw()
     if not self.intro then
-        -- animations.fireTrail:update(1 / 60)
-        -- animations.fireTrail:draw(sprites.fireTrail, self.pos.x, self.pos.y, self.vel:angleTo(), 1, 1, 68, 12)
-
         Player.draw(self)
 
         animations.ball:update(self.vel:len() / 1000)
@@ -211,6 +211,7 @@ function Player.Bird:update(dt)
         self.vel = Vector(Player.birdFlappySpeedX, Player.birdFlappySpeedY)
         animations.bird:pauseAtStart()
         animations.bird:resume()
+        SFX.flap:play()
     end
 
     if DEBUG and Input.pressed('t') then
@@ -237,6 +238,15 @@ function Player.BirdToBall:update(dt)
     Player.update(self, dt)
     Player.gotoSpeed(self)
     animations.birdToBall:update(dt)
+    if Input.isDown('up') and self.userCanTurn then
+        if self.vel:angleTo() > -math.pi / 2 then
+            self.vel:rotateInplace(-Player.ballAngularSpeed)
+        end
+    elseif Input.isDown('down') and self.userCanTurn then
+        if self.vel:angleTo() < math.pi / 2 then
+            self.vel:rotateInplace(Player.ballAngularSpeed)
+        end
+    end
 end
 
 function Player.BirdToBall:draw()
