@@ -26,10 +26,10 @@ INTRO = {
 }
 
 WORLD = {
-    earthHeight = 200,
-    cloudHeight = 400,
-    atmosphereHeight = 700,
-    spaceHeight = 1400,
+    earthHeight = 2000,
+    cloudHeight = 4000,
+    atmosphereHeight = 9000,
+    spaceHeight = 14000,
 
     backgroundCloudProbability = 0.05
 }
